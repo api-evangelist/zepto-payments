@@ -1,0 +1,37 @@
+generated: '2026-07-24'
+method: derived
+source: 4xx/5xx responses across openapi/*.yml
+format: non-rfc9457
+media_type: application/json
+note: >-
+  API-level (protocol) errors derived from the OpenAPI response codes. These
+  are distinct from money-movement failure/reason codes, which are catalogued
+  in errors/zepto-payments-decline-codes.yml.
+problems:
+  - status: 400
+    title: Bad Request
+    seen_in: [zepto, pay-to, investigations]
+  - status: 401
+    title: Unauthorized (missing/invalid token)
+    seen_in: [zepto, pay-to, validate-cop, clients]
+  - status: 403
+    title: Forbidden (token lacks required scope/permission)
+    seen_in: [zepto, pay-to, validate-cop]
+  - status: 404
+    title: Not Found
+    seen_in: [zepto, pay-to, validate-cop, investigations, clients]
+  - status: 422
+    title: Unprocessable Entity (validation failure)
+    seen_in: [zepto, pay-to, validate-cop, clients]
+  - status: 429
+    title: Too Many Requests (rate limited)
+    seen_in: [validate-cop]
+  - status: 500
+    title: Internal Server Error
+    seen_in: [pay-to, clients]
+  - status: 503
+    title: Service Unavailable
+    seen_in: [pay-to]
+related:
+  - https://docs.zeptopayments.com/docs/pay-to-unprocessable-codes
+  - https://docs.zeptopayments.com/docs/pay-to-reason-codes

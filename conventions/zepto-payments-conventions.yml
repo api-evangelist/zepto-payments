@@ -1,0 +1,66 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  Derived from openapi/*.yml plus docs.zeptopayments.com (OAuth Grant Flow,
+  Zepto Environments, Understanding Zepto Reference Numbers, Setting up your
+  webhooks, Dual Approval).
+authentication:
+  core_api:
+    type: oauth2
+    flow: authorizationCode
+    authorization_url: /oauth/authorize
+    token_url: /oauth/token
+    scopes_ref: scopes/zepto-payments-scopes.yml
+  product_apis:
+    type: http
+    scheme: bearer
+    note: PayTo, Validate/CoP, Investigations, Clients, Merchant Reports use HTTP Bearer tokens.
+  profile_ref: authentication/zepto-payments-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request-header
+  header: Idempotency-Key
+  applies_to: >-
+    Asynchronous payment-creating operations on the core Zepto API (e.g.
+    MakeAPayment, MakeAPaymentRequest, IssueARefund, AddATransfer). The
+    Idempotency-Key parameter is declared in openapi/zepto-payments-zepto.yml.
+  purpose: Safely retry create requests without double-processing money movement.
+pagination:
+  style: cursor-and-page
+  note: >-
+    List endpoints accept pagination query parameters and return paged
+    collections; consult each operation's parameters in the OpenAPI for the
+    exact page/cursor field names.
+references:
+  scheme: >-
+    Zepto assigns human-readable reference numbers to transactions; see
+    "Understanding Zepto Reference Numbers". Many operations are keyed by a
+    resource *_ref / *_uid (payment_ref, agreement_ref, refund_ref,
+    agreement_uid, payment_uid) rather than an opaque numeric id.
+versioning:
+  scheme: date-based
+  format: vYYYYMMDD
+  current: v20260101
+  core_api_version: '1.0'
+  changelog_ref: changelog/zepto-payments-changelog.yml
+error_envelope:
+  media_type: application/json
+  format: non-rfc9457
+  note: >-
+    4xx/5xx responses are application/json (not application/problem+json).
+    Transaction-level failures carry a reason code (E1xx/E2xx/E3xx) — see
+    errors/zepto-payments-decline-codes.yml; API-level errors are catalogued in
+    errors/zepto-payments-problem-types.yml.
+webhooks:
+  signing: HMAC-SHA256
+  signature_header: Split-Signature
+  signed_payload: "<timestamp>.<json-body>"
+  verification: constant-time comparison against the endpoint signing secret
+  catalog_ref: asyncapi/zepto-payments-notifications-webhooks.yml
+dual_approval:
+  supported: true
+  note: Payments can require dual approval (maker-checker) — see docs "Dual Approval".
+rate_limit_signaling:
+  note: >-
+    The Validate/CoP API documents HTTP 429 (Too Many Requests) responses;
+    explicit rate-limit response headers are not declared in the published specs.

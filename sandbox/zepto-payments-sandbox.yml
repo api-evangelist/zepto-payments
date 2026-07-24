@@ -1,0 +1,67 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.zeptopayments.com/docs/getting-started-in-sandbox,
+  https://docs.zeptopayments.com/docs/zepto-environments,
+  https://docs.zeptopayments.com/docs/sandbox-simulations,
+  https://docs.zeptopayments.com/docs/simulating-incoming-payments-in-sandbox
+environments:
+  sandbox:
+    api_base_url: https://api.sandbox.zeptopayments.com
+    portal: https://go.sandbox.zeptopayments.com/sign_in
+  production:
+    api_base_url: https://api.zeptopayments.com
+    portal: https://go.zeptopayments.com/sign_in
+  separation: >-
+    Sandbox and live are fully separate environments on distinct hostnames
+    (api.sandbox.zeptopayments.com vs api.zeptopayments.com). OAuth2 tokens and
+    Bearer tokens are issued per-environment.
+magic_amounts:
+  note: >-
+    In sandbox, create a payment/payout using one of these exact dollar amounts
+    to force the corresponding failure reason code (see
+    errors/zepto-payments-decline-codes.yml). Never use these in production.
+  de_debit_failures:
+    '2.01': E201 (Invalid BSB Number)
+    '2.02': E202 (Payment Stopped)
+    '2.03': E203 (Account Closed)
+    '2.04': E204 (Customer Deceased)
+    '2.05': E205 (Account Not Found)
+    '2.06': E206 (Refer to Customer)
+    '2.08': E208 (Invalid UserID)
+    '2.09': E209 (Technically Invalid)
+    '2.50': E250 (Voided By Admin)
+    '2.51': E251 (Voided By Initiator)
+    '2.52': E252 (Insufficient Funds)
+    '2.53': E253 (System Error - DE Debit)
+    '2.99': E299 (Unknown DE Error)
+  de_credit_failures:
+    '1.01-1.09': E101-E109
+    '1.50-1.51': E150-E151
+    '1.53': E153 (System Error - DE Credit)
+    '1.99': E199 (Unknown DE Error)
+  npp_credit_failures:
+    '3.01-3.08': E301-E308
+    '3.99': E399 (Unknown NPP Error)
+  channel_note: >-
+    When an amount maps to a DE failure code but the channel is NPP-only, the
+    payment fails with E303 (Account Not NPP Enabled). With channel switching
+    enabled, the DE failure code applies to the switched transaction.
+simulation_endpoints:
+  note: Sandbox-only endpoints that inject inbound events so integrators can test receive/settlement/dispute flows.
+  operations:
+    - operationId: SimulateIncomingPayIDPayment
+      path: POST /simulate/incoming_npp_payid_payment
+      spec: openapi/zepto-payments-zepto.yml
+    - operationId: SimulateIncomingNPPBBANPayment
+      path: POST /simulate/incoming_npp_bban_payment
+      spec: openapi/zepto-payments-zepto.yml
+    - operationId: SimulateIncomingDEPayment
+      path: POST /simulate/incoming_de_payment
+      spec: openapi/zepto-payments-zepto.yml
+    - path: POST /payto/agreements/{agreement_uid}/simulate_debtor_action
+      spec: openapi/zepto-payments-pay-to.yml
+      note: Simulate the debtor authorising/declining a PayTo agreement.
+    - path: POST /investigations/simulate_incoming_message
+      spec: openapi/zepto-payments-investigations.yml
+      note: Simulate an incoming investigation/dispute message.

@@ -1,0 +1,40 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  Derived from openapi/*.yml and searched compliance claims at
+  https://zepto.com.au/platform-and-accreditations
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: core Zepto API declares an oauth2 authorizationCode securityScheme (openapi/zepto-payments-zepto.yml)
+  - id: http-bearer
+    conforms: true
+    evidence: product APIs declare http bearer securityScheme (bearerAuth)
+  - id: idempotency
+    conforms: true
+    evidence: Idempotency-Key header on core payment-creating operations
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: error responses use application/json, not application/problem+json
+  - id: pci-dss
+    conforms: true
+    level: Level 1 (v4.0)
+    evidence: PCI DSS Level 1 certification (zepto.com.au/platform-and-accreditations)
+  - id: iso-27001
+    conforms: true
+    evidence: ISO/IEC 27001 certified for information security management
+  - id: asae-3150
+    conforms: true
+    evidence: ASAE 3150 compliant, independently certified by RSM Australia
+  - id: iso-9362
+    conforms: true
+    evidence: registered SWIFT BIC SPPYAU22
+  - id: cis-benchmark-l2
+    conforms: true
+    evidence: infrastructure compliant with CIS Benchmark Level 2
+  - id: cdr-open-banking
+    conforms: true
+    evidence: first non-bank payments provider CDR Accredited Data Recipient
+  - id: npp-payto
+    conforms: true
+    evidence: NPP Connected Institution for PayTo; rails cover NPP, PayTo, PayID, BECS Direct Entry

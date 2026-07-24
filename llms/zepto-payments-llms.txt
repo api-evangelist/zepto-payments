@@ -1,0 +1,143 @@
+# Zepto Documentation
+
+> Use the Zepto API to create real-time, account-to-account [A2A] payment solutions for business.
+
+## Guides
+- [Getting Started in Sandbox](https://docs.zeptopayments.com/docs/getting-started-in-sandbox.md)
+- [OAuth Grant Flow](https://docs.zeptopayments.com/docs/oauth-grant-flow.md)
+- [Zepto Environments](https://docs.zeptopayments.com/docs/zepto-environments.md)
+- [Single Sign-On (SSO)](https://docs.zeptopayments.com/docs/single-sign-on.md)
+- [Dual Approval](https://docs.zeptopayments.com/docs/dual-approval.md)
+- [Understanding Zepto Reference Numbers](https://docs.zeptopayments.com/docs/understanding-zepto-reference-numbers.md)
+- [Sandbox Simulations](https://docs.zeptopayments.com/docs/sandbox-simulations.md)
+- [Setting up your webhooks](https://docs.zeptopayments.com/docs/setting-up-your-webhooks.md): This article will guide you on how to setup and subscribe to Zepto webhook events.
+- [Making a Payment (PayOut)](https://docs.zeptopayments.com/docs/webhooks-making-a-payment.md)
+- [Making a Payment Request (Direct Debit)](https://docs.zeptopayments.com/docs/webhooks-making-a-payment-request.md)
+- [Receiving Funds to a PayID](https://docs.zeptopayments.com/docs/webhooks-receiving-funds-to-a-payid.md)
+- [Voided Transactions](https://docs.zeptopayments.com/docs/webhooks-voided-transactions.md)
+- [Client Registration Guide](https://docs.zeptopayments.com/docs/client-registration-guide.md)
+- [Zepto Float Account Overview](https://docs.zeptopayments.com/docs/zepto-float-account-overview.md)
+- [Direct Debit Solution Overview](https://docs.zeptopayments.com/docs/direct-debit-solution-overview.md)
+- [Create a Direct Debit Contact](https://docs.zeptopayments.com/docs/create-a-direct-debit-contact.md)
+- [Making a Payment Request](https://docs.zeptopayments.com/docs/direct-debit-making-a-payment-request.md)
+- [via API](https://docs.zeptopayments.com/docs/making-a-payment-request-via-api.md)
+- [via UI](https://docs.zeptopayments.com/docs/making-a-payment-request-via-ui.md)
+- [Receivable Payments via PayID](https://docs.zeptopayments.com/docs/receivable-payments-via-payid.md)
+- [Simulating Incoming Payments in Sandbox](https://docs.zeptopayments.com/docs/simulating-incoming-payments-in-sandbox.md)
+- [Managing a Pool of PayID's](https://docs.zeptopayments.com/docs/managing-a-pool-of-payids.md)
+- [How To Return PayID Receivable Payments?](https://docs.zeptopayments.com/docs/how-to-return-receivable-contact-payments.md)
+- [via API](https://docs.zeptopayments.com/docs/make-a-payment-via-api.md)
+- [via UI](https://docs.zeptopayments.com/docs/make-a-payment-via-ui.md)
+- [via CSV Upload](https://docs.zeptopayments.com/docs/make-payments-via-csv-upload.md)
+- [Cancelling a Transaction](https://docs.zeptopayments.com/docs/cancelling-a-transaction.md)
+- [Refunding a Transaction](https://docs.zeptopayments.com/docs/refunding-a-transaction.md)
+- [PayTo Overview](https://docs.zeptopayments.com/docs/payto-overview.md)
+- [PayTo Glossary](https://docs.zeptopayments.com/docs/payto-glossary.md)
+- [PayTo Bank Availability](https://docs.zeptopayments.com/docs/payto-bank-availability.md)
+- [PayTo Brand & CX Guidelines](https://docs.zeptopayments.com/docs/payto-brand-guidelines.md)
+- [Integration Overview](https://docs.zeptopayments.com/docs/integration-overview.md)
+- [PayTo Alias Resolution](https://docs.zeptopayments.com/docs/payto-alias-resolution.md)
+- [Creating a PayTo Agreement](https://docs.zeptopayments.com/docs/creating-a-payto-agreement.md)
+- [Creating a PayTo Payment](https://docs.zeptopayments.com/docs/creating-a-payto-payment.md)
+- [Agreement Modifications](https://docs.zeptopayments.com/docs/agreement-modifications.md)
+- [PayTo Webhooks & Polling](https://docs.zeptopayments.com/docs/webhooks-polling.md)
+- [PayTo Refunds via NPP](https://docs.zeptopayments.com/docs/payto-refunds-via-npp.md)
+- [PayTo Refunds via PayTo](https://docs.zeptopayments.com/docs/payto-refunds-via-payto.md)
+- [Sandbox Testing & Simulations](https://docs.zeptopayments.com/docs/sandbox-testing-simulations.md)
+- [PayTo Disputes Guide](https://docs.zeptopayments.com/docs/payto-disputes-guide.md)
+- [PayTo FAQs](https://docs.zeptopayments.com/docs/payto-faqs.md)
+- [Zepto Validate (CoP)](https://docs.zeptopayments.com/docs/zepto-validate.md): Utilise Zepto's Confirmation of Payee service to check the account name and BBAN against the details held by the recipient's bank.
+- [Initiating a Zepto Validate (CoP) lookup](https://docs.zeptopayments.com/docs/initiating-a-validate-lookup.md)
+- [Zepto Validate CX Guidelines](https://docs.zeptopayments.com/docs/validate-cx-guidelines.md): Customer Experience (CX) guidelines are crucial as they serve as the foundational blueprint for all merchant and customer interactions, ensuring that the CoP service is delivered effectively, consistently, and with the customer's best interest in mind.
+- [Sandbox Testing & Simulations](https://docs.zeptopayments.com/docs/validate-sandbox-testing-simulations.md): A guide to our Sandbox environment for simulating certain Zepto Validate confirmation of payee lookup errors and behaviour.
+- [Error / Reason Codes](https://docs.zeptopayments.com/docs/validate-error-reason-codes.md): Can be present on a failed Zepto Validate (CoP) lookup outcome and give more detail about why a request has failed.
+
+## API Reference
+- [API Versioning](https://docs.zeptopayments.com/reference/api-versioning.md)
+- [v20260101 Release Notes](https://docs.zeptopayments.com/reference/v20260101-release-notes.md)
+- [Change Log](https://docs.zeptopayments.com/reference/change-log.md)
+- [Idempotent Requests](https://docs.zeptopayments.com/reference/idempotent-requests.md)
+- [OpenAPI Specifications](https://docs.zeptopayments.com/reference/openapi-specifications.md)
+- [List Agreements](https://docs.zeptopayments.com/reference/listoutgoingagreements.md): By default, all outgoing Agreements will be returned. You can apply filters to your query to customise the returned Agreements.
+- [Get an Agreement](https://docs.zeptopayments.com/reference/getagreement.md): Get a single Agreement by its reference
+- [Cancel an Agreement](https://docs.zeptopayments.com/reference/cancelagreement.md): An Agreement can be cancelled by the initiator at any time whilst the authoriser (Agreement recipient) can only cancel a previously accepted Agreement.
+- [List all Bank Accounts](https://docs.zeptopayments.com/reference/listallbankaccounts.md): By default, all Bank Accounts will be returned.
+- [Get a Bank Account](https://docs.zeptopayments.com/reference/getabankaccount.md): Returns a specified Bank or Float Account owned by your account. For a Float Account, the response includes its current `available_balance`.
+- [List Float Account entries](https://docs.zeptopayments.com/reference/listfloataccountentries.md): Lists the settled ledger entries applied to a Float Account. Transactions and Transfers describe business operations; entries describe what was posted to this Float Account and changed its available balance. An entry may result from a payment, transfer, refund, recovery, return, fee, or manual adjustment, making this endpoint the complete account-level record within the availability window for reconciliation.  Float Account entries are available through this API for a rolling 24-month period, calculated from the time of the request. Entries created before the start of that window are not returned. Requests with either created-at filter before the start of the window return `422 Unprocessable Entity`.  Entries are returned in descending order by `created_at` and then `id`. The ID is a deterministic tie-breaker; entries with the same timestamp are not guaranteed to be returned in their original balance-application order.  `amount` is expressed in cents. Positive values credit the Float Account and negative values debit it.
+- [Get a Float Account entry](https://docs.zeptopayments.com/reference/getfloataccountentry.md): Gets one settled entry applied to a Float Account.  Float Account entries are available through this API for a rolling 24-month period, calculated from the time of the request.
+- [Add a Contact](https://docs.zeptopayments.com/reference/addananyonecontact.md): Use this endpoint when you want to pay somebody.  <aside class="notice">   A Contact added this way cannot be debited. </aside>
+- [List all Contacts](https://docs.zeptopayments.com/reference/listallcontacts.md): By default, all Contacts will be returned. You can apply filters to your query to customise the returned Contact list.
+- [Get a Contact](https://docs.zeptopayments.com/reference/getacontact.md): Get a single Contact by its ID
+- [Remove a Contact](https://docs.zeptopayments.com/reference/removeacontact.md): <aside class="notice">   <ul>     <li>Removing a Contact will not affect your transaction history.</li>     <li>Removing a Receivable Contact will deactivate any associated PayIDs.</li>   </ul> </aside>
+- [Update a Contact](https://docs.zeptopayments.com/reference/updateacontact.md): You can update the name, email, bank account and metadata of any Contact. <aside class="notice">   <ul>     <li>Previous transactions to this Contact will retain the name and bank account that was used at the time.</li>     <li>You cannot update a Contact's bank account details if they currently have an accepted agreement.</li>     <li>Any active Bank Connections will be lost if you change the Contact's bank account.</li>     <li>See our <a href="https://help.zepto.money/en/articles/3829211-how-do-i-change-my-customers-bank-account-details">Help Article</a> for more information about the nuances and implications of changing a contacts Bank Account.</li>   </ul> </aside>
+- [Make a Payment](https://docs.zeptopayments.com/reference/makeapayment.md): To enable custom payment flows, the required payment channel can be selected by setting the _channel_ attribute to one of the following combinations:  <ul>   <li>["new_payments_platform"] - for faster payments 24/7/365</li>   <li>["direct_entry"] - for slower traditional payments</li>   <li>["new_payments_platform", "direct_entry"] - enables automatic channel switching if a payment fails on the NPP</li> </ul> <aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+- [List all Payments](https://docs.zeptopayments.com/reference/listallpayments.md)
+- [Get a Payment](https://docs.zeptopayments.com/reference/getapayment.md): Get a single payment by its reference
+- [Void a Payment](https://docs.zeptopayments.com/reference/voidapayment.md): You can void any Payment from your account that has not yet matured.
+- [Request Payment](https://docs.zeptopayments.com/reference/makeapaymentrequest.md): <aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to a duplicate funds collection. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+- [Get a Payment Request](https://docs.zeptopayments.com/reference/getapaymentrequest.md)
+- [Cancel a Payment Request](https://docs.zeptopayments.com/reference/cancelapaymentrequest.md): A Payment Request can be cancelled as long as the associated transaction's state is <strong>maturing</strong> or <strong>matured</strong>.
+- [List Collections](https://docs.zeptopayments.com/reference/listpaymentrequestcollections.md): Payment Requests where you are the creditor and are collecting funds from your debtor using traditional direct-debit.
+- [List Receivables](https://docs.zeptopayments.com/reference/listpaymentrequestreceivables.md): Payment Requests where the debtor is sending you funds ([Receivable Contacts](https://docs.zeptopayments.com/reference/addareceivablecontact)). This endpoint exposes all received payments.
+- [Issue a Refund](https://docs.zeptopayments.com/reference/issuearefund.md): Certain rules apply to the issuance of a refund: <ul>   <li>Must be applied against a successfully cleared Payment Request (Collections or Receivables)</li>   <li>Many refunds may be created against the original Payment Request</li>   <li>The total refunded amount must not exceed the original value</li> </ul> <aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate refunds. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+- [List Refunds](https://docs.zeptopayments.com/reference/listoutgoingrefunds.md)
+- [Retrieve a Refund](https://docs.zeptopayments.com/reference/retrievearefund.md): Get a single Refund by its reference
+- [List all transactions](https://docs.zeptopayments.com/reference/listalltransactions.md): <aside class="notice">By default, Zepto will search and return all transactions created in the <strong>last 30 days</strong>. You can adjust this up to <strong>1 year</strong> by defining the <code>min_created_date</code> query string parameter defined below.</aside>
+- [Add a Transfer](https://docs.zeptopayments.com/reference/addatransfer.md): Use this endpoint when you want to create a Transfer between any 2 of your float/bank accounts. <aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+- [List all Transfers (Available soon)](https://docs.zeptopayments.com/reference/listalltransfers.md)
+- [Get a Transfer (Available soon)](https://docs.zeptopayments.com/reference/getatransfer.md): Get a single transfer by its reference
+- [Ping](https://docs.zeptopayments.com/reference/ping-1.md): A simple endpoint to test your connectivity and authentication.
+- [Get user details](https://docs.zeptopayments.com/reference/getuserdetails.md)
+- [Simulate incoming PayID payment](https://docs.zeptopayments.com/reference/simulateincomingpayidpayment.md): Simulate receiving a real-time PayID payment from one of your Receivable Contacts.
+- [Simulate an incoming real-time payment](https://docs.zeptopayments.com/reference/simulateincomingnppbbanpayment.md): Simulate receiving a real-time payment to either a Receivable Contact or one of your float accounts, made using a BSB and account number (i.e. not via PayID).
+- [Simulate an incoming DE payment](https://docs.zeptopayments.com/reference/simulateincomingdepayment.md): Simulate receiving a Direct Entry payment (i.e. not a real-time payment) to either a Receivable Contact or one of your float accounts.
+- [Add a Receivable Contact](https://docs.zeptopayments.com/reference/addareceivablecontact.md): Receive funds from a Contact by allowing them to pay to a personalised PayID or account number. Perfect for reconciling incoming funds to a customer, receiving funds instantly, eliminating human error & improving your customer's experience.   <aside class="notice">   To enable this feature, please contact our support team with the following information:     <li>Your full legal business name</li>     <li>A legally owned domain name: for your PayID email addresses</li>     <li><strong>alias_name</strong>: the business name that will be displayed to your customers upon PayID resolution. We suggest using a shortened name appropriate for mobile displays</li> </aside> <aside class="notice">   There are two strategies supported for PayID assignment when creating this type of Contact:   <li><strong>On-demand PayID</strong>: provide a <code>payid_email</code> and we'll create a contact and register a PayID with the given email address. The PayID registration process happens when the request is received. The initial response for <code>payid_details.state</code> will always be <code>pending</code>. It will transition to <code>active</code> when the PayID registration process is complete. This can take up to a few seconds. You can use webhooks to be informed of this state change.</li>   <li><strong>Pooled PayID</strong>: provide your <code>payid_email_domain</code> and we'll create a contact and assign them a PayID from your pool. Pooled PayIDs are pre-registered. The PayID email value is generated using a random value and the email domain from your PayID pool configuration. Providing both <code>payid_email</code> and <code>payid_email_domain</code> will ignore your pool and use the "On-demand PayID" strategy instead.</li> </aside> <aside class="notice">   While unlikely, it is possible that we will be unable to register the given PayID. In this case <code>payid_details.state</code> will transition to <code>failed</code>.    You can simulate this path in sandbox by adding <code>+failure</code> to your <code>payid_email</code> e.g <code>test+failure@zeptopayments.com</code> </aside> <aside class="notice">   You can test receiving payments to a Receivable Contact in our sandbox environment using the <a href="https://docs.zeptopayments.com/reference/simulateincomingpayidpayment">PayID simulation endpoint</a>. </aside>
+- [Disable a Receivable Contact](https://docs.zeptopayments.com/reference/disableareceivablecontact.md): This endpoint should be used to Disable a Receivable Contact.  This will reject all payments made to the relevant Account number or PayID and return them to your customer. Payments made via DE and NPP will be rejected.
+- [Reactivate a Receivable Contact](https://docs.zeptopayments.com/reference/activateareceivablecontact.md): This endpoint should be used to Reactivate a Receivable Contact that has been previously Disabled.  This will once again allow you to receive funds from your customer via both DE and NPP channels.
+- [Update a Receivable Contact](https://docs.zeptopayments.com/reference/updateareceivablecontact.md): You can update the PayID name of a Receivable Contact.  <aside class="notice">   The Receivable Contact you are updating must be active. </aside>
+- [List all webhooks](https://docs.zeptopayments.com/reference/getwebhooks.md): List all your application's webhook configurations.
+- [List deliveries for a webhook](https://docs.zeptopayments.com/reference/getwebhookdeliveries.md): NOTE: Webhook deliveries are stored for 7 days.
+- [Get a Webhook Delivery](https://docs.zeptopayments.com/reference/getawebhookdelivery.md): Get a single webhook delivery by ID.
+- [Resend a Webhook Delivery](https://docs.zeptopayments.com/reference/resendawebhookdelivery.md): Use this endpoint to resend a failed webhook delivery.
+- [create agreement](https://docs.zeptopayments.com/reference/post_payto-agreements.md)
+- [list agreements](https://docs.zeptopayments.com/reference/get_payto-agreements.md)
+- [show agreement](https://docs.zeptopayments.com/reference/get_payto-agreements-agreement-uid.md)
+- [list agreement history](https://docs.zeptopayments.com/reference/get_payto-agreements-agreement-uid-history.md)
+- [create payment](https://docs.zeptopayments.com/reference/post_payto-payments.md)
+- [list payments](https://docs.zeptopayments.com/reference/get_payto-payments.md)
+- [show payment](https://docs.zeptopayments.com/reference/get_payto-payments-payment-uid.md)
+- [retry payment](https://docs.zeptopayments.com/reference/post_payto-payments-payment-uid-retry.md): Retry a failed payment as long as it has failed due to a [retryable]https://docs.zeptopayments.com/reference/payto-reason-codes) reason as indicated by the `retryable` boolean field within the payment's failure object. Payments may be retried up to 10 times while within the related agreement's validity begin and end dates. Additionally, payments can only be retried 5 times within a 24 hour period (the first submission is included in this count).
+- [create refund](https://docs.zeptopayments.com/reference/post_payto-refunds.md)
+- [list refunds](https://docs.zeptopayments.com/reference/get_payto-refunds.md)
+- [show refund](https://docs.zeptopayments.com/reference/get_payto-refunds-refund-uid.md)
+- [create amendment](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-amendment.md): Create an amendment for an existing Agreement.  Any attributes of the existing Agreement that will no longer be relevant after the amendment has been applied must be set to `null` as part of the amendment. For example, when amending `payment_terms.type` from `"fixed"` to `"variable"`, `payment_terms.amount` must be set to `null`.
+- [show amendment](https://docs.zeptopayments.com/reference/get_payto-agreements-agreement-uid-amendment.md): This will return any in-progress amendment for an Agreement (e.g. no response from debtor). If the Agreement has no in-progress amendment, endpoint will return `404`
+- [create amendment_recall](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-amendment-recall.md): An in-progress amendment for an Agreement can be recalled if debtor has not responded yet. Once the amendment as been recalled a new amendment can be created.
+- [cancel agreement](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-cancellation.md)
+- [suspend agreement](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-suspension.md)
+- [reactivate agreement](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-reactivation.md)
+- [simulate debtor [sandbox]](https://docs.zeptopayments.com/reference/post_payto-agreements-agreement-uid-simulate-debtor-action.md): **SANDBOX ONLY** Enables simulation of actions debtor party can trigger for an agreement: `amendment`, `cancellation`, `suspension` & `reactivation`
+- [resolve](https://docs.zeptopayments.com/reference/post_payto-alias-resolution.md): This endpoint is used to resolve an alias to a display name. It is possible for this endpoint to return a 503 service unavailable error if the addressing service is not available.
+- [Reason Codes](https://docs.zeptopayments.com/reference/payto-reason-codes.md)
+- [Unprocessable (422) Codes](https://docs.zeptopayments.com/reference/payto-unprocessable-codes.md)
+- [accept dispute](https://docs.zeptopayments.com/reference/post_investigations-action-requests-action-request-id-accept.md)
+- [reject dispute](https://docs.zeptopayments.com/reference/post_investigations-action-requests-action-request-id-reject.md)
+- [upload evidence](https://docs.zeptopayments.com/reference/post_investigations-action-requests-action-request-id-upload.md)
+- [list disputes](https://docs.zeptopayments.com/reference/get_investigations-disputes.md)
+- [show dispute](https://docs.zeptopayments.com/reference/get_investigations-disputes-dispute-id.md)
+- [simulate incoming message (sandbox only)](https://docs.zeptopayments.com/reference/post_investigations-simulate-incoming-message.md): Simulate an incoming dispute message in sandbox environment
+- [Investigation Action Requested](https://docs.zeptopayments.com/reference/post_investigations-action-requested.md): This webhook is triggered when an action is requested for an investigation.
+- [Investigation Message Received](https://docs.zeptopayments.com/reference/post_investigations-message-received.md): This webhook is triggered when a new message relating to an investigation is received.
+- [Investigation Message Sent](https://docs.zeptopayments.com/reference/post_investigations-message-sent.md): This webhook is triggered when a new message relating to an investigation is sent.
+- [generate download link](https://docs.zeptopayments.com/reference/post_merchant-reports-payto-settlement-report-date-download.md): Generates a presigned download link for the PayTo settlement report for the given date.
+- [Create Client](https://docs.zeptopayments.com/reference/post_clients.md): The Zepto Clients API allows registration of clients who indirectly use the Zepto platform via your Zepto integration.  Merchants are required to keep their sub-client details up to date with Zepto via the update client endpoint.
+- [List Clients](https://docs.zeptopayments.com/reference/get_clients.md)
+- [Show Client](https://docs.zeptopayments.com/reference/get_clients-client-id.md)
+- [Update Client](https://docs.zeptopayments.com/reference/patch_clients-client-id.md): There are certain attributes that cannot be updated here such as the ABN, ACN and MCC. Please reach out to the Zepto Compliance team (compliance@zepto.com.au) to have them updated.
+- [Merchant Category Codes (MCC)](https://docs.zeptopayments.com/reference/merchant-category-codes.md)
+- [account name validation](https://docs.zeptopayments.com/reference/post_cop-account-validate.md): Validates a given name matches a given account.
+- [Unmatched Float Credit Received](https://docs.zeptopayments.com/reference/post_float-accounts-unmatched-credit-received.md): This webhook is triggered when a float account receives an unmatched credit.
+- [Add a KYC Agreement](https://docs.zeptopayments.com/reference/addkycagreement.md): Create an Agreement against a KYC-trusted account holder's bank account.  The calling account must be flagged as `kyc_trusted`. If it is not, a `400 Bad Request` will be returned with `must_be_kyc_trusted`.  When the optional bank connection attributes (`basiq_user_id`, `basiq_connection_id`, `proviso_reference`, `credit_sense_app_id`) are provided, the Agreement is created in the `unverified` state and bank connection verification is queued asynchronously. When verification succeeds the Agreement transitions to `accepted`; when it fails the Agreement transitions to `declined` and the failure reason is recorded on `status_reason`. The verification outcome is not reflected in this endpoint's response - listen for the corresponding `agreement.accepted` or `agreement.declined` webhook to observe the final state.  When no bank connection attributes are provided, the Agreement is auto-accepted before the response is returned.
+
+## Pages
+- [four-0-four](https://docs.zeptopayments.com/four-0-four.md)

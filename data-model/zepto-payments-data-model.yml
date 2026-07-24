@@ -1,0 +1,79 @@
+generated: '2026-07-24'
+method: derived
+source: openapi/zepto-payments-zepto.yml, openapi/zepto-payments-pay-to.yml
+note: >-
+  Entity-relationship graph derived from OpenAPI paths, schemas and id/ref
+  fields. Resources are keyed by *_ref / *_uid references rather than opaque ids.
+entities:
+  - name: Payment
+    ref_field: payment_ref
+    operations: [MakeAPayment, ListAllPayments, GetAPayment, VoidAPayment]
+    relationships:
+      - belongs_to: Contact
+        via: contact
+      - belongs_to: BankAccount
+        via: bank_account
+  - name: PaymentRequest
+    ref_field: payment_request_ref
+    operations: [MakeAPaymentRequest, GetAPaymentRequest, CancelAPaymentRequest, ListPaymentRequestCollections, ListPaymentRequestReceivables]
+    relationships:
+      - belongs_to: Contact
+        via: contact
+      - has_many: Credit
+        via: collections
+  - name: Contact
+    ref_field: contact_id
+    operations: [AddAnAnyoneContact, AddAReceivableContact, ListAllContacts, GetAContact, UpdateAContact, RemoveAContact, DisableAReceivableContact, ActivateAReceivableContact, UpdateAReceivableContact]
+    relationships:
+      - has_many: Payment
+        via: contact
+  - name: BankAccount
+    note: Includes stored-value Float Accounts.
+    ref_field: bank_account_id
+    operations: [ListAllBankAccounts, GetABankAccount, ListFloatAccountEntries, GetFloatAccountEntry]
+    relationships:
+      - has_many: FloatAccountEntry
+        via: entries
+  - name: FloatAccountEntry
+    ref_field: entry_id
+    belongs_to: BankAccount
+    operations: [ListFloatAccountEntries, GetFloatAccountEntry]
+  - name: Refund
+    ref_field: refund_ref
+    operations: [IssueARefund, ListOutgoingRefunds, RetrieveARefund]
+    relationships:
+      - belongs_to: Credit
+        via: credit_ref
+  - name: Transfer
+    ref_field: transfer_ref
+    operations: [AddATransfer, ListAllTransfers, GetATransfer]
+  - name: Transaction
+    operations: [ListAllTransactions]
+  - name: Agreement
+    ref_field: agreement_ref
+    operations: [ListOutgoingAgreements, GetAgreement, CancelAgreement]
+  - name: Webhook
+    ref_field: webhook_id
+    operations: [GetWebhooks, GetWebhookDeliveries]
+    relationships:
+      - has_many: WebhookDelivery
+        via: deliveries
+  - name: WebhookDelivery
+    operations: [GetAWebhookDelivery, ResendAWebhookDelivery]
+    belongs_to: Webhook
+  # PayTo domain (openapi/zepto-payments-pay-to.yml)
+  - name: PayToAgreement
+    ref_field: agreement_uid
+    operations: [create agreement, list agreements, show agreement, create amendment, cancel agreement, suspend agreement, reactivate agreement]
+    relationships:
+      - has_many: PayToPayment
+        via: agreement_uid
+  - name: PayToPayment
+    ref_field: payment_uid
+    belongs_to: PayToAgreement
+    relationships:
+      - has_many: PayToRefund
+        via: payment_uid
+  - name: PayToRefund
+    ref_field: refund_uid
+    belongs_to: PayToPayment

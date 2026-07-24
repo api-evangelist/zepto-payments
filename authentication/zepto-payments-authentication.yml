@@ -1,0 +1,32 @@
+generated: '2026-07-24'
+method: searched
+docs: https://docs.zeptopayments.com/docs/oauth-grant-flow
+source: openapi/zepto-payments-clients.yml, openapi/zepto-payments-investigations.yml, openapi/zepto-payments-merchant-reports.yml,
+  openapi/zepto-payments-notifications.yml, openapi/zepto-payments-pay-to.yml, openapi/zepto-payments-validate-cop.yml,
+  openapi/zepto-payments-zepto.yml
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/zepto-payments-clients.yml
+  - openapi/zepto-payments-investigations.yml
+  - openapi/zepto-payments-merchant-reports.yml
+  - openapi/zepto-payments-notifications.yml
+  - openapi/zepto-payments-pay-to.yml
+  - openapi/zepto-payments-validate-cop.yml
+- name: bearerAuth
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize
+    tokenUrl: /oauth/token
+    scopes: 9
+  sources:
+  - openapi/zepto-payments-zepto.yml

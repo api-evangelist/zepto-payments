@@ -1,0 +1,135 @@
+generated: '2026-07-24'
+method: derived
+status: candidate
+source: openapi/zepto-payments-zepto.yml
+note: No official hosted/remote Zepto MCP server found. Candidate tool list derived one-per-operationId
+  from the core Zepto OpenAPI; each tool inherits that operation's parameters + requestBody as its real
+  inputSchema.
+server:
+  name: zepto
+  transport: http
+  url: null
+tools:
+- name: ListOutgoingAgreements
+  description: List Agreements
+  source_operation: openapi/zepto-payments-zepto.yml#ListOutgoingAgreements
+- name: GetAgreement
+  description: Get an Agreement
+  source_operation: openapi/zepto-payments-zepto.yml#GetAgreement
+- name: CancelAgreement
+  description: Cancel an Agreement
+  source_operation: openapi/zepto-payments-zepto.yml#CancelAgreement
+- name: ListAllBankAccounts
+  description: List all Bank Accounts
+  source_operation: openapi/zepto-payments-zepto.yml#ListAllBankAccounts
+- name: GetABankAccount
+  description: Get a Bank Account
+  source_operation: openapi/zepto-payments-zepto.yml#GetABankAccount
+- name: ListFloatAccountEntries
+  description: List Float Account entries
+  source_operation: openapi/zepto-payments-zepto.yml#ListFloatAccountEntries
+- name: GetFloatAccountEntry
+  description: Get a Float Account entry
+  source_operation: openapi/zepto-payments-zepto.yml#GetFloatAccountEntry
+- name: AddAnAnyoneContact
+  description: Add a Contact
+  source_operation: openapi/zepto-payments-zepto.yml#AddAnAnyoneContact
+- name: AddAReceivableContact
+  description: Add a Receivable Contact
+  source_operation: openapi/zepto-payments-zepto.yml#AddAReceivableContact
+- name: DisableAReceivableContact
+  description: Disable a Receivable Contact
+  source_operation: openapi/zepto-payments-zepto.yml#DisableAReceivableContact
+- name: ActivateAReceivableContact
+  description: Reactivate a Receivable Contact
+  source_operation: openapi/zepto-payments-zepto.yml#ActivateAReceivableContact
+- name: UpdateAReceivableContact
+  description: Update a Receivable Contact
+  source_operation: openapi/zepto-payments-zepto.yml#UpdateAReceivableContact
+- name: ListAllContacts
+  description: List all Contacts
+  source_operation: openapi/zepto-payments-zepto.yml#ListAllContacts
+- name: GetAContact
+  description: Get a Contact
+  source_operation: openapi/zepto-payments-zepto.yml#GetAContact
+- name: RemoveAContact
+  description: Remove a Contact
+  source_operation: openapi/zepto-payments-zepto.yml#RemoveAContact
+- name: UpdateAContact
+  description: Update a Contact
+  source_operation: openapi/zepto-payments-zepto.yml#UpdateAContact
+- name: MakeAPayment
+  description: Make a Payment
+  source_operation: openapi/zepto-payments-zepto.yml#MakeAPayment
+- name: ListAllPayments
+  description: List all Payments
+  source_operation: openapi/zepto-payments-zepto.yml#ListAllPayments
+- name: GetAPayment
+  description: Get a Payment
+  source_operation: openapi/zepto-payments-zepto.yml#GetAPayment
+- name: VoidAPayment
+  description: Void a Payment
+  source_operation: openapi/zepto-payments-zepto.yml#VoidAPayment
+- name: MakeAPaymentRequest
+  description: Request Payment
+  source_operation: openapi/zepto-payments-zepto.yml#MakeAPaymentRequest
+- name: GetAPaymentRequest
+  description: Get a Payment Request
+  source_operation: openapi/zepto-payments-zepto.yml#GetAPaymentRequest
+- name: CancelAPaymentRequest
+  description: Cancel a Payment Request
+  source_operation: openapi/zepto-payments-zepto.yml#CancelAPaymentRequest
+- name: ListPaymentRequestCollections
+  description: List Collections
+  source_operation: openapi/zepto-payments-zepto.yml#ListPaymentRequestCollections
+- name: ListPaymentRequestReceivables
+  description: List Receivables
+  source_operation: openapi/zepto-payments-zepto.yml#ListPaymentRequestReceivables
+- name: IssueARefund
+  description: Issue a Refund
+  source_operation: openapi/zepto-payments-zepto.yml#IssueARefund
+- name: ListOutgoingRefunds
+  description: List Refunds
+  source_operation: openapi/zepto-payments-zepto.yml#ListOutgoingRefunds
+- name: RetrieveARefund
+  description: Retrieve a Refund
+  source_operation: openapi/zepto-payments-zepto.yml#RetrieveARefund
+- name: ListAllTransactions
+  description: List all transactions
+  source_operation: openapi/zepto-payments-zepto.yml#ListAllTransactions
+- name: AddATransfer
+  description: Add a Transfer
+  source_operation: openapi/zepto-payments-zepto.yml#AddATransfer
+- name: ListAllTransfers
+  description: List all Transfers (Available soon)
+  source_operation: openapi/zepto-payments-zepto.yml#ListAllTransfers
+- name: GetATransfer
+  description: Get a Transfer (Available soon)
+  source_operation: openapi/zepto-payments-zepto.yml#GetATransfer
+- name: Ping
+  description: Ping
+  source_operation: openapi/zepto-payments-zepto.yml#Ping
+- name: GetUserDetails
+  description: Get user details
+  source_operation: openapi/zepto-payments-zepto.yml#GetUserDetails
+- name: GetWebhooks
+  description: List all webhooks
+  source_operation: openapi/zepto-payments-zepto.yml#GetWebhooks
+- name: GetWebhookDeliveries
+  description: List deliveries for a webhook
+  source_operation: openapi/zepto-payments-zepto.yml#GetWebhookDeliveries
+- name: GetAWebhookDelivery
+  description: Get a Webhook Delivery
+  source_operation: openapi/zepto-payments-zepto.yml#GetAWebhookDelivery
+- name: ResendAWebhookDelivery
+  description: Resend a Webhook Delivery
+  source_operation: openapi/zepto-payments-zepto.yml#ResendAWebhookDelivery
+- name: SimulateIncomingPayIDPayment
+  description: Simulate incoming PayID payment
+  source_operation: openapi/zepto-payments-zepto.yml#SimulateIncomingPayIDPayment
+- name: SimulateIncomingNPPBBANPayment
+  description: Simulate an incoming real-time payment
+  source_operation: openapi/zepto-payments-zepto.yml#SimulateIncomingNPPBBANPayment
+- name: SimulateIncomingDEPayment
+  description: Simulate an incoming DE payment
+  source_operation: openapi/zepto-payments-zepto.yml#SimulateIncomingDEPayment

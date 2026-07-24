@@ -1,0 +1,155 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://help.zepto.money/en/articles/5633407-au-transaction-failure-responses
+  and https://docs.zeptopayments.com/docs/sandbox-simulations
+envelope:
+  note: >-
+    Failure/reason codes appear on a failed payment/payout transaction as a
+    reason code. In sandbox, magic payment amounts trigger each code (see
+    sandbox/zepto-payments-sandbox.yml). Codes are grouped by rail: DE Debit
+    (E2xx), DE Credit (E1xx), and NPP Credit (E3xx).
+masked_to_buyers: false
+decline_codes:
+  # DE Debit failures (E2xx) — sandbox trigger amount $2.xx
+  - code: E201
+    rail: de-debit
+    meaning: Invalid BSB Number — the BSB is not valid or is no longer active.
+    retryable: false
+  - code: E202
+    rail: de-debit
+    meaning: Payment Stopped — the target institution has blocked transactions to this account.
+    retryable: false
+  - code: E203
+    rail: de-debit
+    meaning: Account Closed — the target account is closed.
+    retryable: false
+  - code: E204
+    rail: de-debit
+    meaning: Customer Deceased — the target account's owner has been listed as deceased.
+    retryable: false
+  - code: E205
+    rail: de-debit
+    meaning: Account Not Found — the target account number is incorrect.
+    retryable: false
+  - code: E206
+    rail: de-debit
+    meaning: Refer to Customer — usually insufficient funds or a transaction limit breach.
+    retryable: false
+  - code: E208
+    rail: de-debit
+    meaning: Invalid UserID — contact Zepto for further information.
+    retryable: false
+  - code: E209
+    rail: de-debit
+    meaning: Technically Invalid — account not debitable or failure cannot be categorized within standard BECS return codes.
+    retryable: false
+  - code: E250
+    rail: de-debit
+    meaning: Voided By Admin — the transaction was voided by an administrator.
+    retryable: false
+  - code: E251
+    rail: de-debit
+    meaning: Voided By Initiator — the transaction was voided by its initiator.
+    retryable: false
+  - code: E252
+    rail: de-debit
+    meaning: Insufficient Funds — there were insufficient funds to complete the transaction.
+    retryable: false
+  - code: E253
+    rail: de-debit
+    meaning: System Error (DE Debit) — the transaction was unable to be completed.
+    retryable: true
+  - code: E299
+    rail: de-debit
+    meaning: Unknown DE Error.
+    retryable: false
+  # DE Credit failures (E1xx) — sandbox trigger amount $1.xx
+  - code: E101
+    rail: de-credit
+    meaning: Invalid BSB Number.
+    retryable: false
+  - code: E102
+    rail: de-credit
+    meaning: Payment Stopped — the target institution has blocked transactions.
+    retryable: false
+  - code: E103
+    rail: de-credit
+    meaning: Account Closed.
+    retryable: false
+  - code: E104
+    rail: de-credit
+    meaning: Customer Deceased.
+    retryable: false
+  - code: E105
+    rail: de-credit
+    meaning: Account Not Found.
+    retryable: false
+  - code: E106
+    rail: de-credit
+    meaning: Refer to Customer — issue with the account receiving credit requiring customer resolution.
+    retryable: false
+  - code: E108
+    rail: de-credit
+    meaning: Invalid UserID.
+    retryable: false
+  - code: E109
+    rail: de-credit
+    meaning: Technically Invalid.
+    retryable: false
+  - code: E150
+    rail: de-credit
+    meaning: Voided By Admin.
+    retryable: false
+  - code: E151
+    rail: de-credit
+    meaning: Voided By Initiator.
+    retryable: false
+  - code: E153
+    rail: de-credit
+    meaning: System Error (DE Credit) — the transaction was unable to complete.
+    retryable: true
+  - code: E199
+    rail: de-credit
+    meaning: Unknown DE Error.
+    retryable: false
+  # NPP Credit failures (E3xx) — sandbox trigger amount $3.xx
+  - code: E301
+    rail: npp-credit
+    meaning: Upstream Network Outage — an upstream network issue occurred.
+    retryable: true
+  - code: E302
+    rail: npp-credit
+    meaning: BSB Not NPP Enabled — the target BSB is not NPP enabled.
+    retryable: false
+  - code: E303
+    rail: npp-credit
+    meaning: Account Not NPP Enabled — the target account cannot accept funds via NPP.
+    retryable: false
+  - code: E304
+    rail: npp-credit
+    meaning: Account Not Found — the target account number cannot be found.
+    retryable: false
+  - code: E305
+    rail: npp-credit
+    meaning: Intermittent Outage At Target Institution.
+    retryable: true
+  - code: E306
+    rail: npp-credit
+    meaning: Account Closed.
+    retryable: false
+  - code: E307
+    rail: npp-credit
+    meaning: Target Institution Offline — undergoing maintenance.
+    retryable: true
+  - code: E308
+    rail: npp-credit
+    meaning: Account Blocked — cannot receive funds.
+    retryable: false
+  - code: E399
+    rail: npp-credit
+    meaning: Unknown NPP Error.
+    retryable: false
+related:
+  - https://docs.zeptopayments.com/docs/pay-to-reason-codes
+  - https://docs.zeptopayments.com/docs/pay-to-unprocessable-codes

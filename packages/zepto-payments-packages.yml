@@ -1,0 +1,30 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  Searched npm, PyPI, RubyGems, Packagist, NuGet, pkg.go.dev and the Zepto docs
+  (docs.zeptopayments.com) and GitHub org (github.com/zeptofs). Zepto publishes
+  no first-party API client SDK on any public package registry as of this round;
+  integration is documented against the raw REST + OAuth2 surface. The zeptofs
+  GitHub org publishes open-source utility libraries (not API clients).
+packages: []
+libraries:
+  - language: ruby
+    name: aba
+    repo: https://github.com/zeptofs/aba
+    description: >-
+      ABA (Australian Bankers Association) file generator for BECS Direct Entry
+      batch files — a first-party open-source utility from the Zepto (Split
+      Payments) GitHub org. Not a Zepto API client SDK; the canonical `aba` gem
+      on RubyGems is maintained by a separate author (andrba/aba).
+    official: true
+    kind: utility
+  - language: c
+    name: rubywmq
+    repo: https://github.com/zeptofs/rubywmq
+    description: Ruby interface into IBM WebSphere MQ (first-party open-source utility, not an API client).
+    official: true
+    kind: utility
+notes: >-
+  No official Zepto API SDK found on npm, PyPI, RubyGems, NuGet, Go modules,
+  Packagist or crates.io. Because there is no first-party API client library,
+  no `SDKs` rating pointer is emitted (would be inaccurate).

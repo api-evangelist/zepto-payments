@@ -1,0 +1,35 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://zepto.com.au/platform-and-accreditations,
+  https://zepto.com.au/security-and-resilience,
+  https://zepto.com.au/insights/a-successful-iso-27001-audit
+url: https://zepto.com.au/platform-and-accreditations
+certifications:
+  - PCI DSS Level 1 (v4.0)
+  - ISO/IEC 27001
+  - ASAE 3150 (independently certified by RSM Australia)
+  - CIS Benchmark Level 2
+  - ISO 9362 (registered SWIFT BIC SPPYAU22)
+accreditations:
+  - NPP Connected Institution (first non-ADI approved to connect directly to the New Payments Platform)
+  - CDR Accredited Data Recipient (first non-bank payments provider ADR, Sept 2021)
+  - AusPayNet Tier 2 BECS Participant (BSB 840 / SPL — first PayTech)
+  - AFSL 541011 (Zepto Payments Pty Ltd, ACN 604 057 598)
+  - New Zealand FSP #711431
+memberships:
+  - Tech Council of Australia
+  - DSPANZ
+security_partners:
+  - AWS
+  - CrowdStrike
+  - GitHub
+  - Wiz
+data_protection:
+  encryption_at_rest: true
+  note: All persisted data encrypted at rest in highly available, replicated databases across Australian regions.
+evidence:
+  - source: https://zepto.com.au/platform-and-accreditations
+    keywords: [pci dss, iso 27001, asae 3150, iso 9362, npp connected institution, accredited data recipient]
+  - source: https://www.tipranks.com/news/private-companies/zepto-achieves-pci-dss-level-1-certification-strengthening-payments-security-credentials
+    keywords: [pci dss level 1, v4.0]

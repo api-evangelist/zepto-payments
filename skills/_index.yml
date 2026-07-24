@@ -1,0 +1,16 @@
+generated: '2026-07-24'
+method: generated
+source: Grounded in real operationIds in openapi/*.yml + conventions/errors/sandbox artifacts.
+skills:
+  - file: zepto-payments-make-a-payment.md
+    name: Make an account-to-account payment with Zepto
+    api: openapi/zepto-payments-zepto.yml
+    operations: [GetUserDetails, ListAllContacts, AddAnAnyoneContact, MakeAPayment, GetAPayment, VoidAPayment]
+  - file: zepto-payments-collect-with-payto.md
+    name: Set up a PayTo agreement and collect payment
+    api: openapi/zepto-payments-pay-to.yml
+    operations: [create agreement, show agreement, create payment, show payment, create refund]
+  - file: zepto-payments-verify-payee.md
+    name: Verify a payee with Confirmation of Payee before paying
+    api: openapi/zepto-payments-validate-cop.yml
+    operations: [account name validation]

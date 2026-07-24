@@ -1,0 +1,29 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.zeptopayments.com/reference/change-log,
+  https://docs.zeptopayments.com/docs/zepto-environments,
+  https://status.zeptopayments.com/
+versioning:
+  scheme: date-based
+  format: vYYYYMMDD
+  current: v20260101
+  core_api_version: '1.0'
+  docs: https://docs.zeptopayments.com/reference/change-log
+  note: >-
+    Product specs are versioned 20260101; release notes exist for v20250101 and
+    a forthcoming v20270101, indicating a dated version train.
+status_page: https://status.zeptopayments.com/
+maturity_labels:
+  note: Zepto ships products at explicit maturity stages, surfaced in the specs/portal.
+  stages:
+    - Investigations / Disputes — Beta
+    - Clients — Alpha
+    - core Zepto API, PayTo, Validate/CoP, Merchant Reports — GA
+deprecation:
+  policy_found: false
+  note: >-
+    No dedicated deprecation/sunset policy page or RFC 8594 Sunset/Deprecation
+    header support was found in the published docs or specs. No Deprecation
+    pointer emitted (would be inaccurate).
+deprecated_operations: []

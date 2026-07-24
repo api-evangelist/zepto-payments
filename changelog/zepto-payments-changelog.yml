@@ -1,0 +1,19 @@
+generated: '2026-07-24'
+method: searched
+source: https://docs.zeptopayments.com/reference/change-log
+scheme: date-based (vYYYYMMDD)
+current_version: v20260101
+docs: https://docs.zeptopayments.com/reference/change-log
+entries:
+  - date: '2026-07-23'
+    type: addition
+    breaking: false
+    highlights:
+      - Added GET /bank_accounts/{id} to retrieve specific bank/float account details.
+      - Added GET /bank_accounts/{id}/entries to list Float Account settlement entries.
+      - Added GET /bank_accounts/{id}/entries/{id} to query an individual Float Account settlement entry.
+    note: >-
+      Responses include transaction IDs, timestamps, descriptions, amounts and
+      available-balance tracking. The live changelog is the source of truth;
+      this captures the recent window only (release notes also exist for
+      v20250101 and v20270101).

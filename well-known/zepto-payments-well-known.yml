@@ -1,0 +1,28 @@
+generated: '2026-07-24'
+method: searched
+source: Live probes of /.well-known/ on Zepto website + API hosts (2026-07-24)
+hosts:
+  - host: https://zepto.com.au
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        file: zepto-payments-security.txt
+        note: RFC 9116 — Contact researchers@zepto.com.au, Policy VDP PDF.
+  - host: https://zeptopayments.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        note: Serves the same canonical security.txt (canonical zepto.com.au).
+  - host: https://api.zeptopayments.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /openapi.json
+        status: 404
+        note: API host root returns the ReadMe docs HTML shell, not a spec. Real specs are the 7 downloadable YAMLs on the docs portal.

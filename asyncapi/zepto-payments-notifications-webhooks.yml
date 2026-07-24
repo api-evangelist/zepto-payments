@@ -1,0 +1,51 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.zeptopayments.com/docs/setting-up-your-webhooks and webhooks
+  declared in openapi/zepto-payments-notifications.yml +
+  openapi/zepto-payments-investigations.yml + webhook-management operations in
+  openapi/zepto-payments-zepto.yml
+spec_type: Webhooks
+note: >-
+  Zepto documents webhook event notifications but publishes no standalone
+  AsyncAPI document. This artifact is the honest webhook catalog (no AsyncAPI
+  was fabricated).
+transport: https
+security:
+  signing: HMAC-SHA256
+  signature_header: Split-Signature
+  signed_payload: "<timestamp>.<json-request-body>"
+  verification: >-
+    Recompute HMAC-SHA256 over the signed_payload using the endpoint's signing
+    secret; compare using a constant-time comparison.
+subscription:
+  managed_via: Zepto account portal (Webhooks section) and the core API webhook endpoints
+  management_operations:
+    - GetWebhooks (GET /webhooks)
+    - GetWebhookDeliveries (GET /webhooks/{webhook_id}/deliveries)
+    - GetAWebhookDelivery (GET /webhook_deliveries/{id})
+    - ResendAWebhookDelivery (POST /webhook_deliveries/{id}/redeliver)
+event_families:
+  - agreement.*
+  - open_agreement.*
+  - unassigned_agreement.*
+  - contact.*
+  - credit.*
+  - debit.*
+  - creditor_debit.*
+  - debtor_credit.*
+  - payment.*
+  - payment_request.*
+events:
+  - key: float_accounts.unmatched_credit.received
+    summary: Unmatched Float Credit Received
+    source: openapi/zepto-payments-notifications.yml
+  - key: investigations.action_requested
+    summary: Investigation Action Requested
+    source: openapi/zepto-payments-investigations.yml
+  - key: investigations.message_received
+    summary: Investigation Message Received
+    source: openapi/zepto-payments-investigations.yml
+  - key: investigations.message_sent
+    summary: Investigation Message Sent
+    source: openapi/zepto-payments-investigations.yml

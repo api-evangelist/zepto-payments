@@ -1,0 +1,66 @@
+generated: '2026-07-24'
+method: searched
+source: openapi/zepto-payments-zepto.yml
+docs: https://docs.zeptopayments.com/docs/oauth-grant-flow
+schemes:
+- name: bearerAuth
+  source: openapi/zepto-payments-zepto.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize
+    tokenUrl: /oauth/token
+scopes:
+- scope: agreements
+  description: Manage your agreements
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: contacts
+  description: Manage your contacts
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: open_agreements
+  description: Manage your open agreements
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: payment_requests
+  description: Manage your payment requests
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: payments
+  description: Manage your payments
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: public
+  description: Access your public information
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: refunds
+  description: Manage your refunds
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: transactions
+  description: Access your transaction history
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml
+- scope: transfers
+  description: Manage your Transfers
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/zepto-payments-zepto.yml

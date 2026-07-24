@@ -1,0 +1,19 @@
+# generated: '2026-07-24'
+# method: generated
+# source: openapi/zepto-payments-validate-cop.yml
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Zepto Validate API (Confirmation of Payee)
+  version: 1.0.0
+extends: openapi/zepto-payments-validate-cop.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: zepto-payments
+    x-apievangelist-enriched: '2026-07-24'
+    x-apievangelist-artifacts:
+    - authentication
+    - conventions
+    - errors
+    - conventions
+    - agentic-access

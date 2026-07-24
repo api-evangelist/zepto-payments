@@ -166,6 +166,16 @@ apis:
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/getwebhooks
 common:
+- type: VulnerabilityDisclosure
+  url: security/zepto-payments-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/zepto-payments-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/zepto-payments-agentic-access.yml
+- type: Authentication
+  url: authentication/zepto-payments-authentication.yml
+- type: OAuthScopes
+  url: scopes/zepto-payments-scopes.yml
 - type: Website
   url: https://zepto.com.au/
 - type: DeveloperPortal
@@ -192,6 +202,48 @@ common:
   url: https://zepto.com.au/website-terms
 - type: PrivacyPolicy
   url: https://zepto.com.au/legal-and-privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/zeptofs
+- type: Packages
+  url: packages/zepto-payments-packages.yml
+- type: WellKnown
+  url: well-known/zepto-payments-well-known.yml
+- type: SecurityTxt
+  url: well-known/zepto-payments-security.txt
+- type: Security
+  url: https://zepto.com.au/uploads/documents/Vulnerability-Disclosure-Policy.pdf
+- type: TrustCenter
+  url: security/zepto-payments-trust-center.yml
+- type: Compliance
+  url: https://zepto.com.au/platform-and-accreditations
+- type: Conformance
+  url: conformance/zepto-payments-conformance.yml
+- type: LLMsTxt
+  url: llms/zepto-payments-llms.txt
+- type: MCPServer
+  url: mcp/zepto-payments-mcp.yml
+- type: Conventions
+  url: conventions/zepto-payments-conventions.yml
+- type: Idempotency
+  url: conventions/zepto-payments-conventions.yml
+- type: ErrorCatalog
+  url: errors/zepto-payments-problem-types.yml
+- type: DeclineCodes
+  url: errors/zepto-payments-decline-codes.yml
+- type: Lifecycle
+  url: lifecycle/zepto-payments-lifecycle.yml
+- type: ChangeLog
+  url: changelog/zepto-payments-changelog.yml
+- type: Sandbox
+  url: sandbox/zepto-payments-sandbox.yml
+- type: DataModel
+  url: data-model/zepto-payments-data-model.yml
+- type: Webhooks
+  url: asyncapi/zepto-payments-notifications-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/zepto-payments-zepto-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
