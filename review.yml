@@ -1,0 +1,150 @@
+aid: zepto-payments
+name: Zepto
+review:
+  question: Does Zepto publish a real public developer portal with downloadable OpenAPI, and what is its API posture?
+  answer: true
+  date: '2026-07-24'
+  reviewer: API Evangelist
+findings:
+  summary: |
+    Zepto (zepto.com.au) is an Australian account-to-account (A2A) payments
+    company with a genuinely API-native, developer-first posture. It runs a
+    public ReadMe-hosted developer portal at https://docs.zeptopayments.com/
+    (HTTP 200) linked from a developer landing page at
+    https://zepto.com.au/developers/ (HTTP 200), backed by a full sandbox
+    (https://go.sandbox.zeptopayments.com/sign_in) and a merchant portal login
+    (https://go.zeptopayments.com/sign_in). The portal exposes a complete REST
+    API reference plus a dedicated "OpenAPI Specifications" page
+    (https://docs.zeptopayments.com/reference/openapi-specifications) offering
+    SEVEN downloadable OpenAPI 3.x YAML documents, each versioned 20260101 and
+    hosted at https://go.zeptopayments.com/api-docs/<product>/20260101/openapi.yaml.
+    All seven were fetched verbatim (HTTP 200) and parse as valid OpenAPI:
+    the core Zepto API (payments/payouts/agreements/contacts/transactions,
+    OpenAPI 3.1.0, 35 paths), PayTo (OpenAPI 3.0.1, 15 paths), Validate /
+    Confirmation of Payee (3.0.1), Investigations/Disputes Beta (3.1.0),
+    Clients Alpha (3.0.1), Merchant Reports (3.0.1) and Notifications/webhooks
+    (3.1.0). Home market is Australia; Zepto is the first non-ADI approved to
+    connect directly to the New Payments Platform (NPP) as a "Connected
+    Institution" for PayTo, and its rails cover NPP real-time A2A, PayTo
+    mandated debits, PayID addressing and BECS Direct Entry. Authentication is
+    OAuth2: the core Zepto API declares an OAuth2 authorization-code flow
+    (authorizationUrl /oauth/authorize, tokenUrl /oauth/token) with scoped
+    tokens (public, contacts, payments, payment_requests, refunds, agreements,
+    transactions, open_agreements, transfers); the product specs declare HTTP
+    Bearer token auth. Idempotency-Key headers are supported for asynchronous
+    payment flows. Webhooks/events are first-class (a Notifications spec plus
+    webhook management endpoints in the core spec). No public Postman
+    collection, GraphQL surface, gRPC/.proto, or AsyncAPI document was found,
+    and there is no public GitHub organization or public pricing page.
+  developerPortal:
+    url: https://docs.zeptopayments.com/
+    status: 200
+    platform: ReadMe (readme.com)
+    confirmed: true
+  developerLanding:
+    url: https://zepto.com.au/developers/
+    status: 200
+  sandbox:
+    url: https://go.sandbox.zeptopayments.com/sign_in
+    status: 200
+  authModel:
+    coreApi: OAuth2 authorization-code (scoped tokens) — authorizationUrl /oauth/authorize, tokenUrl /oauth/token
+    productApis: HTTP Bearer token
+    idempotency: Idempotency-Key header supported for async payment flows
+  homeMarket: Australia
+  rails:
+    - New Payments Platform (NPP) — real-time account-to-account
+    - PayTo — mandated real-time debits (Zepto is a Connected Institution to the NPP for PayTo)
+    - PayID — addressing / receivable payments
+    - BECS Direct Entry — direct debit and direct credit
+    - Stored-value float accounts
+  webhooks:
+    documented: true
+    note: Notifications OpenAPI declares webhook events (e.g. float_accounts.unmatched_credit.received); core spec exposes webhook + webhook-delivery management endpoints; docs page /docs/setting-up-your-webhooks.
+  postman:
+    found: false
+  graphql:
+    found: false
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.zeptopayments.com
+      sandboxBaseURL: https://api.sandbox.zeptopayments.com
+      documented: true
+    - protocol: Webhooks
+      scheme: https
+      documented: true
+      note: HTTP webhook callbacks for asynchronous payment/account events.
+specsHarvested:
+  count: 7
+  provenance:
+    sourcePage: https://docs.zeptopayments.com/reference/openapi-specifications
+    fetchDate: '2026-07-24'
+  files:
+    - file: openapi/zepto-payments-zepto.yml
+      title: Zepto API
+      openapi: 3.1.0
+      version: '1.0'
+      source: https://go.zeptopayments.com/api-docs/zepto/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-pay-to.yml
+      title: Zepto PayTo API
+      openapi: 3.0.1
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/pay-to/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-validate-cop.yml
+      title: Zepto Validate API (Confirmation of Payee)
+      openapi: 3.0.1
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/cop/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-investigations.yml
+      title: Zepto Investigations API
+      openapi: 3.1.0
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/investigations/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-clients.yml
+      title: Zepto Clients API (Alpha)
+      openapi: 3.0.1
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/clients/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-merchant-reports.yml
+      title: Zepto Merchant Reports API
+      openapi: 3.0.1
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/merchant-reports/20260101/openapi.yaml
+      httpStatus: 200
+    - file: openapi/zepto-payments-notifications.yml
+      title: Notifications
+      openapi: 3.1.0
+      version: '20260101'
+      source: https://go.zeptopayments.com/api-docs/notifications/20260101/openapi.yaml
+      httpStatus: 200
+sources:
+  - url: https://zepto.com.au/developers/the-api
+    type: DeveloperPortal
+    note: Confirms unified A2A/NPP/PayTo/PayID/BECS/stored-value API and that an OpenAPI/Swagger definition is provided.
+  - url: https://docs.zeptopayments.com/reference/openapi-specifications
+    type: APIReference
+    status: 200
+    note: Lists seven downloadable OpenAPI YAML specs (version 20260101).
+  - url: https://docs.zeptopayments.com/reference/change-log
+    type: ChangeLog
+    status: 200
+  - url: https://status.zeptopayments.com/
+    type: StatusPage
+    status: 200
+  - url: https://help.zepto.money/en/
+    type: HelpCenter
+    status: 200
+actions:
+  apisYmlUpdated: true
+  specsSaved: 7
+  reason: |
+    Real, self-serve, API-native payments provider. Captured company identity
+    plus seven verbatim OpenAPI specifications from Zepto's public ReadMe
+    portal, listed as seven separate apis[] entries, with OAuth2 + Bearer auth
+    and webhook events recorded honestly.

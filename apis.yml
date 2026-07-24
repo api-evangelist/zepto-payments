@@ -1,0 +1,197 @@
+aid: zepto-payments
+url: https://raw.githubusercontent.com/api-evangelist/zepto-payments/refs/heads/main/apis.yml
+name: Zepto
+kind: company
+description: >-
+  Zepto is a Gold Coast, Australia based account-to-account (A2A) payments
+  company that gives merchants and platforms programmable, real-time access to
+  Australia's core money-movement rails. Its unified REST API moves money over
+  the New Payments Platform (NPP) for instant account-to-account payments,
+  PayTo for mandated real-time debits, PayID addressing, BECS Direct Entry
+  (direct debit and direct credit), and stored-value float accounts, with
+  real-time messaging, settlement and reconciliation. Zepto is the first
+  non-authorised-deposit-taking institution (non-ADI) approved to connect
+  directly to the NPP as a "Connected Institution" for PayTo, positioning it as
+  an infrastructure-grade money-movement provider rather than a card acquirer.
+  Its API posture is genuinely developer-first and API-native: a public ReadMe
+  developer portal, a full sandbox, idempotent asynchronous payment flows,
+  webhook notifications, and seven downloadable OpenAPI specifications covering
+  the core payments API, PayTo, Confirmation of Payee (Validate), disputes,
+  clients, merchant reports and notifications.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Payments
+- Australia
+- Real-Time Payments
+- Account-to-Account
+- New Payments Platform
+- PayTo
+- PayID
+- Direct Entry
+- Open Banking
+- Money Movement
+created: '2026-07-24'
+modified: '2026-07-24'
+specificationVersion: '0.19'
+apis:
+- aid: zepto-payments:zepto-api
+  name: Zepto API
+  description: >-
+    Zepto's core account-to-account payments API — move money over the New
+    Payments Platform (NPP), BECS Direct Entry and PayID with payments, payouts,
+    payment requests, transfers, refunds, agreements, contacts, bank accounts
+    and transaction history. Authenticated with OAuth2 (authorization code)
+    using scoped access tokens.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Payments
+  - Payouts
+  - Account-to-Account
+  - NPP
+  - Direct Entry
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-zepto.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+- aid: zepto-payments:payto-api
+  name: Zepto PayTo API
+  description: >-
+    Programmatic PayTo mandate management and real-time collection — create,
+    amend, suspend, reactivate and cancel PayTo agreements, then collect
+    authorised real-time payments and issue refunds against them. Zepto is a
+    Connected Institution to the NPP for PayTo.
+  humanURL: https://docs.zeptopayments.com/reference/agreements
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - PayTo
+  - Agreements
+  - Mandates
+  - Real-Time Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-pay-to.yml
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+- aid: zepto-payments:validate-cop-api
+  name: Zepto Validate API (Confirmation of Payee)
+  description: >-
+    Confirmation of Payee (CoP) account validation — verify that a payee's
+    account name matches the account details in real time before initiating a
+    payment, reducing misdirected payments and payment fraud.
+  humanURL: https://docs.zeptopayments.com/reference/cop-account-validations
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Confirmation of Payee
+  - Validation
+  - Fraud
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-validate-cop.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+- aid: zepto-payments:investigations-api
+  name: Zepto Investigations API
+  description: >-
+    Disputes and investigations (Beta) — raise and manage payment disputes,
+    respond to action requests (accept, reject, upload evidence) and simulate
+    incoming investigation messages in sandbox.
+  humanURL: https://docs.zeptopayments.com/reference/disputes-beta
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Disputes
+  - Investigations
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-investigations.yml
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+- aid: zepto-payments:clients-api
+  name: Zepto Clients API
+  description: >-
+    Client management (Alpha) — create and manage sub-clients and their
+    Merchant Category Codes (MCC) for platform and marketplace models operating
+    on top of Zepto's rails.
+  humanURL: https://docs.zeptopayments.com/reference/clients
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Clients
+  - Platforms
+  - Merchant Category Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-clients.yml
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+- aid: zepto-payments:merchant-reports-api
+  name: Zepto Merchant Reports API
+  description: >-
+    Merchant reporting — download PayTo settlement reports by report date for
+    reconciliation of collected and settled funds.
+  humanURL: https://docs.zeptopayments.com/reference/openapi-specifications
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Reporting
+  - Reconciliation
+  - Settlement
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-merchant-reports.yml
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+- aid: zepto-payments:notifications-api
+  name: Zepto Notifications API (Webhooks)
+  description: >-
+    Webhook event notifications — subscribe to asynchronous payment and account
+    events (for example float_accounts.unmatched_credit.received) to drive
+    real-time reconciliation and payment status handling.
+  humanURL: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-notifications.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+common:
+- type: Website
+  url: https://zepto.com.au/
+- type: DeveloperPortal
+  url: https://zepto.com.au/developers/
+- type: Documentation
+  url: https://docs.zeptopayments.com/
+- type: APIReference
+  url: https://docs.zeptopayments.com/reference/openapi-specifications
+- type: GettingStarted
+  url: https://docs.zeptopayments.com/docs/getting-started-in-sandbox
+- type: ChangeLog
+  url: https://docs.zeptopayments.com/reference/change-log
+- type: StatusPage
+  url: https://status.zeptopayments.com/
+- type: HelpCenter
+  url: https://help.zepto.money/en/
+- type: Login
+  url: https://go.zeptopayments.com/sign_in
+- type: Blog
+  url: https://zepto.com.au/blog
+- type: LinkedIn
+  url: https://www.linkedin.com/company/zepto-payments
+- type: TermsOfService
+  url: https://zepto.com.au/website-terms
+- type: PrivacyPolicy
+  url: https://zepto.com.au/legal-and-privacy-policy
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
