@@ -166,6 +166,8 @@ apis:
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/getwebhooks
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/zepto/overview
 - type: VulnerabilityDisclosure
   url: security/zepto-payments-vulnerability-disclosure.yml
 - type: DomainSecurity
