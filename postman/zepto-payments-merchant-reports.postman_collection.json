@@ -1,0 +1,168 @@
+{
+  "info": {
+    "_postman_id": "74cb4168-3317-4f1c-9fba-d29c9c4f4729",
+    "name": "Zepto Merchant Reports API",
+    "description": "Documentation for the Zepto Merchant Reports API.\n\nContact Support:\n Email: support@zepto.com.au",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:37:35.000Z",
+    "updatedAt": "2026-07-28T03:37:36.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-74cb4168-3317-4f1c-9fba-d29c9c4f4729"
+  },
+  "item": [
+    {
+      "name": "merchant_reports",
+      "item": [
+        {
+          "name": "payto_settlement",
+          "item": [
+            {
+              "name": "{report_date}",
+              "item": [
+                {
+                  "name": "download",
+                  "item": [
+                    {
+                      "name": "generate download link",
+                      "id": "bfc8483f-27cc-4e58-8fd7-d11e7588022f",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                            "key": "Zepto-API-Version",
+                            "value": "20250101"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/merchant_reports/payto_settlement/:report_date/download",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "merchant_reports",
+                            "payto_settlement",
+                            ":report_date",
+                            "download"
+                          ],
+                          "variable": [
+                            {
+                              "id": "2f8e719a-78d0-485a-bcc3-ac8465daf29e",
+                              "key": "report_date",
+                              "value": "<date>",
+                              "description": "(Required) The date of the settlement report in YYYY-MM-DD format."
+                            }
+                          ]
+                        },
+                        "description": "Generates a presigned download link for the PayTo settlement report for the given date."
+                      },
+                      "response": [
+                        {
+                          "id": "a8b6ed85-3a0e-424d-b74a-cb9af099230c",
+                          "name": "Created",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                                "key": "Zepto-API-Version",
+                                "value": "20250101"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/merchant_reports/payto_settlement/:report_date/download",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "merchant_reports",
+                                "payto_settlement",
+                                ":report_date",
+                                "download"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "report_date"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Created",
+                          "code": 201,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"data\": {\n    \"id\": \"<string>\",\n    \"type\": \"merchant_reports\",\n    \"attributes\": {\n      \"type\": \"payto_settlement\",\n      \"download_link\": {\n        \"url\": \"<uri>\",\n        \"expires_at\": \"<dateTime>\"\n      }\n    },\n    \"links\": {\n      \"download\": {\n        \"href\": \"<uri>\",\n        \"meta\": {\n          \"method\": \"POST\",\n          \"zepto_account_id\": \"<string>\"\n        }\n      }\n    }\n  }\n}",
+                          "createdAt": "2026-07-28T03:37:36.000Z",
+                          "updatedAt": "2026-07-28T03:37:36.000Z",
+                          "uid": "35240-a8b6ed85-3a0e-424d-b74a-cb9af099230c"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:37:36.000Z",
+                      "updatedAt": "2026-07-28T03:37:36.000Z",
+                      "uid": "35240-bfc8483f-27cc-4e58-8fd7-d11e7588022f"
+                    }
+                  ],
+                  "id": "af8c8a50-36c7-41c5-8f5a-d51f5b53686e",
+                  "createdAt": "2026-07-28T03:37:36.000Z",
+                  "updatedAt": "2026-07-28T03:37:36.000Z",
+                  "uid": "35240-af8c8a50-36c7-41c5-8f5a-d51f5b53686e"
+                }
+              ],
+              "id": "817154bd-ab00-4c17-b764-ca7dee1d0152",
+              "createdAt": "2026-07-28T03:37:36.000Z",
+              "updatedAt": "2026-07-28T03:37:36.000Z",
+              "uid": "35240-817154bd-ab00-4c17-b764-ca7dee1d0152"
+            }
+          ],
+          "id": "12745543-2401-4d95-92df-d2a938642ce5",
+          "createdAt": "2026-07-28T03:37:36.000Z",
+          "updatedAt": "2026-07-28T03:37:36.000Z",
+          "uid": "35240-12745543-2401-4d95-92df-d2a938642ce5"
+        }
+      ],
+      "id": "5f4fcd3d-a341-4a06-81f8-575331a64744",
+      "createdAt": "2026-07-28T03:37:36.000Z",
+      "updatedAt": "2026-07-28T03:37:36.000Z",
+      "uid": "35240-5f4fcd3d-a341-4a06-81f8-575331a64744"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.sandbox.zeptopayments.com"
+    }
+  ]
+}

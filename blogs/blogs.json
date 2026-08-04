@@ -1,0 +1,14 @@
+{
+  "repo": "zepto-payments",
+  "feeds": [
+    {
+      "source": "https://go.zeptopayments.com/sign_in",
+      "feed_url": "https://go.zeptopayments.com/sign_in",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-01T15:49:00Z"
+}

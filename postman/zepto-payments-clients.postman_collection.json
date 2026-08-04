@@ -1,0 +1,1476 @@
+{
+  "info": {
+    "_postman_id": "7d370271-bdfe-4872-b09b-2bbe88dc4a5c",
+    "name": "Zepto Clients API (Alpha)",
+    "description": "Documentation for the Zepto Clients API.\n\nContact Support:\n Email: support@zepto.com.au",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:37:34.000Z",
+    "updatedAt": "2026-07-28T03:37:35.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-7d370271-bdfe-4872-b09b-2bbe88dc4a5c"
+  },
+  "item": [
+    {
+      "name": "clients",
+      "item": [
+        {
+          "name": "{client_id}",
+          "item": [
+            {
+              "name": "Show Client",
+              "id": "0701439a-80e6-44b6-86a6-25eca9afd794",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:client_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":client_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "3efcac25-802b-4ff6-a56a-38816e9edd80",
+                      "key": "client_id",
+                      "value": "<string>",
+                      "description": "(Required) "
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "2055c705-122a-4ff7-addb-3a7693dbacd9",
+                  "name": "successful",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"data\": {\n    \"austrac_number\": \"<string>\",\n    \"australian_business_number\": \"A13323181509z\",\n    \"australian_company_number\": \"A724032093z\",\n    \"australian_credit_licence\": \"<string>\",\n    \"australian_financial_services_licence\": \"<string>\",\n    \"business_names\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"business_registration_date\": \"<date>\",\n    \"company_incorporation_date\": \"<date>\",\n    \"contact_information\": {\n      \"contact_name\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"A+\u30003\u2028\\t\u20044\u205f\u2006\u2000\u2005z\"\n    },\n    \"id\": \"<string>\",\n    \"legal_name\": \"<string>\",\n    \"merchant_category_code\": \"7519\",\n    \"primary_bank_account_bban\": \"<string>\",\n    \"registered_address\": \"<string>\",\n    \"risk_level\": \"low\",\n    \"services\": {\n      \"de\": \"suspended\",\n      \"payto\": \"active\",\n      \"rtp\": \"off_boarded\"\n    },\n    \"type\": \"individual\",\n    \"website_url\": \"<string>\"\n  }\n}",
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-2055c705-122a-4ff7-addb-3a7693dbacd9"
+                },
+                {
+                  "id": "f069714e-af59-401a-8d56-da84fc4b0db5",
+                  "name": "unauthorized",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-f069714e-af59-401a-8d56-da84fc4b0db5"
+                },
+                {
+                  "id": "58616997-0ec8-4db5-8a60-2ea499bcf636",
+                  "name": "forbidden",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-58616997-0ec8-4db5-8a60-2ea499bcf636"
+                },
+                {
+                  "id": "1af01202-5d7e-41eb-8f9f-895097d8988e",
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-1af01202-5d7e-41eb-8f9f-895097d8988e"
+                },
+                {
+                  "id": "e7aab717-3e4d-4300-a685-4eb7b24f2da1",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-e7aab717-3e4d-4300-a685-4eb7b24f2da1"
+                }
+              ],
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-0701439a-80e6-44b6-86a6-25eca9afd794"
+            },
+            {
+              "name": "Update Client",
+              "id": "b2c23eae-7430-4464-bda9-ac4fff0de217",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:client_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":client_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "b3a33ded-813d-4b49-9d55-17bcf116bb7a",
+                      "key": "client_id",
+                      "value": "<string>",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "description": "There are certain attributes that cannot be updated here such as the ABN, ACN and MCC. Please reach out to the Zepto Compliance team (compliance@zepto.com.au) to have them updated."
+              },
+              "response": [
+                {
+                  "id": "d509f8ad-e640-4d17-964a-a2cf9d9a4b72",
+                  "name": "accepted",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Accepted",
+                  "code": 202,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-d509f8ad-e640-4d17-964a-a2cf9d9a4b72"
+                },
+                {
+                  "id": "51e6f734-9eec-4882-8673-238bc1d65bab",
+                  "name": "unauthorized",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-51e6f734-9eec-4882-8673-238bc1d65bab"
+                },
+                {
+                  "id": "493b63a8-49ca-4efa-9824-ea6e4944ec73",
+                  "name": "forbidden",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-493b63a8-49ca-4efa-9824-ea6e4944ec73"
+                },
+                {
+                  "id": "577c3a79-0c27-43a0-b76d-8e661224f261",
+                  "name": "not found",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-577c3a79-0c27-43a0-b76d-8e661224f261"
+                },
+                {
+                  "id": "d35abb74-1f55-4d06-8bf7-bbc109559aba",
+                  "name": "Unprocessable Entity",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-d35abb74-1f55-4d06-8bf7-bbc109559aba"
+                },
+                {
+                  "id": "b5fdc760-f8ca-4f4e-bc17-1b8e7eea823e",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                        "key": "Zepto-API-Version",
+                        "value": "20250101"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u200a1\\r \u2009\\tz\"\n  },\n  \"legal_name\": \"<string>\",\n  \"registered_address\": \"<string>\",\n  \"website_url\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:37:35.000Z",
+                  "updatedAt": "2026-07-28T03:37:35.000Z",
+                  "uid": "35240-b5fdc760-f8ca-4f4e-bc17-1b8e7eea823e"
+                }
+              ],
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-b2c23eae-7430-4464-bda9-ac4fff0de217"
+            }
+          ],
+          "id": "e856274b-7eda-4aba-b28d-d310207ac3ac",
+          "createdAt": "2026-07-28T03:37:35.000Z",
+          "updatedAt": "2026-07-28T03:37:35.000Z",
+          "uid": "35240-e856274b-7eda-4aba-b28d-d310207ac3ac"
+        },
+        {
+          "name": "Create Client",
+          "id": "d00773b0-6a33-4148-b4e0-20522410ee34",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ]
+            },
+            "description": "The Zepto Clients API allows registration of clients who indirectly use the Zepto platform\nvia your Zepto integration.\n\nMerchants are required to keep their sub-client details up to date with Zepto via the update client endpoint.\n"
+          },
+          "response": [
+            {
+              "id": "c7a5b35c-0a08-42b6-85cb-5e3b93a63019",
+              "name": "successful",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"data\": {\n    \"austrac_number\": \"<string>\",\n    \"australian_business_number\": \"A13323181509z\",\n    \"australian_company_number\": \"A724032093z\",\n    \"australian_credit_licence\": \"<string>\",\n    \"australian_financial_services_licence\": \"<string>\",\n    \"business_names\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"business_registration_date\": \"<date>\",\n    \"company_incorporation_date\": \"<date>\",\n    \"contact_information\": {\n      \"contact_name\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"A+\u30003\u2028\\t\u20044\u205f\u2006\u2000\u2005z\"\n    },\n    \"id\": \"<string>\",\n    \"legal_name\": \"<string>\",\n    \"merchant_category_code\": \"7519\",\n    \"primary_bank_account_bban\": \"<string>\",\n    \"registered_address\": \"<string>\",\n    \"risk_level\": \"low\",\n    \"services\": {\n      \"de\": \"suspended\",\n      \"payto\": \"active\",\n      \"rtp\": \"off_boarded\"\n    },\n    \"type\": \"individual\",\n    \"website_url\": \"<string>\"\n  }\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-c7a5b35c-0a08-42b6-85cb-5e3b93a63019"
+            },
+            {
+              "id": "00f4085c-ae17-43dd-afdf-b92baed4922b",
+              "name": "unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-00f4085c-ae17-43dd-afdf-b92baed4922b"
+            },
+            {
+              "id": "7212592a-3383-4646-afc9-b4de74ac7f23",
+              "name": "forbidden",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-7212592a-3383-4646-afc9-b4de74ac7f23"
+            },
+            {
+              "id": "cd818ecc-0f76-4944-821f-e08f7719361b",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-cd818ecc-0f76-4944-821f-e08f7719361b"
+            },
+            {
+              "id": "e0d11ac1-4ff4-4e5b-86e7-d29e2b77afb7",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"australian_business_number\": \"A63147440089z\",\n  \"business_names\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"business_registration_date\": \"<date>\",\n  \"legal_name\": \"<string>\",\n  \"merchant_category_code\": \"8211\",\n  \"registered_address\": \"<string>\",\n  \"risk_level\": \"high\",\n  \"services\": [\n    \"de\",\n    \"de\"\n  ],\n  \"type\": \"business\",\n  \"website_url\": \"<string>\",\n  \"austrac_number\": \"<string>\",\n  \"australian_company_number\": \"A974517286z\",\n  \"australian_credit_licence\": \"<string>\",\n  \"australian_financial_services_licence\": \"<string>\",\n  \"company_incorporation_date\": \"<date>\",\n  \"contact_information\": {\n    \"contact_name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"A\u2006\u2001\\f\u2029\u2005\u2008\u2000\\n6)z\"\n  },\n  \"primary_bank_account_bban\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-e0d11ac1-4ff4-4e5b-86e7-d29e2b77afb7"
+            }
+          ],
+          "createdAt": "2026-07-28T03:37:35.000Z",
+          "updatedAt": "2026-07-28T03:37:35.000Z",
+          "uid": "35240-d00773b0-6a33-4148-b4e0-20522410ee34"
+        },
+        {
+          "name": "List Clients",
+          "id": "cf570725-7838-47b0-b4e8-0f6d4001f5de",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ],
+              "query": [
+                {
+                  "description": "Number of results per page",
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                  "key": "starting_after",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                  "key": "legal_name",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Filter clients by ABN.",
+                  "key": "australian_business_number",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9b0668bf-557d-45ca-9180-60c59b448893",
+              "name": "successful",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Number of results per page",
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                      "key": "starting_after",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                      "key": "legal_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by ABN.",
+                      "key": "australian_business_number",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"links\": {\n    \"next\": \"<string>\"\n  },\n  \"data\": [\n    {\n      \"austrac_number\": \"<string>\",\n      \"australian_business_number\": \"A56098607251z\",\n      \"australian_company_number\": \"A616538811z\",\n      \"australian_credit_licence\": \"<string>\",\n      \"australian_financial_services_licence\": \"<string>\",\n      \"business_names\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"business_registration_date\": \"<date>\",\n      \"company_incorporation_date\": \"<date>\",\n      \"contact_information\": {\n        \"contact_name\": \"<string>\",\n        \"email\": \"<string>\",\n        \"phone\": \"A\u1680\u2007\\tz\"\n      },\n      \"id\": \"<string>\",\n      \"legal_name\": \"<string>\",\n      \"merchant_category_code\": \"6052\",\n      \"primary_bank_account_bban\": \"<string>\",\n      \"registered_address\": \"<string>\",\n      \"risk_level\": \"medium\",\n      \"services\": {\n        \"de\": \"pending\",\n        \"payto\": \"pending\",\n        \"rtp\": \"off_boarded\"\n      },\n      \"type\": \"individual\",\n      \"website_url\": \"<string>\"\n    },\n    {\n      \"austrac_number\": \"<string>\",\n      \"australian_business_number\": \"A45543460317z\",\n      \"australian_company_number\": \"A536071254z\",\n      \"australian_credit_licence\": \"<string>\",\n      \"australian_financial_services_licence\": \"<string>\",\n      \"business_names\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"business_registration_date\": \"<date>\",\n      \"company_incorporation_date\": \"<date>\",\n      \"contact_information\": {\n        \"contact_name\": \"<string>\",\n        \"email\": \"<string>\",\n        \"phone\": \"A\u2009\u00a08\u200a\u2009-+ \u20074\u2001z\"\n      },\n      \"id\": \"<string>\",\n      \"legal_name\": \"<string>\",\n      \"merchant_category_code\": \"7342\",\n      \"primary_bank_account_bban\": \"<string>\",\n      \"registered_address\": \"<string>\",\n      \"risk_level\": \"low\",\n      \"services\": {\n        \"de\": \"pending\",\n        \"payto\": \"off_boarded\",\n        \"rtp\": \"off_boarded\"\n      },\n      \"type\": \"individual\",\n      \"website_url\": \"<string>\"\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-9b0668bf-557d-45ca-9180-60c59b448893"
+            },
+            {
+              "id": "9d5b655d-84c1-4ab4-af57-56a4ea2f76fe",
+              "name": "unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Number of results per page",
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                      "key": "starting_after",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                      "key": "legal_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by ABN.",
+                      "key": "australian_business_number",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-9d5b655d-84c1-4ab4-af57-56a4ea2f76fe"
+            },
+            {
+              "id": "b94d6bc4-e4b8-4865-8685-3b3ef315ea00",
+              "name": "forbidden",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Number of results per page",
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                      "key": "starting_after",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                      "key": "legal_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by ABN.",
+                      "key": "australian_business_number",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-b94d6bc4-e4b8-4865-8685-3b3ef315ea00"
+            },
+            {
+              "id": "c13caa03-272c-45b4-a0d5-bfddb6082958",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Number of results per page",
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                      "key": "starting_after",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                      "key": "legal_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by ABN.",
+                      "key": "australian_business_number",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"<string>\",\n      \"detail\": \"<string>\",\n      \"links\": {\n        \"about\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-c13caa03-272c-45b4-a0d5-bfddb6082958"
+            },
+            {
+              "id": "da62273b-35f6-4030-a1f0-5f7a700005cc",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20250101"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?per_page=20&starting_after=<string>&legal_name=<string>&australian_business_number=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Number of results per page",
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "description": "Opaque pagination cursor value. Set by following \"next\" links.",
+                      "key": "starting_after",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name.",
+                      "key": "legal_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter clients by ABN.",
+                      "key": "australian_business_number",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-07-28T03:37:35.000Z",
+              "updatedAt": "2026-07-28T03:37:35.000Z",
+              "uid": "35240-da62273b-35f6-4030-a1f0-5f7a700005cc"
+            }
+          ],
+          "createdAt": "2026-07-28T03:37:35.000Z",
+          "updatedAt": "2026-07-28T03:37:35.000Z",
+          "uid": "35240-cf570725-7838-47b0-b4e8-0f6d4001f5de"
+        }
+      ],
+      "id": "58257a53-2bc2-48af-a6d4-96307b14d642",
+      "createdAt": "2026-07-28T03:37:35.000Z",
+      "updatedAt": "2026-07-28T03:37:35.000Z",
+      "uid": "35240-58257a53-2bc2-48af-a6d4-96307b14d642"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.sandbox.zeptopayments.com"
+    }
+  ]
+}

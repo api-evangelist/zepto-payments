@@ -1,0 +1,29 @@
+{
+  "info": {
+    "_postman_id": "48dafdbb-d77f-40f3-ad8f-b754393e677d",
+    "name": "Notifications",
+    "description": "Documentation for component notifications.\n\nContact Support:\n Email: support@zepto.com.au",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:37:38.000Z",
+    "updatedAt": "2026-07-28T03:37:38.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-48dafdbb-d77f-40f3-ad8f-b754393e677d"
+  },
+  "item": [],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.sandbox.zeptopayments.com"
+    }
+  ]
+}
