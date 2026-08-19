@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto Validate API (Confirmation of Payee)",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "CoP Account Validations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "account name validation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/cop/account/validate",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Validates a given name matches a given account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

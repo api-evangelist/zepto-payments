@@ -1,0 +1,1355 @@
+{
+  "item": [
+    {
+      "id": "72c6cf58-fea4-4d10-94ff-1b3843d2ee44",
+      "name": "Disputes (Beta)",
+      "description": {
+        "content": "The Zepto Disputes API is for managing disputes. Access to this API is limited. Please contact Zepto for more information.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fb2d964a-d0c0-4868-a04d-4c8e57a70f55",
+          "name": "accept dispute",
+          "request": {
+            "name": "accept dispute",
+            "description": {},
+            "url": {
+              "path": [
+                "investigations",
+                "action_requests",
+                ":action_request_id",
+                "accept"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "action_request_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount_returned\": {\n    \"currency\": \"<string>\",\n    \"value\": \"<integer>\"\n  },\n  \"return_transaction_identification\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "22e1d652-1b87-4c32-92cc-d860987c6fca",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "accept"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount_returned\": {\n    \"currency\": \"AUD\",\n    \"value\": 100\n  },\n  \"return_transaction_identification\": \"lbkmya1jg83uqr9d1ytogr6wpwdzz9bjwgs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n    \"type\": \"disputes\",\n    \"attributes\": {\n      \"raised_at\": \"2025-05-23T12:00:00Z\",\n      \"state\": \"open\"\n    },\n    \"links\": {\n      \"self\": \"http://NoWvUijkkBuhBRRfLyOsKiOBnUutiUgLy.kkdoKWMfdK+O\"\n    },\n    \"relationships\": {\n      \"events\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"Merchant rejected dispute\",\n              \"detail\": \"Merchant acknowledged dispute was founded and has returned funds\"\n            }\n          },\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"OFI raised dispute\",\n              \"detail\": \"Zepto requested merchant to take action\"\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      },\n      \"uploads\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          },\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      }\n    }\n  },\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "47566077-78e0-4db6-96cd-523b2ab8aeef",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "accept"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount_returned\": {\n    \"currency\": \"AUD\",\n    \"value\": 100\n  },\n  \"return_transaction_identification\": \"lbkmya1jg83uqr9d1ytogr6wpwdzz9bjwgs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6aa4537-3a7f-4663-8db2-1d5fac9e0235",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "accept"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount_returned\": {\n    \"currency\": \"AUD\",\n    \"value\": 100\n  },\n  \"return_transaction_identification\": \"lbkmya1jg83uqr9d1ytogr6wpwdzz9bjwgs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "518ecbc7-0ffb-4ff7-9a85-4e762700b4ba",
+          "name": "reject dispute",
+          "request": {
+            "name": "reject dispute",
+            "description": {},
+            "url": {
+              "path": [
+                "investigations",
+                "action_requests",
+                ":action_request_id",
+                "reject"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "action_request_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": {\n    \"code\": \"<string>\",\n    \"description\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "62a81c64-0e1b-48de-92c2-8eec6f3d46e0",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "reject"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": {\n    \"code\": \"NAUT\",\n    \"description\": \"Item was delivered (see uploaded evidence)\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n    \"type\": \"disputes\",\n    \"attributes\": {\n      \"raised_at\": \"2025-05-23T12:00:00Z\",\n      \"state\": \"open\"\n    },\n    \"links\": {\n      \"self\": \"http://NoWvUijkkBuhBRRfLyOsKiOBnUutiUgLy.kkdoKWMfdK+O\"\n    },\n    \"relationships\": {\n      \"events\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"Merchant rejected dispute\",\n              \"detail\": \"Merchant acknowledged dispute was founded and has returned funds\"\n            }\n          },\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"OFI raised dispute\",\n              \"detail\": \"Zepto requested merchant to take action\"\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      },\n      \"uploads\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          },\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      }\n    }\n  },\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4433c24-2406-48b5-893c-2234fc10b072",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "reject"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": {\n    \"code\": \"NAUT\",\n    \"description\": \"Item was delivered (see uploaded evidence)\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ef2b31b1-f5ad-4913-b4a0-d80b3afa9713",
+          "name": "upload evidence",
+          "request": {
+            "name": "upload evidence",
+            "description": {},
+            "url": {
+              "path": [
+                "investigations",
+                "action_requests",
+                ":action_request_id",
+                "upload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "action_request_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "0",
+                  "value": "<",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "1",
+                  "value": "b",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "2",
+                  "value": "i",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "3",
+                  "value": "n",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "4",
+                  "value": "a",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "5",
+                  "value": "r",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "6",
+                  "value": "y",
+                  "type": "text",
+                  "description": "undefined"
+                },
+                {
+                  "key": "7",
+                  "value": ">",
+                  "type": "text",
+                  "description": "undefined"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "bd5a60e2-5fbb-4266-8f1e-348357e720f3",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "0",
+                      "value": "e",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "1",
+                      "value": "x",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "2",
+                      "value": "a",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "3",
+                      "value": "m",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "4",
+                      "value": "p",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "5",
+                      "value": "l",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "6",
+                      "value": "e",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "7",
+                      "value": ".",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "8",
+                      "value": "p",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "9",
+                      "value": "d",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "10",
+                      "value": "f",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n    \"type\": \"uploads\",\n    \"attributes\": {\n      \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n    },\n    \"relationships\": {\n      \"dispute\": {\n        \"data\": {\n          \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n          \"type\": \"disputes\",\n          \"attributes\": {\n            \"raised_at\": \"2025-05-23T12:00:00Z\",\n            \"state\": \"open\"\n          },\n          \"links\": {\n            \"self\": \"http://nxWeZIzfxI.icEKenPIWMfDkgstVUqhhlaOb-x+mC\"\n          },\n          \"relationships\": {\n            \"events\": {\n              \"data\": [\n                {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              ],\n              \"meta\": {\n                \"included\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            },\n            \"uploads\": {\n              \"data\": [\n                {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              ],\n              \"meta\": {\n                \"included\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  },\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c2ea42d-5347-4b32-bbc1-d261aa08e707",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "action_requests",
+                    ":action_request_id",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "action_request_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "0",
+                      "value": "e",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "1",
+                      "value": "x",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "2",
+                      "value": "a",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "3",
+                      "value": "m",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "4",
+                      "value": "p",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "5",
+                      "value": "l",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "6",
+                      "value": "e",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "7",
+                      "value": ".",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "8",
+                      "value": "p",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "9",
+                      "value": "d",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "undefined",
+                        "type": "text/plain"
+                      },
+                      "key": "10",
+                      "value": "f",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a35864d5-ce6e-41a9-bd0d-c04bc7de4f7d",
+          "name": "list disputes",
+          "request": {
+            "name": "list disputes",
+            "description": {},
+            "url": {
+              "path": [
+                "investigations",
+                "disputes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bfcb6d7e-065f-48b5-af26-3a5773db63f1",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "disputes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n      \"type\": \"disputes\",\n      \"attributes\": {\n        \"raised_at\": \"2025-05-23T12:00:00Z\",\n        \"state\": \"open\"\n      },\n      \"links\": {\n        \"self\": \"https://QHQlZWqKuUHjiVlqOyNCkQUqekPV.baHJJ6eHa3ErfQttRsLXKzIqtgMhGHl1tRfA2fIO\"\n      },\n      \"relationships\": {\n        \"events\": {\n          \"data\": [\n            {\n              \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n              \"type\": \"events\",\n              \"attributes\": {\n                \"at\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"title\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"detail\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            },\n            {\n              \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n              \"type\": \"events\",\n              \"attributes\": {\n                \"at\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"title\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"detail\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          ],\n          \"meta\": {\n            \"included\": false\n          }\n        },\n        \"uploads\": {\n          \"data\": [\n            {\n              \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n              \"type\": \"uploads\",\n              \"attributes\": {\n                \"urn\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              },\n              \"relationships\": {\n                \"dispute\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            },\n            {\n              \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n              \"type\": \"uploads\",\n              \"attributes\": {\n                \"urn\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              },\n              \"relationships\": {\n                \"dispute\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          ],\n          \"meta\": {\n            \"included\": false\n          }\n        }\n      }\n    },\n    {\n      \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n      \"type\": \"disputes\",\n      \"attributes\": {\n        \"raised_at\": \"2025-05-23T12:00:00Z\",\n        \"state\": \"open\"\n      },\n      \"links\": {\n        \"self\": \"http://JErZgaZezZ.hodcnlXBSkmQzaPlHQ\"\n      },\n      \"relationships\": {\n        \"events\": {\n          \"data\": [\n            {\n              \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n              \"type\": \"events\",\n              \"attributes\": {\n                \"at\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"title\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"detail\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            },\n            {\n              \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n              \"type\": \"events\",\n              \"attributes\": {\n                \"at\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"title\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                },\n                \"detail\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          ],\n          \"meta\": {\n            \"included\": false\n          }\n        },\n        \"uploads\": {\n          \"data\": [\n            {\n              \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n              \"type\": \"uploads\",\n              \"attributes\": {\n                \"urn\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              },\n              \"relationships\": {\n                \"dispute\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            },\n            {\n              \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n              \"type\": \"uploads\",\n              \"attributes\": {\n                \"urn\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              },\n              \"relationships\": {\n                \"dispute\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          ],\n          \"meta\": {\n            \"included\": false\n          }\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2eeb12d0-fef5-4c13-993b-cc48e38bb8f2",
+          "name": "show dispute",
+          "request": {
+            "name": "show dispute",
+            "description": {},
+            "url": {
+              "path": [
+                "investigations",
+                "disputes",
+                ":dispute_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "dispute_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "09cb7350-9aca-4fef-88a9-a5a3f8dffa43",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "disputes",
+                    ":dispute_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "dispute_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0196f9a6-c8ba-9b54-2913-5e0a8d42dd40\",\n    \"type\": \"disputes\",\n    \"attributes\": {\n      \"raised_at\": \"2025-05-23T12:00:00Z\",\n      \"state\": \"open\"\n    },\n    \"links\": {\n      \"self\": \"http://NoWvUijkkBuhBRRfLyOsKiOBnUutiUgLy.kkdoKWMfdK+O\"\n    },\n    \"relationships\": {\n      \"events\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"Merchant rejected dispute\",\n              \"detail\": \"Merchant acknowledged dispute was founded and has returned funds\"\n            }\n          },\n          {\n            \"id\": \"0196f9a7-1aca-54a5-ba76-722e8e70deda\",\n            \"type\": \"events\",\n            \"attributes\": {\n              \"at\": \"2025-05-23T14:30:00Z\",\n              \"title\": \"OFI raised dispute\",\n              \"detail\": \"Zepto requested merchant to take action\"\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      },\n      \"uploads\": {\n        \"data\": [\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          },\n          {\n            \"id\": \"0196f9a7-3465-ae88-7cc8-6fabacb573bc\",\n            \"type\": \"uploads\",\n            \"attributes\": {\n              \"urn\": \"urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc\"\n            },\n            \"relationships\": {\n              \"dispute\": {\n                \"data\": {\n                  \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                }\n              }\n            }\n          }\n        ],\n        \"meta\": {\n          \"included\": false\n        }\n      }\n    }\n  },\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9f2af3bd-de65-4704-9a9d-58860732f49d",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "disputes",
+                    ":dispute_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "dispute_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3baaa810-2e87-4b09-963d-4877e50897e9",
+          "name": "simulate incoming message (sandbox only)",
+          "request": {
+            "name": "simulate incoming message (sandbox only)",
+            "description": {
+              "content": "Simulate an incoming dispute message in sandbox environment",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "investigations",
+                "simulate_incoming_message"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"simulate_action_request\": \"<boolean>\",\n  \"investigation_type_code\": \"<string>\",\n  \"investigation_reason_code\": \"<string>\",\n  \"original_transaction_identification\": \"<string>\",\n  \"narrative\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c79597c8-9fe3-41eb-9f0b-ac773b5a3daf",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "simulate_incoming_message"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"simulate_action_request\": true,\n  \"investigation_type_code\": \"INV13\",\n  \"investigation_reason_code\": \"CUST\",\n  \"original_transaction_identification\": \"0196fb4e-3611-8c42-fffc-7f6852dddbc4\",\n  \"narrative\": \"/SomeKey1/SomeValue1//SomeKey2/SomeValue2/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\n    \"type\": \"incoming_message_simulations\"\n  },\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9173d861-3fbc-4298-aa5e-64b74c998dcb",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "investigations",
+                    "simulate_incoming_message"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"simulate_action_request\": true,\n  \"investigation_type_code\": \"INV13\",\n  \"investigation_reason_code\": \"CUST\",\n  \"original_transaction_identification\": \"0196fb4e-3611-8c42-fffc-7f6852dddbc4\",\n  \"narrative\": \"/SomeKey1/SomeValue1//SomeKey2/SomeValue2/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"jsonapi\": {\n    \"version\": \"1.0\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sandbox.zeptopayments.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a8ecbff2-f6cd-4668-9ac6-57068efc3576",
+    "name": "Zepto Investigations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for the Zepto Investigations API.\n\nContact Support:\n Email: support@zepto.com.au",
+      "type": "text/plain"
+    }
+  }
+}

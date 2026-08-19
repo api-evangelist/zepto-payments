@@ -1,0 +1,1435 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "/oauth/authorize",
+      "accessTokenUrl": "/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agreements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Agreements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/agreements/outgoing",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              },
+              {
+                "name": "authoriser_id",
+                "value": "2c4dec90-8a4c-4685-b620-bd1d7ca05a60",
+                "type": "query",
+                "description": "Authoriser ID (`Contact.data.account.id`), single value, exact match"
+              },
+              {
+                "name": "contact_id",
+                "value": "e5edc264-1771-4809-9cf5-b40baaee15f7",
+                "type": "query",
+                "description": "Contact ID (`Contact.data.id`), single value, exact match"
+              },
+              {
+                "name": "status",
+                "value": "proposed",
+                "type": "query",
+                "description": "Exact match"
+              }
+            ]
+          },
+          "docs": "By default, all outgoing Agreements will be returned. You can apply filters to your query to customise the returned Agreements."
+        },
+        {
+          "info": {
+            "name": "Get an Agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/agreements/:agreement_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_ref",
+                "value": "A.2",
+                "type": "path",
+                "description": "Single value, exact match"
+              }
+            ]
+          },
+          "docs": "Get a single Agreement by its reference"
+        },
+        {
+          "info": {
+            "name": "Cancel an Agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.sandbox.zeptopayments.com/agreements/:agreement_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_ref",
+                "value": "A.2",
+                "type": "path",
+                "description": "Single value, exact match."
+              }
+            ]
+          },
+          "docs": "An Agreement can be cancelled by the initiator at any time whilst the authoriser (Agreement recipient) can only cancel a previously accepted Agreement."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Bank Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Bank Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/bank_accounts",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "By default, all Bank Accounts will be returned.\n"
+        },
+        {
+          "info": {
+            "name": "Get a Bank Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/bank_accounts/:id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "ab3de19b-709b-4a41-82a5-3b43b3dc58c9",
+                "type": "path",
+                "description": "Bank Account ID (`BankAccount.data.id`), single value, exact match"
+              }
+            ]
+          },
+          "docs": "Returns a specified Bank or Float Account owned by your account. For a Float Account, the response includes its current `available_balance`."
+        },
+        {
+          "info": {
+            "name": "List Float Account entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/bank_accounts/:bank_account_id/entries",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "bank_account_id",
+                "value": "ab3de19b-709b-4a41-82a5-3b43b3dc58c9",
+                "type": "path",
+                "description": "Bank Account ID (`BankAccount.data.id`), single value, exact match"
+              },
+              {
+                "name": "min_created_date",
+                "value": "2026-07-01T00:00:00Z",
+                "type": "query",
+                "description": "Filter by minimum `created_at`. The value must not be earlier than the start of the rolling 24-month availability window. Date/time UTC ISO 8601 format, single value, exact match."
+              },
+              {
+                "name": "max_created_date",
+                "value": "2026-07-31T23:59:59Z",
+                "type": "query",
+                "description": "Filter by maximum `created_at`. The value must not be earlier than the start of the rolling 24-month availability window. Date/time UTC ISO 8601 format, single value, exact match."
+              },
+              {
+                "name": "per_page",
+                "value": "20",
+                "type": "query",
+                "description": "Number of entries to return. Defaults to 20 and is constrained to 1–100."
+              },
+              {
+                "name": "starting_after",
+                "value": "019c8814-c767-753c-82f7-3daac44d8662",
+                "type": "query",
+                "description": "ID of the final entry from the previous page. Return the value from the `Link` header unchanged."
+              }
+            ]
+          },
+          "docs": "Lists the settled ledger entries applied to a Float Account. Transactions and Transfers describe business operations; entries describe what was posted to this Float Account and changed its available balance. An entry may result from a payment, transfer, refund, recovery, return, fee, or manual adjustment, making this endpoint the complete account-level record within the availability window for reconciliation.\n\nFloat Account entries are available through this API for a rolling 24-month period, ca"
+        },
+        {
+          "info": {
+            "name": "Get a Float Account entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/bank_accounts/:bank_account_id/entries/:entry_id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "bank_account_id",
+                "value": "ab3de19b-709b-4a41-82a5-3b43b3dc58c9",
+                "type": "path",
+                "description": "Bank Account ID (`BankAccount.data.id`), single value, exact match"
+              },
+              {
+                "name": "entry_id",
+                "value": "019c8814-c767-753c-82f7-3daac44d8662",
+                "type": "path",
+                "description": "Float Account entry ID (`FloatAccountEntry.data.id`), single value, exact match"
+              }
+            ]
+          },
+          "docs": "Gets one settled entry applied to a Float Account.\n\nFloat Account entries are available through this API for a rolling 24-month period, calculated from the time of the request."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/anyone",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this endpoint when you want to pay somebody.\n\n<aside class=\"notice\">\n  A Contact added this way cannot be debited.\n</aside>\n"
+        },
+        {
+          "info": {
+            "name": "List all Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/contacts",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              },
+              {
+                "name": "name",
+                "value": "Some name",
+                "type": "query",
+                "description": "Single value, string search"
+              },
+              {
+                "name": "nickname",
+                "value": "Some_nickname",
+                "type": "query",
+                "description": "Single value, string search"
+              },
+              {
+                "name": "email",
+                "value": "george@gmail.com",
+                "type": "query",
+                "description": "Single value, string search"
+              },
+              {
+                "name": "bank_account_id",
+                "value": "095c5ab7-7fa8-40fd-b317-cddbbf4c8fbc",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "bank_account_branch_code",
+                "value": "068231",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "bank_account_account_number",
+                "value": "4395959",
+                "type": "query",
+                "description": "Single value, exact match"
+              }
+            ]
+          },
+          "docs": "By default, all Contacts will be returned. You can apply filters to your query to customise the returned Contact list.\n"
+        },
+        {
+          "info": {
+            "name": "Get a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "55afddde-4296-4daf-8e49-7ba481ef9608",
+                "type": "path",
+                "description": "Contact ID (`Contact.data.id`)"
+              }
+            ]
+          },
+          "docs": "Get a single Contact by its ID"
+        },
+        {
+          "info": {
+            "name": "Update a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "55afddde-4296-4daf-8e49-7ba481ef9608",
+                "type": "path",
+                "description": "Contact ID (`Contact.data.id`)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "You can update the name, email, bank account and metadata of any Contact.\n<aside class=\"notice\">\n  <ul>\n    <li>Previous transactions to this Contact will retain the name and bank account that was used at the time.</li>\n    <li>You cannot update a Contact's bank account details if they currently have an accepted agreement.</li>\n    <li>Any active Bank Connections will be lost if you change the Contact's bank account.</li>\n    <li>See our <a href=\"https://help.zepto.money/en/articles/3829211-how-"
+        },
+        {
+          "info": {
+            "name": "Remove a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "55afddde-4296-4daf-8e49-7ba481ef9608",
+                "type": "path",
+                "description": "Contact ID (`Contact.data.id`)"
+              }
+            ]
+          },
+          "docs": "<aside class=\"notice\">\n  <ul>\n    <li>Removing a Contact will not affect your transaction history.</li>\n    <li>Removing a Receivable Contact will deactivate any associated PayIDs.</li>\n  </ul>\n</aside>\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contacts (Receivable)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add a Receivable Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/receivable",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Receive funds from a Contact by allowing them to pay to a personalised PayID or account number. Perfect for reconciling incoming funds to a customer, receiving funds instantly, eliminating human error & improving your customer's experience.\n\n\n<aside class=\"notice\">\n  To enable this feature, please contact our support team with the following information:\n    <li>Your full legal business name</li>\n    <li>A legally owned domain name: for your PayID email addresses</li>\n    <li><strong>alias_name</"
+        },
+        {
+          "info": {
+            "name": "Disable a Receivable Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:contact_id/receivable/disable",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "2d2429c2-b868-455e-80ef-915df7c115a7",
+                "type": "path",
+                "description": "Receivable Contact ID (`ReceivableContact.data.id`)"
+              }
+            ]
+          },
+          "docs": "This endpoint should be used to Disable a Receivable Contact.\n\nThis will reject all payments made to the relevant Account number or PayID and return them to your customer. Payments made via DE and NPP will be rejected.\n"
+        },
+        {
+          "info": {
+            "name": "Reactivate a Receivable Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:contact_id/receivable/activate",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "2d2429c2-b868-455e-80ef-915df7c115a7",
+                "type": "path",
+                "description": "Receivable Contact ID (`ReceivableContact.data.id`)"
+              }
+            ]
+          },
+          "docs": "This endpoint should be used to Reactivate a Receivable Contact that has been previously Disabled.\n\nThis will once again allow you to receive funds from your customer via both DE and NPP channels.\n"
+        },
+        {
+          "info": {
+            "name": "Update a Receivable Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.sandbox.zeptopayments.com/contacts/:contact_id/receivable",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "2d2429c2-b868-455e-80ef-915df7c115a7",
+                "type": "path",
+                "description": "Receivable Contact ID (`ReceivableContact.data.id`)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "You can update the PayID name of a Receivable Contact.\n\n<aside class=\"notice\">\n  The Receivable Contact you are updating must be active.\n</aside>\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payments",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              }
+            ]
+          },
+          "docs": "List all Payments"
+        },
+        {
+          "info": {
+            "name": "Make a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payments",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              },
+              {
+                "name": "Idempotency-Key",
+                "value": "{unique-uuid-per-payment}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "To enable custom payment flows, the required payment channel can be selected by setting the _channel_ attribute to one of the following combinations:\n\n<ul>\n  <li>[\"new_payments_platform\"] - for faster payments 24/7/365</li>\n  <li>[\"direct_entry\"] - for slower traditional payments</li>\n  <li>[\"new_payments_platform\", \"direct_entry\"] - enables automatic channel switching if a payment fails on the NPP</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header w"
+        },
+        {
+          "info": {
+            "name": "Get a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payments/:payment_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_ref",
+                "value": "PB.1",
+                "type": "path",
+                "description": "Payment reference"
+              }
+            ]
+          },
+          "docs": "Get a single payment by its reference"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Void a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.sandbox.zeptopayments.com/payouts/:ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "ref",
+                "value": "D.48",
+                "type": "path",
+                "description": "Payment debit reference number e.g D.48"
+              }
+            ]
+          },
+          "docs": "You can void any Payment from your account that has not yet matured.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payment Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Request Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payment_requests",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              },
+              {
+                "name": "Idempotency-Key",
+                "value": "{unique-uuid-per-payment-request}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to a duplicate funds collection. To understand more on how to make idempotent requests, please refer to our <a href=\"https://docs.zeptopayments.com/v20260101/reference/idempotent-requests\">Idempote"
+        },
+        {
+          "info": {
+            "name": "Get a Payment Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payment_requests/:payment_request_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_request_ref",
+                "value": "PR.3",
+                "type": "path",
+                "description": "Single value, exact match"
+              }
+            ]
+          },
+          "docs": "Get a Payment Request"
+        },
+        {
+          "info": {
+            "name": "Cancel a Payment Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.sandbox.zeptopayments.com/payment_requests/:payment_request_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_request_ref",
+                "value": "PR.3",
+                "type": "path",
+                "description": "Single value, exact match"
+              }
+            ]
+          },
+          "docs": "A Payment Request can be cancelled as long as the associated transaction's state is <strong>maturing</strong> or <strong>matured</strong>."
+        },
+        {
+          "info": {
+            "name": "List Collections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payment_requests/collections",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              }
+            ]
+          },
+          "docs": "Payment Requests where you are the creditor and are collecting funds from your debtor using traditional direct-debit."
+        },
+        {
+          "info": {
+            "name": "List Receivables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payment_requests/receivables",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              }
+            ]
+          },
+          "docs": "Payment Requests where the debtor is sending you funds ([Receivable Contacts](https://docs.zeptopayments.com/reference/addareceivablecontact)). This endpoint exposes all received payments."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Refunds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Issue a Refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/credits/:credit_ref/refunds",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              },
+              {
+                "name": "Idempotency-Key",
+                "value": "{unique-uuid-per-refund}"
+              }
+            ],
+            "params": [
+              {
+                "name": "credit_ref",
+                "value": "C.625v",
+                "type": "path",
+                "description": "The credit reference number e.g C.625v"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Certain rules apply to the issuance of a refund:\n<ul>\n  <li>Must be applied against a successfully cleared Payment Request (Collections or Receivables)</li>\n  <li>Many refunds may be created against the original Payment Request</li>\n  <li>The total refunded amount must not exceed the original value</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the head"
+        },
+        {
+          "info": {
+            "name": "List Refunds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/refunds/outgoing",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              }
+            ]
+          },
+          "docs": "List Refunds"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/refunds/:refund_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "refund_ref",
+                "value": "PRF.75f",
+                "type": "path",
+                "description": "Single value, exact match"
+              }
+            ]
+          },
+          "docs": "Get a single Refund by its reference"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/transactions",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              },
+              {
+                "name": "ref (debit or credit)",
+                "value": "D.1i",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "parent_ref",
+                "value": "PRF.92a",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "bank_ref",
+                "value": "DT.12",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "both_parties",
+                "value": "true",
+                "type": "query",
+                "description": "Single value, exact match. Will also list debits & credits applied to the other party"
+              },
+              {
+                "name": "status",
+                "value": "maturing",
+                "type": "query",
+                "description": "Multiple values, exact match"
+              },
+              {
+                "name": "category",
+                "value": "payout",
+                "type": "query",
+                "description": "Multiple values, exact match"
+              },
+              {
+                "name": "type",
+                "value": "debit",
+                "type": "query",
+                "description": "Multiple values, exact match"
+              },
+              {
+                "name": "other_party",
+                "value": "party people",
+                "type": "query",
+                "description": "Single value, string search. Cannot be combine with <code>both_parties</code> query string"
+              },
+              {
+                "name": "other_party_bank_ref",
+                "value": "CT.3a",
+                "type": "query",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "party_contact_id",
+                "value": "a67036fc-217e-437a-83f4-89e90724bea0",
+                "type": "query",
+                "description": "Single value, exact match. Cannot be combine with <code>both_parties</code> query string"
+              },
+              {
+                "name": "description",
+                "value": "some description",
+                "type": "query",
+                "description": "Single value, string search"
+              },
+              {
+                "name": "min_amount",
+                "value": "500",
+                "type": "query",
+                "description": "Cents, single value, exact match"
+              },
+              {
+                "name": "max_amount",
+                "value": "1000",
+                "type": "query",
+                "description": "Cents, single value, exact match"
+              },
+              {
+                "name": "min_created_date",
+                "value": "2017-05-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "max_created_date",
+                "value": "2017-06-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "min_matured_date",
+                "value": "2017-05-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "max_matured_date",
+                "value": "2017-06-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "min_cleared_date",
+                "value": "2017-05-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "max_cleared_date",
+                "value": "2017-06-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "min_status_changed_date",
+                "value": "2017-05-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "max_status_changed_date",
+                "value": "2017-06-10T00:00:00Z",
+                "type": "query",
+                "description": "Date/time UTC ISO 8601 format, single value, exact match"
+              }
+            ]
+          },
+          "docs": "<aside class=\"notice\">By default, Zepto will search and return all transactions created in the <strong>last 30 days</strong>. You can adjust this up to <strong>1 year</strong> by defining the <code>min_created_date</code> query string parameter defined below.</aside>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Transfers (Available soon)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/transfers",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Page of results to return, single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "100",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              },
+              {
+                "name": "from_bank_account_id",
+                "value": "a79423b2-3827-4cf5-9eda-dc02a298d005",
+                "type": "query",
+                "description": "Source bank/float account UUID, single value, exact match"
+              },
+              {
+                "name": "to_bank_account_id",
+                "value": "0921a719-c79d-4ffb-91b6-1b30ab77d14d",
+                "type": "query",
+                "description": "Target bank/float account UUID, single value, exact match"
+              }
+            ]
+          },
+          "docs": "List all Transfers (Available soon)"
+        },
+        {
+          "info": {
+            "name": "Add a Transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/transfers",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              },
+              {
+                "name": "Idempotency-Key",
+                "value": "{unique-uuid-per-transfer}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this endpoint when you want to create a Transfer between any 2 of your float/bank accounts.\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a "
+        },
+        {
+          "info": {
+            "name": "Get a Transfer (Available soon)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/transfers/:transfer_ref",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "transfer_ref",
+                "value": "T.11ub",
+                "type": "path",
+                "description": "Transfer reference"
+              }
+            ]
+          },
+          "docs": "Get a single transfer by its reference"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Ping",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ping",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/ping",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "A simple endpoint to test your connectivity and authentication."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get user details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/user",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Get user details"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/webhooks",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "List all your application's webhook configurations."
+        },
+        {
+          "info": {
+            "name": "List deliveries for a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/webhooks/:webhook_id/deliveries",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "webhook_id",
+                "value": "31918dce-2dc3-405b-8d3c-fd3901b17e9f",
+                "type": "path",
+                "description": "Single value, exact match"
+              },
+              {
+                "name": "ref",
+                "value": "",
+                "type": "query",
+                "description": "Filter deliveries by ref (`WebhookDelivery.data.ref`), single value, exact match"
+              },
+              {
+                "name": "per_page",
+                "value": "20",
+                "type": "query",
+                "description": "Number of results per page, single value, exact match"
+              },
+              {
+                "name": "starting_after",
+                "value": "31918dce-2dc3-405b-8d3c-fd3901b17e9f",
+                "type": "query",
+                "description": "Display all webhook deliveries after this webhook delivery offset UUID, single value, exact match"
+              },
+              {
+                "name": "event_type",
+                "value": "agreement.accepted",
+                "type": "query",
+                "description": "See ([Data schemas](/#data-schemas)) for a list of possible values, single value, exact match"
+              },
+              {
+                "name": "since",
+                "value": "2017-05-10T00:00:00Z",
+                "type": "query",
+                "description": "Display all webhook deliveries after this date. Date/time UTC ISO 8601 format, single value, exact match"
+              },
+              {
+                "name": "response_status_code",
+                "value": "418",
+                "type": "query",
+                "description": "Single value / multiple values separated by commas"
+              },
+              {
+                "name": "state",
+                "value": "completed",
+                "type": "query",
+                "description": "Filter deliveries by state, single value / multiple values separated by commas. See [Our delivery promise](#our-delivery-promises)"
+              }
+            ]
+          },
+          "docs": "NOTE: Webhook deliveries are stored for 7 days."
+        },
+        {
+          "info": {
+            "name": "Get a Webhook Delivery",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/webhook_deliveries/:id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "31918dce-2dc3-405b-8d3c-fd3901b17e9f",
+                "type": "path",
+                "description": "WebhookDelivery ID (`WebhookDelivery.data.id`)"
+              }
+            ]
+          },
+          "docs": "Get a single webhook delivery by ID."
+        },
+        {
+          "info": {
+            "name": "Resend a Webhook Delivery",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/webhook_deliveries/:id/redeliver",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "31918dce-2dc3-405b-8d3c-fd3901b17e9f",
+                "type": "path",
+                "description": "WebhookDelivery ID (`WebhookDelivery.data.id`)"
+              }
+            ]
+          },
+          "docs": "Use this endpoint to resend a failed webhook delivery.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sandbox Only",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Simulate incoming PayID payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/simulate/incoming_npp_payid_payment",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate receiving a real-time PayID payment from one of your Receivable Contacts."
+        },
+        {
+          "info": {
+            "name": "Simulate an incoming real-time payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/simulate/incoming_npp_bban_payment",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate receiving a real-time payment to either a Receivable Contact or one of your float accounts, made using a BSB and account number (i.e. not via PayID).\n"
+        },
+        {
+          "info": {
+            "name": "Simulate an incoming DE payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/simulate/incoming_de_payment",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate receiving a Direct Entry payment (i.e. not a real-time payment) to either a Receivable Contact or one of your float accounts.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

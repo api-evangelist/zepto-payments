@@ -1,0 +1,163 @@
+{
+  "item": [
+    {
+      "id": "a3a43b18-fea6-4fa6-a52b-2942bd3631aa",
+      "name": "Merchant Reports",
+      "description": {
+        "content": "The Zepto Merchant Reports API is used to generate temporary download links for reports. Access to this API is limited. Please contact Zepto for more information.",
+        "type": "text/plain"
+      },
+      "item": [],
+      "event": []
+    },
+    {
+      "id": "2cde0c15-c1c8-4952-8970-2ad8ea2b74fe",
+      "name": "PayTo Settlement",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "bf5c739a-e3ad-48c6-b096-820390966f85",
+          "name": "generate download link",
+          "request": {
+            "name": "generate download link",
+            "description": {
+              "content": "Generates a presigned download link for the PayTo settlement report for the given date.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "merchant_reports",
+                "payto_settlement",
+                ":report_date",
+                "download"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<date>",
+                  "key": "report_date",
+                  "description": "(Required) The date of the settlement report in YYYY-MM-DD format."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "beabf4fe-6a88-4a5d-98c5-e6e61bf01dd2",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "merchant_reports",
+                    "payto_settlement",
+                    ":report_date",
+                    "download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<date>",
+                      "key": "report_date",
+                      "description": "(Required) The date of the settlement report in YYYY-MM-DD format."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"urn:zepto:data:artefact:payto-settlement.d77d1e34ae554b8eb193c6df65f5a686.20251029.csv\",\n    \"type\": \"merchant_reports\",\n    \"attributes\": {\n      \"type\": \"payto_settlement\",\n      \"download_link\": {\n        \"url\": \"https://a.presigned.url/\",\n        \"expires_at\": \"2006-04-11T15:38:20.419Z\"\n      }\n    },\n    \"links\": {\n      \"download\": {\n        \"href\": \"https://api.zeptopayments.com/merchant_reports/payto_settlement/2025-04-16/download\",\n        \"meta\": {\n          \"method\": \"POST\",\n          \"zepto_account_id\": \"00000000-0000-0000-0000-000000000000\"\n        }\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sandbox.zeptopayments.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ccce59e4-12c3-4bff-8c70-140abe77bee2",
+    "name": "Zepto Merchant Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for the Zepto Merchant Reports API.\n\nContact Support:\n Email: support@zepto.com.au",
+      "type": "text/plain"
+    }
+  }
+}

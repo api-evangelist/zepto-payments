@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto Merchant Reports API",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "PayTo Settlement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "generate download link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/merchant_reports/payto_settlement/:report_date/download",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "report_date",
+                "value": "",
+                "type": "path",
+                "description": "The date of the settlement report in YYYY-MM-DD format."
+              }
+            ]
+          },
+          "docs": "Generates a presigned download link for the PayTo settlement report for the given date."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

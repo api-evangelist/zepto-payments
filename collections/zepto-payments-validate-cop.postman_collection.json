@@ -1,0 +1,451 @@
+{
+  "item": [
+    {
+      "id": "6d230e28-b875-4ccf-b4bc-8b4f7358acae",
+      "name": "CoP Account Validations",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "901d4d65-0496-40c2-8647-3420d666a959",
+          "name": "account name validation",
+          "request": {
+            "name": "account name validation",
+            "description": {
+              "content": "Validates a given name matches a given account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cop",
+                "account",
+                "validate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                "key": "Zepto-API-Version",
+                "value": "20250101"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"<string>\",\n  \"account_identifier\": {\n    \"type\": \"<string>\",\n    \"value\": \"<string>\"\n  },\n  \"party_name\": \"<string>\",\n  \"requester\": {\n    \"id\": \"<string>\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f4949ad4-d8dc-4cac-82c3-4d44c3d1765e",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"outcome\": {\n      \"result\": \"match\",\n      \"match_name\": \"John Doe and others\",\n      \"message\": \"The account is in the name of John Doe and others\"\n    },\n    \"insights\": {\n      \"risk_score\": 25,\n      \"is_joint\": true,\n      \"suggested_payment_channels\": [\n        \"npp.sct\",\n        \"de.dc\"\n      ]\n    },\n    \"uid\": \"biz_cop_request_123456\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "abe0a4f6-be98-44d8-aed6-ca859f42bb44",
+              "name": "unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"Unauthorised access token\",\n      \"detail\": \"Access token is expired or not valid\",\n      \"links\": {\n        \"about\": \"https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a85e7ed4-9b4a-4ac3-98bb-13c38b8e1144",
+              "name": "forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"title\": \"Unauthorised\",\n      \"detail\": \"This user is not permitted to perform the requested action.\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "03110f90-c297-4e52-a624-0a5b00202113",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"ZCOPR02\",\n      \"title\": \"No account found\",\n      \"detail\": \"No record of the account can be found.\",\n      \"retryable\": false\n    }\n  ],\n  \"data\": {\n    \"uid\": \"biz_cop_request_123456\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "75b35eb3-3835-410c-8665-8199b64e5b2d",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"ZCOPR00\",\n      \"title\": \"Unable to confirm\",\n      \"detail\": \"We could not confirm the account name match.\",\n      \"retryable\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc13e829-7207-41dd-af60-58ebd08aab7a",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cop",
+                    "account",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.",
+                    "key": "Zepto-API-Version",
+                    "value": "20260101"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"biz_cop_request_123456\",\n  \"account_identifier\": {\n    \"type\": \"bban\",\n    \"value\": \"062000-11111111\"\n  },\n  \"party_name\": \"John Doe\",\n  \"requester\": {\n    \"id\": \"AdminUser1234\"\n  },\n  \"sandbox\": {\n    \"simulate\": \"match\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sandbox.zeptopayments.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c27c95f5-20cb-4aef-a989-e2ebc5e92c32",
+    "name": "Zepto Validate API (Confirmation of Payee)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Zepto Validate API (Confirmation of Payee) endpoints. Access to this API is limited. Please contact Zepto for more information.",
+      "type": "text/plain"
+    }
+  }
+}

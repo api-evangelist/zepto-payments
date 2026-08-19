@@ -133,3 +133,9 @@ tools:
 - name: SimulateIncomingDEPayment
   description: Simulate an incoming DE payment
   source_operation: openapi/zepto-payments-zepto.yml#SimulateIncomingDEPayment
+deployment:
+  mode: none
+  verified: derived
+  tools: 41
+  checked: '2026-08-12'
+  source: catalog MCP census

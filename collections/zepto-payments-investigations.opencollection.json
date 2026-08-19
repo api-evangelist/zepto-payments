@@ -1,0 +1,170 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto Investigations API",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Disputes (Beta)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "accept dispute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/action_requests/:action_request_id/accept",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "action_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "accept dispute"
+        },
+        {
+          "info": {
+            "name": "reject dispute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/action_requests/:action_request_id/reject",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "action_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "reject dispute"
+        },
+        {
+          "info": {
+            "name": "upload evidence",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/action_requests/:action_request_id/upload",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "action_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "upload evidence"
+        },
+        {
+          "info": {
+            "name": "list disputes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/disputes",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "list disputes"
+        },
+        {
+          "info": {
+            "name": "show dispute",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/disputes/:dispute_id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "dispute_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "show dispute"
+        },
+        {
+          "info": {
+            "name": "simulate incoming message (sandbox only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/investigations/simulate_incoming_message",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate an incoming dispute message in sandbox environment"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

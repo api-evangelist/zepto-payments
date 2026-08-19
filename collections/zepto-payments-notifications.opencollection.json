@@ -1,0 +1,15 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Notifications",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [],
+  "bundled": true
+}

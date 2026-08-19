@@ -1,0 +1,639 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto PayTo API",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agreements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "list agreements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              },
+              {
+                "name": "starting_after",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor value. Set by following \"next\" links."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Filter agreements by state. Multiple values can be separated by commas."
+              },
+              {
+                "name": "initiator_name",
+                "value": "Jane's Flowers",
+                "type": "query",
+                "description": "Filter agreements by initiator name. The filtering is case sensitive and must be an exact match."
+              },
+              {
+                "name": "min_created_date",
+                "value": "2022-01-01",
+                "type": "query",
+                "description": "Filter by minimum created_at date. ISO8601 format."
+              },
+              {
+                "name": "max_created_date",
+                "value": "2022-01-31",
+                "type": "query",
+                "description": "Filter by maximum created_at date. ISO8601 format."
+              }
+            ]
+          },
+          "docs": "list agreements"
+        },
+        {
+          "info": {
+            "name": "create agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "create agreement"
+        },
+        {
+          "info": {
+            "name": "show agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "show agreement"
+        },
+        {
+          "info": {
+            "name": "list agreement history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/history",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              },
+              {
+                "name": "starting_after",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor value. Set by following \"next\" links."
+              }
+            ]
+          },
+          "docs": "list agreement history"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Agreement modification",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "show amendment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/amendment",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This will return any in-progress amendment for an Agreement (e.g. no response from debtor). If the Agreement has no in-progress amendment, endpoint will return `404`"
+        },
+        {
+          "info": {
+            "name": "create amendment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/amendment",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an amendment for an existing Agreement.\n\nAny attributes of the existing Agreement that will no longer be relevant after the amendment has been applied must be set to `null` as part of the amendment.\nFor example, when amending `payment_terms.type` from `\"fixed\"` to `\"variable\"`, `payment_terms.amount` must be set to `null`.\n"
+        },
+        {
+          "info": {
+            "name": "create amendment_recall",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/amendment/recall",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An in-progress amendment for an Agreement can be recalled if debtor has not responded yet. Once the amendment as been recalled a new amendment can be created."
+        },
+        {
+          "info": {
+            "name": "cancel agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/cancellation",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "cancel agreement"
+        },
+        {
+          "info": {
+            "name": "suspend agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/suspension",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "suspend agreement"
+        },
+        {
+          "info": {
+            "name": "reactivate agreement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/reactivation",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "reactivate agreement"
+        },
+        {
+          "info": {
+            "name": "simulate debtor [sandbox]",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/agreements/:agreement_uid/simulate_debtor_action",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "agreement_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**SANDBOX ONLY** Enables simulation of actions debtor party can trigger for an agreement: `amendment`, `cancellation`, `suspension` & `reactivation`"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Alias Resolution",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "resolve",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/alias_resolution",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is used to resolve an alias to a display name. It is possible for this endpoint to return a 503 service unavailable error if the addressing service is not available."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "list payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/payments",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              },
+              {
+                "name": "starting_after",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor value. Set by following \"next\" links."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Filter payments by state. Multiple values can be separated by commas."
+              },
+              {
+                "name": "min_created_date",
+                "value": "2022-01-01",
+                "type": "query",
+                "description": "Filter by minimum created_at date. ISO8601 format."
+              },
+              {
+                "name": "max_created_date",
+                "value": "2022-01-31",
+                "type": "query",
+                "description": "Filter by maximum created_at date. ISO8601 format."
+              },
+              {
+                "name": "agreement_uid",
+                "value": "biz_agreement_000123",
+                "type": "query",
+                "description": "Filter payments by agreement."
+              },
+              {
+                "name": "agreement_initiator_name",
+                "value": "Jane's Flowers",
+                "type": "query",
+                "description": "Filter payments by initiator name. The filtering is case sensitive and must be an exact match."
+              },
+              {
+                "name": "refunds",
+                "value": "included",
+                "type": "query",
+                "description": "Filter payments by whether or not they are facilitating a refund."
+              }
+            ]
+          },
+          "docs": "list payments"
+        },
+        {
+          "info": {
+            "name": "create payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/payments",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "create payment"
+        },
+        {
+          "info": {
+            "name": "show payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/payments/:payment_uid",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_uid",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "show payment"
+        },
+        {
+          "info": {
+            "name": "retry payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/payments/:payment_uid/retry",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_uid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retry a failed payment as long as it has failed due to a [retryable]https://docs.zeptopayments.com/reference/payto-reason-codes) reason as indicated by the `retryable` boolean field within the payment's failure object. Payments may be retried up to 10 times while within the related agreement's validity begin and end dates. Additionally, payments can only be retried 5 times within a 24 hour period (the first submission is included in this count)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Refunds (Beta)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "list refunds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/refunds",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              },
+              {
+                "name": "starting_after",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor value. Set by following \"next\" links."
+              },
+              {
+                "name": "min_created_date",
+                "value": "2022-01-01",
+                "type": "query",
+                "description": "Filter by minimum created_at date. ISO8601 format."
+              },
+              {
+                "name": "max_created_date",
+                "value": "2022-01-31",
+                "type": "query",
+                "description": "Filter by maximum created_at date. ISO8601 format."
+              },
+              {
+                "name": "original_payment_uid",
+                "value": "biz_payment_000123",
+                "type": "query",
+                "description": "Filter refunds by original payment uid."
+              }
+            ]
+          },
+          "docs": "list refunds"
+        },
+        {
+          "info": {
+            "name": "create refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/payto/refunds",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "create refund"
+        },
+        {
+          "info": {
+            "name": "show refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/payto/refunds/:refund_uid",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "refund_uid",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "show refund"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

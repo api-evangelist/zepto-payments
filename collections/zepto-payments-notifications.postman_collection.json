@@ -1,0 +1,40 @@
+{
+  "item": [
+    {
+      "id": "427695f8-3536-4dce-a803-bee3d1dce0ce",
+      "name": "Float Accounts",
+      "description": {
+        "content": "Webhooks relating to out of band activity on float bank accounts",
+        "type": "text/plain"
+      },
+      "item": [],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sandbox.zeptopayments.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "647e8b5f-d497-4c67-a45e-c218bfbdd52e",
+    "name": "Notifications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for component notifications.\n\nContact Support:\n Email: support@zepto.com.au",
+      "type": "text/plain"
+    }
+  }
+}

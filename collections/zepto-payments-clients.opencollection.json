@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Zepto Clients API (Alpha)",
+    "version": "20260101"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Clients",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/clients",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              },
+              {
+                "name": "starting_after",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor value. Set by following \"next\" links."
+              },
+              {
+                "name": "legal_name",
+                "value": "",
+                "type": "query",
+                "description": "Filter clients by legal name. The filtering is case insensitive and must match the beginning of the provided legal name."
+              },
+              {
+                "name": "australian_business_number",
+                "value": "",
+                "type": "query",
+                "description": "Filter clients by ABN."
+              }
+            ]
+          },
+          "docs": "List Clients"
+        },
+        {
+          "info": {
+            "name": "Create Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sandbox.zeptopayments.com/clients",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The Zepto Clients API allows registration of clients who indirectly use the Zepto platform\nvia your Zepto integration.\n\nMerchants are required to keep their sub-client details up to date with Zepto via the update client endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "Show Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sandbox.zeptopayments.com/clients/:client_id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Show Client"
+        },
+        {
+          "info": {
+            "name": "Update Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.sandbox.zeptopayments.com/clients/:client_id",
+            "headers": [
+              {
+                "name": "Zepto-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "There are certain attributes that cannot be updated here such as the ABN, ACN and MCC. Please reach out to the Zepto Compliance team (compliance@zepto.com.au) to have them updated."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
