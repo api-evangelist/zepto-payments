@@ -155,6 +155,10 @@ apis:
   humanURL: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
   baseURL: https://api.zeptopayments.com
   tags:
+  - Webhook
+  - Event
+  - Notification
+  tags_raw:
   - Webhooks
   - Events
   - Notifications
