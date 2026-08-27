@@ -34,137 +34,1005 @@ created: '2026-07-24'
 modified: '2026-07-24'
 specificationVersion: '0.23'
 apis:
-- aid: zepto-payments:zepto-api
-  name: Zepto API
-  description: >-
-    Zepto's core account-to-account payments API — move money over the New
-    Payments Platform (NPP), BECS Direct Entry and PayID with payments, payouts,
-    payment requests, transfers, refunds, agreements, contacts, bank accounts
-    and transaction history. Authenticated with OAuth2 (authorization code)
-    using scoped access tokens.
+- aid: zepto-payments:zepto-payments-agreement-modification-api
+  name: Zepto Agreement modification API
+  description: Modify existing agreements
   humanURL: https://docs.zeptopayments.com/reference/zepto-api
   baseURL: https://api.zeptopayments.com
   tags:
-  - Payments
-  - Payouts
-  - Account-to-Account
-  - NPP
-  - Direct Entry
+  - Agreement modification
   properties:
   - type: OpenAPI
-    url: openapi/zepto-payments-zepto.yml
+    url: openapi/zepto-payments-agreement-modification-api-openapi.yml
   - type: Documentation
     url: https://docs.zeptopayments.com/docs/zepto-api
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/makeapayment
-- aid: zepto-payments:payto-api
-  name: Zepto PayTo API
-  description: >-
-    Programmatic PayTo mandate management and real-time collection — create,
-    amend, suspend, reactivate and cancel PayTo agreements, then collect
-    authorised real-time payments and issue refunds against them. Zepto is a
-    Connected Institution to the NPP for PayTo.
-  humanURL: https://docs.zeptopayments.com/reference/agreements
-  baseURL: https://api.zeptopayments.com
-  tags:
-  - PayTo
-  - Agreements
-  - Mandates
-  - Real-Time Payments
-  properties:
-  - type: OpenAPI
-    url: openapi/zepto-payments-pay-to.yml
   - type: Documentation
     url: https://zepto.com.au/solutions/payto
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/agreements
-- aid: zepto-payments:validate-cop-api
-  name: Zepto Validate API (Confirmation of Payee)
-  description: >-
-    Confirmation of Payee (CoP) account validation — verify that a payee's
-    account name matches the account details in real time before initiating a
-    payment, reducing misdirected payments and payment fraud.
-  humanURL: https://docs.zeptopayments.com/reference/cop-account-validations
-  baseURL: https://api.zeptopayments.com
-  tags:
-  - Confirmation of Payee
-  - Validation
-  - Fraud
-  properties:
-  - type: OpenAPI
-    url: openapi/zepto-payments-validate-cop.yml
   - type: Documentation
     url: https://docs.zeptopayments.com/docs/zepto-validate
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/cop-account-validations
-- aid: zepto-payments:investigations-api
-  name: Zepto Investigations API
-  description: >-
-    Disputes and investigations (Beta) — raise and manage payment disputes,
-    respond to action requests (accept, reject, upload evidence) and simulate
-    incoming investigation messages in sandbox.
-  humanURL: https://docs.zeptopayments.com/reference/disputes-beta
-  baseURL: https://api.zeptopayments.com
-  tags:
-  - Disputes
-  - Investigations
-  properties:
-  - type: OpenAPI
-    url: openapi/zepto-payments-investigations.yml
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/disputes-beta
-- aid: zepto-payments:clients-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-agreements-api
+  name: Zepto Agreements API
+  description: Create and query agreements
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Agreements
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-agreements-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-alias-resolution-api
+  name: Zepto Alias Resolution API
+  description: Resolve the display name associated with a PayID alias
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Alias Resolution
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-alias-resolution-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-bank-accounts-api
+  name: Zepto Bank Accounts API
+  description: Your currently linked up bank accounts.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Bank Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-bank-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-clients-api
   name: Zepto Clients API
   description: >-
-    Client management (Alpha) — create and manage sub-clients and their
-    Merchant Category Codes (MCC) for platform and marketplace models operating
-    on top of Zepto's rails.
-  humanURL: https://docs.zeptopayments.com/reference/clients
+    The Zepto Clients API allows registration of clients who indirectly use the Zepto platform
+
+    via your Zepto integration.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
   baseURL: https://api.zeptopayments.com
   tags:
   - Clients
-  - Platforms
-  - Merchant Category Codes
   properties:
   - type: OpenAPI
-    url: openapi/zepto-payments-clients.yml
+    url: openapi/zepto-payments-clients-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/clients
-- aid: zepto-payments:merchant-reports-api
-  name: Zepto Merchant Reports API
-  description: >-
-    Merchant reporting — download PayTo settlement reports by report date for
-    reconciliation of collected and settled funds.
-  humanURL: https://docs.zeptopayments.com/reference/openapi-specifications
-  baseURL: https://api.zeptopayments.com
-  tags:
-  - Reporting
-  - Reconciliation
-  - Settlement
-  properties:
-  - type: OpenAPI
-    url: openapi/zepto-payments-merchant-reports.yml
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/openapi-specifications
-- aid: zepto-payments:notifications-api
-  name: Zepto Notifications API (Webhooks)
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-contacts-api
+  name: Zepto Contacts API
   description: >-
-    Webhook event notifications — subscribe to asynchronous payment and account
-    events (for example float_accounts.unmatched_credit.received) to drive
-    real-time reconciliation and payment status handling.
-  humanURL: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+    Your Contacts form an address book of parties with whom you can interact. In order to initiate any
+    type of transaction you must first have the party in your Contact list.
+
+
+    <aside class="notice">In the case of Open Agreements, the authorising party will be automatically
+    added to your Contacts list.</aside>
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
   baseURL: https://api.zeptopayments.com
   tags:
-  - Webhook
-  - Event
-  - Notification
-  tags_raw:
-  - Webhooks
-  - Events
-  - Notifications
+  - Contacts
   properties:
   - type: OpenAPI
-    url: openapi/zepto-payments-notifications.yml
+    url: openapi/zepto-payments-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-contacts-receivable-api
+  name: Zepto Contacts (Receivable) API
+  description: The Contacts (Receivable) API from Zepto — 4 operation(s) for contacts (receivable).
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Contacts (Receivable)
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-contacts-receivable-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-cop-account-validations-api
+  name: Zepto CoP Account Validations API
+  description: The CoP Account Validations API from Zepto — 1 operation(s) for cop account validations.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - CoP Account Validations
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-cop-account-validations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-disputes-beta-api
+  name: Zepto Disputes (Beta) API
+  description: >-
+    The Zepto Disputes API is for managing disputes. Access to this API is limited. Please contact Zepto
+    for more information.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Disputes (Beta)
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-disputes-beta-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-float-accounts-api
+  name: Zepto Float Accounts API
+  description: Webhooks relating to out of band activity on float bank accounts
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Float Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-float-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-payment-requests-api
+  name: Zepto Payment Requests API
+  description: >-
+    A Payment Request (PR) is used to collect funds, via direct debit, from one of your Contacts (as long
+    as there is an accepted Agreement in place).
+
+
+    <div class="middle-header">Applicable scenarios</div>
+
+
+    1. **You send a Payment Request to a [Contact](/#Zepto-API-Contacts) in order to collect funds:**
+        1. Given there is an Agreement in place and the Payment Request is within the terms of the Agreement,
+    then it will be automatically approved; **or**
+        1. Given the Payment Request is **not** within the terms of the Agreement, then it will not be
+    created; **or**
+        1. There is no Agreement in place, then it will not be created.
+    1. **Your customer sends funds to you as a [Receivable Contact](/#add-a-receivable-contact):**
+        1. A *receivable* Payment Request will be automatically created and approved to identify the movement
+    of funds from your customer to your chosen Zepto float account.
+
+
+    ##Lifecycle
+
+
+    <aside class="notice">Payment Requests generated from a customer sending you funds will always be
+    <code>approved</code></aside>
+
+
+    A Payment Request can have the following statuses:
+
+
+    | Status | Description |
+
+    |-------|-------------|
+
+    | `approved` | The debtor has approved the Payment Request. |
+
+    | `cancelled` | The creditor has cancelled the Payment Request. |
+
+
+    <div class="middle-header">Prechecking</div>
+
+
+    When using Payment Requests to collect payments from your customer, Zepto will automatically check
+    for available funds before **attempting to debit** the debtor. This check is only performed for contacts
+    with an active [bank connection](/#Zepto-API-Bank-Connections).
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Payment Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-payment-requests-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-payments-api
+  name: Zepto Payments API
+  description: Make payments using an existing agreement
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-payments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-payouts-api
+  name: Zepto Payouts API
+  description: >-
+    This endpoint gives you some control over a transaction:
+
+
+    * After it has been created; and
+
+    * Before it has been submitted to the banks.
+
+
+    <aside class="notice">
+      Payments and Payment Requests are made up of individual Debits and Credits. These debits and credits
+      were once referred to as Payouts [Legacy naming].
+    </aside>
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-payouts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-payto-settlement-api
+  name: Zepto PayTo Settlement API
+  description: The PayTo Settlement API from Zepto — 1 operation(s) for payto settlement.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - PayTo Settlement
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-payto-settlement-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-ping-api
+  name: Zepto Ping API
+  description: Test your connectivity and authentication.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Ping
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-ping-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-refunds-api
+  name: Zepto Refunds API
+  description: >-
+    Refunds can be issued for any successfully completed Payment Request transaction. This includes:
+
+
+    1. Payment Requests for direct debit payments **(Collections)**:
+
+    2. Payment Requests for funds received via DE/NPP **(Receivables)**:
+
+
+    This allows you to return any funds that were previously collected or received into one of your bank/float
+    accounts.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-refunds-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-refunds-beta-api
+  name: Zepto Refunds (Beta) API
+  description: >-
+    Refund existing settled PayTo Payments
+
+
+    ## Beta Release
+
+
+    We're excited to announce that this feature is now in beta! While we'll aim to minimize breaking changes,
+
+    some adjustments may occur as we refine it. Rest assured, we'll notify you of any major changes in
+    advance.
+
+    Access is limited to selected merchants who applied. Your feedback is crucial in helping us improve
+    and stabilize
+
+    the feature so please share your experiences!
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Refunds (Beta)
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-refunds-beta-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-sandbox-only-api
+  name: Zepto Sandbox Only API
+  description: Special testing endpoints that only exist in the sandbox environment.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Sandbox Only
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-sandbox-only-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-transactions-api
+  name: Zepto Transactions API
+  description: >-
+    By default, the transactions endpoint provides a detailed look at all past, current and future debits
+    & credits related to your account.
+
+
+    <aside class="notice">Want to also know about the debits & credits applied to the other party? No
+    problem! Use the <code>both_parties=true</code> query string.</aside>
+
+
+    ##Lifecycle
+
+
+    A transaction (debit or credit) can have the following statuses:
+
+
+    | Status | Description |
+
+    |--------|-------------|
+
+    | `maturing` | The maturation date has not yet been reached. |
+
+    | `matured` | The maturation date has been reached and the transaction is eligible for processing.
+    |
+
+    | `preprocessing` | The transaction is undergoing pre-checks before being sent to the bank. |
+
+    | `processing` | The transaction has been submitted to the bank. |
+
+    | `clearing` | Waiting for confirmation from the bank that the transaction has succeeded. |
+
+    | `cleared` | The transaction is complete. |
+
+    | `rejected` | The bank has rejected the transaction due to incorrect bank account details. |
+
+    | `returned` | The transaction did not successfully clear. |
+
+    | `voided` | The transaction has been cancelled and is no longer eligible for processing. |
+
+    | `pending_verification` | The bank account must be verified before the transaction can proceed. |
+
+    | `paused` | The transaction has temporary been paused by Zepto pending internal review. |
+
+    | `channel_switched` | The initial payment channel has failed and the credit has automatically switched
+    to attempt the payment using the next available channel. |
+
+    ## Failure codes
+
+    > Example response
+
+
+    ```json
+
+    {
+      "data": [
+        {
+          "ref": "D.3",
+          "parent_ref": null,
+          "type": "debit",
+          "category": "payout_refund",
+          "created_at": "2021-04-07T23:15:00Z",
+          "matures_at": "2021-04-10T23:15:00Z",
+          "cleared_at": null,
+          "bank_ref": null,
+          "status": "returned",
+          "status_changed_at": "2021-04-08T23:15:00Z",
+          "failure" : {
+            "code": "E251",
+            "title": "Voided By Initiator",
+            "detail": "The transaction was voided by its initiator.",
+          },
+          "failure_details": "Wrong amount - approved by Stacey"
+          "party_contact_id": "26297f44-c5e1-40a1-9864-3e0b0754c32a",
+          "party_name": "Sanford-Rees",
+          "party_nickname": "sanford-rees-8",
+          "description": null,
+          "amount": 1,
+          "bank_account_id": "56df206a-aaff-471a-b075-11882bc8906a"
+          "channels": ["float_account"]
+          "current_channel": "float_account"
+        }
+      ]
+    }
+
+    ```
+
+    The rejected, returned & voided statuses are always accompanied by a failure code, title and detail
+    as listed below.
+
+    ### DE credit failures
+
+    | Code | Title | Detail |
+
+    | ------------ | ------------- | -------------- |
+
+    | E101 | Invalid BSB Number | The BSB is not valid or is no longer active. |
+
+    | E102 | Payment Stopped | The target institution has blocked transactions to this account. Please
+    refer to customer. |
+
+    | E103 | Account Closed | The target account is closed. |
+
+    | E104 | Customer Deceased | The target account's owner has been listed as deceased. |
+
+    | E105 | Account Not Found | The target account number cannot be found by the financial institution.
+    |
+
+    | E106 | Refer to Customer | Usually means that there is an issue with the account receiving a credit
+    that only the customer and their financial institution can resolve. Please refer to customer. |
+
+    | E107 | Account Deleted | The target account is deleted. |
+
+    | E108 | Invalid UserID | Please contact Zepto for further information. |
+
+    | E109 | Technically Invalid | Usually means that the account is not creditable or that the reason
+    for failure cannot be categorised within the standard BECS return codes. Please refer to customer.
+    |
+
+    | E150 | Voided By Admin | The transaction was voided by an administrator. |
+
+    | E151 | Voided By Initiator | The transaction was voided by its initiator. |
+
+    | E152 | Insufficient Funds | There were insufficient funds to complete the transaction. |
+
+    | E153 | System Error | The transaction was unable to complete. Please contact Zepto for assistance.
+    |
+
+    | E154 | Account Blocked | The target account is blocked and cannot receive funds. |
+
+    | E199 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |
+
+    ### DE debit failures
+
+    | Code | Title | Detail |
+
+    | ------------ | ------------- | -------------- |
+
+    | E201 | Invalid BSB Number | The BSB is not valid or is no longer active. |
+
+    | E202 | Payment Stopped | The target institution has blocked transactions to this account. Please
+    refer to customer. |
+
+    | E203 | Account Closed | The target account is closed. |
+
+    | E204 | Customer Deceased | The target account's owner has been listed as deceased. |
+
+    | E205 | Account Not Found | The target account number cannot be found by the financial institution.
+    |
+
+    | E206 | Refer to Customer | Usually means insufficient funds or that the target account has breached
+    their transaction limits. |
+
+    | E207 | Account Deleted | The target account is deleted. |
+
+    | E208 | Invalid UserID | Please contact Zepto for further information. |
+
+    | E209 | Technically Invalid | Usually means that the account is not debitable or that the reason
+    for failure can not be categorised within the standard BECS return codes. Please refer to customer.
+    |
+
+    | E250 | Voided By Admin | The transaction was voided by an administrator. |
+
+    | E251 | Voided By Initiator | The transaction was voided by its initiator. |
+
+    | E252 | Insufficient Funds | There were insufficient funds to complete the transaction. |
+
+    | E253 | System Error | The transaction was unable to complete. Please contact Zepto for assistance.
+    |
+
+    | E299 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |
+
+    ### NPP credit failures
+
+    | Code | Title | Detail |
+
+    | ------------ | ------------- | -------------- |
+
+    | E301 | Upstream Network Outage | An upstream network issue occurred. Please try again later. |
+
+    | E302 | BSB Not NPP Enabled | The target BSB is not NPP enabled. Please try another channel. |
+
+    | E303 | Account Not NPP Enabled | The target account exists but cannot accept funds via the NPP.
+    Please try another channel. |
+
+    | E304 | Account Not Found | The target account number cannot be found. |
+
+    | E305 | Intermittent Outage At Target Institution | The target financial institution is experiencing
+    technical difficulties. Please try again later. |
+
+    | E306 | Account Closed | The target account is closed. |
+
+    | E307 | Target Institution Offline | The target financial institution is undergoing maintenance or
+    experiencing an outage. Please try again later. |
+
+    | E308 | Account Blocked | The target account is blocked and cannot receive funds. |
+
+    | E399 | Unknown NPP Error | An unknown NPP error occurred. Please contact Zepto for assistance. |
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-transfers-api
+  name: Zepto Transfers API
+  description: >-
+    This endpoint lets you Transfer funds between any bank & float accounts registered under your Zepto
+    account:
+
+
+    1. **From**: Bank Account **To**: Float Account:
+      * Topping up a float account via Direct Debit
+      * Up to 2 days
+    2. **From**: Float Account **To**: Bank Account:
+      * Withdrawing from a float account
+      * Will attempt NPP first and channel switch to DE if required
+    3. **From**: Float Account **To**: Float Account:
+      * Transfer between two float accounts
+      * Within seconds
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-transfers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-users-api
+  name: Zepto Users API
+  description: All about the currently authenticated user.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/getwebhooks
+- aid: zepto-payments:zepto-payments-webhooks-api
+  name: Zepto Webhooks API
+  description: The Webhooks API from Zepto — 4 operation(s) for webhooks.
+  humanURL: https://docs.zeptopayments.com/reference/zepto-api
+  baseURL: https://api.zeptopayments.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/zepto-payments-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-api
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/makeapayment
+  - type: Documentation
+    url: https://zepto.com.au/solutions/payto
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/agreements
+  - type: Documentation
+    url: https://docs.zeptopayments.com/docs/zepto-validate
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/cop-account-validations
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/disputes-beta
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/clients
+  - type: APIReference
+    url: https://docs.zeptopayments.com/reference/openapi-specifications
   - type: Documentation
     url: https://docs.zeptopayments.com/docs/setting-up-your-webhooks
   - type: APIReference
