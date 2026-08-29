@@ -1,0 +1,83 @@
+slug: zepto-payments
+provider: Zepto
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 7
+edges:
+- tag: Payment Requests
+  spec_file: zepto-payments-payment-requests-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.8
+  evidence: POST /payment_requests  MakeAPaymentRequest  Request Payment; DELETE ... CancelAPaymentRequest
+  reason: Capture, retrieval and cancellation of payment instructions (requests, collections, receivables)
+    over A2A rails is payment initiation management.
+- tag: Payments
+  spec_file: zepto-payments-payments-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.8
+  evidence: POST /payments  MakeAPayment  Make a Payment; POST /payto/payments  create payment
+  reason: Operations create, list, retrieve and retry real-time PayTo/A2A payments — payment instruction
+    capture and authorisation, i.e. payment initiation.
+- tag: Webhooks
+  spec_file: zepto-payments-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.78
+  evidence: GET /webhooks/{webhook_id}/deliveries  GetWebhookDeliveries  List deliveries for a webhook;
+    POST /webhook_deliveries/{id}/redeliver
+  reason: Manages outbound webhook subscriptions and delivery reliability/redelivery, matching webhook
+    & event subscription management in the developer platform capability.
+- tag: Agreement modification
+  spec_file: zepto-payments-agreement-modification-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.75
+  evidence: POST /payto/agreements/{agreement_uid}/amendment 'create amendment'; 'cancel agreement'; 'suspend
+    agreement'; 'reactivate agreement'; schema payto.unprocessable_mandate_reactivate_errors
+  reason: PayTo agreements are payment mandates on Australia's NPP rails; these operations amend, suspend,
+    cancel and reactivate the debtor's payment authorisation. Clearly payments capability; ambiguous between
+    payment-initiation/authorisation and real-time payment rails, so no L2.
+- tag: Agreements
+  spec_file: zepto-payments-agreements-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.75
+  evidence: POST /payto/agreements 'create agreement'; GET /payto/agreements/{agreement_uid}/history 'list
+    agreement history'; DELETE /agreements/{agreement_ref} CancelAgreement
+  reason: Creation and lifecycle of PayTo mandates (payment authorisations) used to debit payer accounts
+    over real-time rails — a payments capability. L2 left null because the mandate sits between payment
+    initiation/authorisation and real-time payment rail management.
+- tag: Refunds
+  spec_file: zepto-payments-refunds-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /credits/{credit_ref}/refunds  IssueARefund  Issue a Refund
+  reason: Issuing and retrieving refunds against credits is a payment-processing operation on the A2A
+    rails; the specific sub-capability (initiation vs processing) is not clearly named.
+- tag: Refunds (Beta)
+  spec_file: zepto-payments-refunds-beta-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /payto/refunds    create refund; schema payto.refund.pay_to_payment
+  reason: Creation and retrieval of refunds against PayTo payments is payment processing; sub-capability
+    not distinctly evidenced.

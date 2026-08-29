@@ -1050,6 +1050,9 @@ apis:
   - type: APIReference
     url: https://docs.zeptopayments.com/reference/getwebhooks
 common:
+- type: CapabilityMap
+  url: capabilities/zepto-payments-capability-edges.yml
+  name: Zepto Business Capability Map
 - type: PostmanWorkspace
   url: https://www.postman.com/kinlaneapi/zepto/overview
 - type: VulnerabilityDisclosure
