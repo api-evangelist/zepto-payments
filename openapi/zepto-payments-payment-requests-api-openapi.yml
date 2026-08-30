@@ -1,0 +1,794 @@
+openapi: 3.2.0
+info:
+  title: Zepto Payment Requests API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Payment Requests
+  description: "A Payment Request (PR) is used to collect funds, via direct debit, from one of your Contacts (as long as there is an accepted Agreement in place).\n\n<div class=\"middle-header\">Applicable scenarios</div>\n\n1. **You send a Payment Request to a [Contact](/#Zepto-API-Contacts) in order to collect funds:**\n    1. Given there is an Agreement in place and the Payment Request is within the terms of the Agreement, then it will be automatically approved; **or**\n    1. Given the Payment Request is **not** within the terms of the Agreement, then it will not be created; **or**\n    1. There is no Agreement in place, then it will not be created.\n1. **Your customer sends funds to you as a [Receivable Contact](/#add-a-receivable-contact):**\n    1. A *receivable* Payment Request will be automatically created and approved to identify the movement of funds from your customer to your chosen Zepto float account.\n\n\n##Lifecycle\n\n<aside class=\"notice\">Payment Requests generated from a customer sending you funds will always be <code>approved</code></aside>\n\nA Payment Request can have the following statuses:\n\n| Status | Description |\n|-------|-------------|\n| `approved` | The debtor has approved the Payment Request. |\n| `cancelled` | The creditor has cancelled the Payment Request. |\n\n<div class=\"middle-header\">Prechecking</div>\n\nWhen using Payment Requests to collect payments from your customer, Zepto will automatically check for available funds before **attempting to debit** the debtor. This check is only performed for contacts with an active [bank connection](/#Zepto-API-Bank-Connections).\n"
+paths:
+  /payment_requests:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Payment Requests
+      summary: Request Payment
+      description: '<aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to a duplicate funds collection. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+
+        '
+      operationId: MakeAPaymentRequest
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Idempotency key to support safe retries for 24h
+        required: true
+        schema:
+          type: string
+        example: '{unique-uuid-per-payment-request}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MakeAPaymentRequestRequest'
+        required: true
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MakeAPaymentRequestResponse'
+        '422':
+          description: When a payment is requested from an Anyone Contact with no valid Agreement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MakeAPaymentRequestWithNoAgreementResponse'
+  /payment_requests/{payment_request_ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Payment Requests
+      summary: Get a Payment Request
+      description: ''
+      operationId: GetAPaymentRequest
+      parameters:
+      - name: payment_request_ref
+        in: path
+        description: Single value, exact match
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: PR.3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAPaymentRequestResponse'
+    delete:
+      tags:
+      - Payment Requests
+      summary: Cancel a Payment Request
+      description: A Payment Request can be cancelled as long as the associated transaction's state is <strong>maturing</strong> or <strong>matured</strong>.
+      operationId: CancelAPaymentRequest
+      parameters:
+      - name: payment_request_ref
+        in: path
+        description: Single value, exact match
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: PR.3
+      responses:
+        '204':
+          description: No Content
+  /payment_requests/collections:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Payment Requests
+      summary: List Collections
+      description: Payment Requests where you are the creditor and are collecting funds from your debtor using traditional direct-debit.
+      operationId: ListPaymentRequestCollections
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPaymentRequestCollectionsResponse'
+  /payment_requests/receivables:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Payment Requests
+      summary: List Receivables
+      description: Payment Requests where the debtor is sending you funds ([Receivable Contacts](https://docs.zeptopayments.com/reference/addareceivablecontact)). This endpoint exposes all received payments.
+      operationId: ListPaymentRequestReceivables
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPaymentRequestReceivablesResponse'
+components:
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  schemas:
+    GetAPaymentRequestResponse:
+      title: Get a Payment Request (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - initiator_id
+          - your_bank_account_id
+          - authoriser_id
+          - authoriser_contact_id
+          - schedule_ref
+          - status
+          - status_reason
+          - matures_at
+          - responded_at
+          - created_at
+          - payout
+          properties:
+            ref:
+              type: string
+              description: 'The Payment Request reference (PR.*) (Min: 4 - Max: 8)'
+            initiator_id:
+              type: string
+              format: uuid
+              description: 'Your bank account ID where the funds will settle (Min: 36 - Max: 36)'
+            your_bank_account_id:
+              type: string
+              format: uuid
+              description: 'Your bank account ID where the funds will settle (alias of `initiator_id`) (Min: 36 - Max: 36)'
+            authoriser_id:
+              type: string
+              format: uuid
+              description: 'The debtor''s bank account ID (Min: 36 - Max: 36)'
+            authoriser_contact_id:
+              type: string
+              format: uuid
+              description: 'The contact ID representing the debtor within Zepto (Min: 36 - Max: 36)'
+            schedule_ref:
+              type:
+              - string
+              - 'null'
+              description: 'The schedule that generated the Payment request if applicable (Min: 0 - Max: 8)'
+            status:
+              type: string
+              description: The status of the Payment Request
+              enum:
+              - approved
+              - cancelled
+            status_reason:
+              type:
+              - string
+              - 'null'
+              description: 'Only used when the `status` is `declined` due to prechecking. (Min: 0 - Max: 280)'
+              enum:
+              - The balance of the nominated bank account for this Payment Request is not available.
+              - The nominated bank account for this Payment Request has insufficient funds.
+              - null
+            matures_at:
+              type: string
+              format: date-time
+              description: 'The date-time when the Payment Request is up for processing (Min: 20 - Max: 20)'
+            responded_at:
+              type: string
+              format: date-time
+              description: 'The date-time when the Payment Request status changed (Min: 0 - Max: 20)'
+            created_at:
+              type: string
+              format: date-time
+              description: 'The date-time when the Payment Request was created (Min: 20 - Max: 20)'
+            credit_ref:
+              type: string
+              description: 'The resulting credit entry reference (available once approved) (Min: 4 - Max: 8)'
+            payout:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                  minimum: 1
+                  maximum: 99999999999
+                  description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+                description:
+                  type: string
+                  description: 'Payment Request description (Min: 1 - Max: 280)'
+                matures_at:
+                  type: string
+                  format: date-time
+                  description: 'The date-time when the Payment Request is up for processing (Min: 20 - Max: 20)'
+              required:
+              - amount
+              - description
+              - matures_at
+            metadata:
+              type: object
+              description: Your custom keyed data
+      example:
+        data:
+          ref: PR.88me
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: 970e4526-67d9-4ed9-b554-f5cf390ab775
+          authoriser_contact_id: de86472c-c027-4735-a6a7-234366a27fc7
+          contact_initiated: false
+          schedule_ref: null
+          status: approved
+          status_reason: null
+          matures_at: '2021-11-25T00:00:00Z'
+          responded_at: '2021-11-19T02:38:04Z'
+          created_at: '2021-11-19T02:10:56Z'
+          credit_ref: C.b6tf
+          payout:
+            amount: 1200
+            description: Xbox Live subscription
+            matures_at: '2021-11-25T00:00:00Z'
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    MakeAPaymentRequestResponse:
+      title: Make a Payment Request (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - initiator_id
+          - your_bank_account_id
+          - authoriser_id
+          - authoriser_contact_id
+          - contact_initiated
+          - schedule_ref
+          - status
+          - status_reason
+          - matures_at
+          - responded_at
+          - created_at
+          - credit_ref
+          - payout
+          properties:
+            ref:
+              type: string
+              description: 'The Payment Request reference (PR.*) (Min: 4 - Max: 8)'
+            initiator_id:
+              type: string
+              format: uuid
+              description: 'Your bank account ID where the funds will settle (Min: 36 - Max: 36)'
+            your_bank_account_id:
+              type: string
+              format: uuid
+              description: 'Your bank account ID where the funds will settle (alias of `initiator_id`) (Min: 36 - Max: 36)'
+            authoriser_id:
+              type: string
+              format: uuid
+              description: 'The debtor''s bank account ID (Min: 36 - Max: 36)'
+            authoriser_contact_id:
+              type: string
+              format: uuid
+              description: 'The contact ID representing the debtor within Zepto (Min: 36 - Max: 36)'
+            contact_initiated:
+              type: boolean
+              description: Initiated by Contact or Merchant
+            schedule_ref:
+              type:
+              - string
+              - 'null'
+              description: 'The schedule that generated the Payment request if applicable (Min: 0 - Max: 8)'
+            status:
+              type: string
+              description: The status of the Payment Request
+              enum:
+              - approved
+              - cancelled
+            status_reason:
+              type:
+              - 'null'
+              description: (Deprecated) Only used when the `status` is `declined` due to prechecking.
+              enum:
+              - null
+            matures_at:
+              type: string
+              format: date-time
+              description: 'The date-time when the Payment Request is up for processing (Min: 20 - Max: 20)'
+            responded_at:
+              type:
+              - string
+              - 'null'
+              format: date-time
+              description: 'The date-time when the Payment Request status changed (Min: 0 - Max: 20)'
+            created_at:
+              type: string
+              format: date-time
+              description: 'The date-time when the Payment Request was created (Min: 20 - Max: 20)'
+            credit_ref:
+              type:
+              - string
+              - 'null'
+              description: 'The resulting credit entry reference (available once approved) (Min: 4 - Max: 8)'
+            payout:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                  minimum: 1
+                  maximum: 99999999999
+                  description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+                description:
+                  type: string
+                  description: 'Payment Request description (Min: 1 - Max: 280)'
+                matures_at:
+                  type: string
+                  format: date-time
+                  description: 'The date-time when the Payment Request is up for processing (Min: 20 - Max: 20)'
+              required:
+              - amount
+              - description
+              - matures_at
+            metadata:
+              type: object
+              description: Your custom keyed data
+      example:
+        data:
+          ref: PR.39p1
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: 970e4526-67d9-4ed9-b554-f5cf390ab775
+          authoriser_contact_id: de86472c-c027-4735-a6a7-234366a27fc7
+          contact_initiated: false
+          schedule_ref: null
+          status: approved
+          status_reason: null
+          matures_at: '2021-12-25T00:00:00Z'
+          responded_at: null
+          created_at: '2021-12-19T02:10:56Z'
+          credit_ref: null
+          payout:
+            amount: 99000
+            description: Premium Package for 4
+            matures_at: '2021-12-25T00:00:00Z'
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    ListPaymentRequestReceivablesResponse:
+      title: List Receivables (response)
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required:
+            - ref
+            - initiator_id
+            - your_bank_account_id
+            - authoriser_id
+            - authoriser_contact_id
+            - contact_initiated
+            - schedule_ref
+            - status
+            - status_reason
+            - matures_at
+            - responded_at
+            - created_at
+            - credit_ref
+            - payout
+            properties:
+              ref:
+                type: string
+                description: The Payment Reference reference (PR.*)
+              initiator_id:
+                type: string
+                format: uuid
+                description: Your bank account ID where the funds will settle
+              your_bank_account_id:
+                type: string
+                format: uuid
+                description: Your bank account ID where the funds will settle (alias of `initiator_id`)
+              authoriser_id:
+                type: string
+                format: uuid
+                description: The debtor's bank account ID
+              authoriser_contact_id:
+                type: string
+                format: uuid
+                description: The contact ID representing the debtor within Zepto
+              contact_initiated:
+                type: boolean
+                description: Initiated by Contact or Merchant
+              schedule_ref:
+                type:
+                - string
+                - 'null'
+                description: The schedule that generated the Payment request if applicable
+              status:
+                type: string
+                description: The status of the Payment Request. For Receivables, this will always be *approved*
+              status_reason:
+                type:
+                - 'null'
+                description: (Deprecated) Only used when the `status` is `declined` due to prechecking.
+              matures_at:
+                type: string
+                format: date-time
+                description: The date-time when the Payment Request is up for processing
+              responded_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                description: The date-time when the Payment Request status changed
+              created_at:
+                type: string
+                format: date-time
+                description: The date-time when the Payment Request was created
+              credit_ref:
+                type: string
+                description: The resulting credit entry reference (available once approved)
+              payout:
+                type: object
+                properties:
+                  amount:
+                    type: integer
+                    minimum: 1
+                    maximum: 99999999999
+                    description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+                  description:
+                    type: string
+                    description: Payment Request description
+                  matures_at:
+                    type: string
+                    format: date-time
+                    description: The date-time when the Payment Request is up for processing
+                required:
+                - amount
+                - description
+                - matures_at
+              metadata:
+                type: array
+                description: Your custom keyed data
+                items:
+                  type: object
+      example:
+        data:
+        - ref: PR.2t65
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: de86472c-c027-4735-a6a7-234366a27fc7
+          authoriser_contact_id: fb6a9252-3818-44dc-b5aa-2195391a746f
+          contact_initiated: true
+          schedule_ref: null
+          status: approved
+          status_reason: null
+          matures_at: '2021-05-12T13:43:12Z'
+          responded_at: '2021-05-12T13:43:12Z'
+          created_at: '2021-05-12T13:43:12Z'
+          credit_ref: C.77b1
+          payout:
+            amount: 50000
+            description: Deposit to my Trading account
+            matures_at: '2021-05-12T13:43:12Z'
+        - ref: PR.1n644
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: de86472c-c027-4735-a6a7-234366a27fc7
+          authoriser_contact_id: fb6a9252-3818-44dc-b5aa-2195391a746f
+          contact_initiated: true
+          schedule_ref: null
+          status: approved
+          status_reason: null
+          matures_at: '2021-06-01T04:34:50Z'
+          responded_at: null
+          created_at: '2021-06-01T04:34:56Z'
+          credit_ref: c.54r3
+          payout:
+            amount: 5000
+            description: Punting account top-up
+            matures_at: '2021-06-01T04:34:56Z'
+    MakeAPaymentRequestRequest:
+      title: Make a Payment Request (request)
+      required:
+      - authoriser_contact_id
+      - description
+      - matures_at
+      - amount
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description visible to the initiator (payee). The first 9 characters supplied will be visible to the authoriser (payer)
+          example: Visible to both initiator and authoriser
+        matures_at:
+          type: string
+          format: date-time
+          description: Date & time in UTC ISO8601 that the Payment will be processed if the request is approved. (If the request is approved after this point in time, it will be processed straight away)
+          example: '2016-12-19T02:10:56Z'
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents to pay the initiator (Min: 1 - Max: 99999999999)'
+          example: 99000
+        authoriser_contact_id:
+          type: string
+          description: The Contact the payment will be requested from (`Contact.data.id`)
+          example: de86472c-c027-4735-a6a7-234366a27fc7
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should settle the funds for this transaction. If omitted, your primary bank account will be used.
+          example: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          type: object
+          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
+      example:
+        description: Visible to both initiator and authoriser
+        matures_at: 2016-12-19 02:10:56 UTC
+        amount: 99000
+        authoriser_contact_id: de86472c-c027-4735-a6a7-234366a27fc7
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    MakeAPaymentRequestWithNoAgreementResponse:
+      title: Make a Payment Request to an Anyone Contact with no valid Agreement (response)
+      required:
+      - errors
+      type: object
+      properties:
+        errors:
+          type: string
+      example:
+        errors: Authoriser contact (de86472c-c027-4735-a6a7-234366a27fc7) is not a Zepto account holder and therefore must have a valid agreement in place before a Payment Request can be issued.
+    ListPaymentRequestCollectionsResponse:
+      title: List Collections (response)
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required:
+            - ref
+            - initiator_id
+            - your_bank_account_id
+            - authoriser_id
+            - authoriser_contact_id
+            - contact_initiated
+            - schedule_ref
+            - status
+            - status_reason
+            - matures_at
+            - responded_at
+            - created_at
+            - credit_ref
+            - payout
+            properties:
+              ref:
+                type: string
+                description: The Payment Reference reference (PR.*)
+              initiator_id:
+                type: string
+                format: uuid
+                description: Your bank account ID where the funds will settle
+              your_bank_account_id:
+                type: string
+                format: uuid
+                description: Your bank account ID where the funds will settle (alias of `initiator_id`)
+              authoriser_id:
+                type: string
+                format: uuid
+                description: The debtor's bank account ID
+              authoriser_contact_id:
+                type: string
+                format: uuid
+                description: The contact ID representing the debtor within Zepto
+              contact_initiated:
+                type: boolean
+                description: Initiated by Contact or Merchant
+              schedule_ref:
+                type:
+                - string
+                - 'null'
+                description: The schedule that generated the Payment request if applicable
+              status:
+                type: string
+                description: The status of the Payment Request
+                enum:
+                - approved
+                - cancelled
+              status_reason:
+                type:
+                - 'null'
+                description: (Deprecated) Only used when the `status` is `declined` due to prechecking.
+                enum:
+                - null
+              matures_at:
+                type: string
+                format: date-time
+                description: The date-time when the Payment Request is up for processing
+              responded_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                description: The date-time when the Payment Request status changed
+              created_at:
+                type: string
+                format: date-time
+                description: The date-time when the Payment Request was created
+              credit_ref:
+                type:
+                - string
+                - 'null'
+                description: The resulting credit entry reference (available once approved)
+              payout:
+                type: object
+                properties:
+                  amount:
+                    type: integer
+                    minimum: 1
+                    maximum: 99999999999
+                    description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+                  description:
+                    type: string
+                    description: Payment Request description
+                  matures_at:
+                    type: string
+                    format: date-time
+                    description: The date-time when the Payment Request is up for processing
+                required:
+                - amount
+                - description
+                - matures_at
+              metadata:
+                type: array
+                description: Your custom keyed data
+                items:
+                  type: object
+      example:
+        data:
+        - ref: PR.84t6
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: de86472c-c027-4735-a6a7-234366a27fc7
+          authoriser_contact_id: fb6a9252-3818-44dc-b5aa-2195391a746f
+          contact_initiated: false
+          schedule_ref: PRS.89t3
+          status: approved
+          status_reason: null
+          matures_at: '2021-07-18T02:10:00Z'
+          responded_at: '2021-07-18T02:10:00Z'
+          created_at: '2021-07-18T02:10:00Z'
+          credit_ref: C.6gr7
+          payout:
+            amount: 4999
+            description: Subscription Payment
+            matures_at: '2021-07-18T02:10:00Z'
+        - ref: PR.45h7
+          initiator_id: ca7bc5b3-e47f-4153-96fb-bbe326b42772
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          authoriser_id: de86472c-c027-4735-a6a7-234366a27fc7
+          authoriser_contact_id: fb6a9252-3818-44dc-b5aa-2195391a746f
+          contact_initiated: false
+          schedule_ref: null
+          status: approved
+          status_reason: null
+          matures_at: '2021-03-09T16:58:00Z'
+          responded_at: null
+          created_at: '2021-03-09T16:58:00Z'
+          credit_ref: null
+          payout:
+            amount: 3000
+            description: Membership fees
+            matures_at: '2021-03-09T16:58:00Z'
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

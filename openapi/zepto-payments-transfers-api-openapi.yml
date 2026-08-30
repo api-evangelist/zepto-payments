@@ -1,0 +1,325 @@
+openapi: 3.2.0
+info:
+  title: Zepto Transfers API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Transfers
+  description: "\nThis endpoint lets you Transfer funds between any bank & float accounts registered under your Zepto account:\n\n1. **From**: Bank Account **To**: Float Account:\n  * Topping up a float account via Direct Debit\n  * Up to 2 days\n2. **From**: Float Account **To**: Bank Account:\n  * Withdrawing from a float account\n  * Will attempt NPP first and channel switch to DE if required\n3. **From**: Float Account **To**: Float Account:\n  * Transfer between two float accounts\n  * Within seconds\n"
+paths:
+  /transfers:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Transfers
+      summary: Add a Transfer
+      description: 'Use this endpoint when you want to create a Transfer between any 2 of your float/bank accounts.
+
+        <aside class="notice">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a href="https://docs.zeptopayments.com/v20260101/reference/idempotent-requests">Idempotent requests guide</a>.</aside>
+
+        '
+      operationId: AddATransfer
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Idempotency key to support safe retries for 24h
+        required: true
+        schema:
+          type: string
+        example: '{unique-uuid-per-transfer}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddATransferRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddATransferResponse'
+    get:
+      tags:
+      - Transfers
+      summary: List all Transfers (Available soon)
+      description: ''
+      operationId: ListAllTransfers
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      - name: from_bank_account_id
+        in: query
+        description: Source bank/float account UUID, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: a79423b2-3827-4cf5-9eda-dc02a298d005
+      - name: to_bank_account_id
+        in: query
+        description: Target bank/float account UUID, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllTransfersResponse'
+  /transfers/{transfer_ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Transfers
+      summary: Get a Transfer (Available soon)
+      description: Get a single transfer by its reference
+      operationId: GetATransfer
+      parameters:
+      - name: transfer_ref
+        in: path
+        description: Transfer reference
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: T.11ub
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetATransferResponse'
+components:
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  schemas:
+    AddATransferResponse:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - from_bank_account_id
+          - to_bank_account_id
+          - amount
+          - description
+          - matures_at
+          properties:
+            ref:
+              type: string
+              description: 'The Transfer request reference (T.*) (Min: 4 - Max: 8)'
+            from_bank_account_id:
+              type: string
+              description: The source bank/float account (UUID)
+            to_bank_account_id:
+              type: string
+              description: The destination bank/float account (UUID
+            amount:
+              type: integer
+              minimum: 1
+              maximum: 99999999999
+              description: 'The amount value provided (Min: 1 - Max: 99999999999)'
+            description:
+              type: string
+              description: Description for the Transfer
+            matures_at:
+              type: string
+              format: date-time
+              description: Date & time in UTC ISO8601 the Transfer should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
+              example: '2021-06-01T02:10:56Z'
+      example:
+        data:
+          ref: T.11ub
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 100000
+          description: Float account balance adjustment
+          matures_at: '2021-06-06T00:00:00Z'
+    AddATransferRequest:
+      required:
+      - from_bank_account_id
+      - to_bank_account_id
+      - amount
+      - description
+      - matures_at
+      type: object
+      properties:
+        from_bank_account_id:
+          type: string
+          description: The source float/bank account (UUID)
+        to_bank_account_id:
+          type: string
+          description: The destination float/bank account (UUID)
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+        description:
+          type: string
+          pattern: ^[ -~\p{Emoji}]+$
+          description: Description for the Transfer. ASCII-printable characters and unicode emojis are accepted.
+        matures_at:
+          type: string
+          format: date-time
+          description: Date & time in UTC ISO8601 the Transfer should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
+          example: '2021-06-01T02:10:56Z'
+      example:
+        from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+        to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+        amount: 100000
+        description: Float account balance adjustment
+        matures_at: '2021-06-06T00:00:00Z'
+    GetATransferResponse:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - from_bank_account_id
+          - to_bank_account_id
+          - amount
+          - description
+          - matures_at
+          properties:
+            ref:
+              type: string
+              description: 'The Transfer request reference (T.*) (Min: 4 - Max: 8)'
+            initiator_id:
+              type: string
+              description: Initiating Zepto Account
+            from_bank_account_id:
+              type: string
+              description: The source bank/float account (UUID)
+            to_bank_account_id:
+              type: string
+              description: The destination bank/float account (UUID
+            amount:
+              type: integer
+              minimum: 1
+              maximum: 99999999999
+              description: 'The amount value provided (Min: 1 - Max: 99999999999)'
+            description:
+              type: string
+              description: Description for the Transfer
+            matures_at:
+              type: string
+              format: date-time
+              description: Date & time in UTC ISO8601 the Transfer should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
+              example: '2021-06-01T02:10:56Z'
+      example:
+        data:
+          ref: T.87xp
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 47000
+          description: Deposit from my bank account
+          matures_at: '2021-06-03T00:00:00Z'
+    ListAllTransfersResponse:
+      title: List all Transfers (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+      example:
+        data:
+        - ref: T.62xl
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 47000
+          description: Deposit from my bank account
+          matures_at: '2021-06-03T00:00:00Z'
+        - ref: T.87xp
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 9700
+          description: Withdrawal June 2021
+          matures_at: '2021-05-28T00:00:00Z'
+        - ref: T.87s4
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 230
+          description: Transfer to my other Float account
+          matures_at: '2021-05-03T00:00:00Z'
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

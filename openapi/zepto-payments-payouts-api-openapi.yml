@@ -1,0 +1,72 @@
+openapi: 3.2.0
+info:
+  title: Zepto Payouts API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Payouts
+  description: "This endpoint gives you some control over a transaction:\n\n* After it has been created; and\n* Before it has been submitted to the banks.\n\n<aside class=\"notice\">\n  Payments and Payment Requests are made up of individual Debits and Credits. These debits and credits\n  were once referred to as Payouts [Legacy naming].\n</aside>\n"
+paths:
+  /payouts/{ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    delete:
+      tags:
+      - Payouts
+      summary: Void a Payment
+      description: 'You can void any Payment from your account that has not yet matured.
+
+        '
+      operationId: VoidAPayment
+      parameters:
+      - name: ref
+        in: path
+        description: Payment debit reference number e.g D.48
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: D.48
+      responses:
+        '204':
+          description: No Content
+components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

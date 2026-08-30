@@ -1,0 +1,639 @@
+openapi: 3.2.0
+info:
+  title: Zepto Contacts API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Contacts
+  description: 'Your Contacts form an address book of parties with whom you can interact. In order to initiate any type of transaction you must first have the party in your Contact list.
+
+
+    <aside class="notice">In the case of Open Agreements, the authorising party will be automatically added to your Contacts list.</aside>
+
+    '
+paths:
+  /contacts/anyone:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Contacts
+      summary: Add a Contact
+      description: "Use this endpoint when you want to pay somebody.\n\n<aside class=\"notice\">\n  A Contact added this way cannot be debited.\n</aside>\n"
+      operationId: AddAnAnyoneContact
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAnAnyoneContactRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddAnAnyoneContactResponse'
+  /contacts:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Contacts
+      summary: List all Contacts
+      description: 'By default, all Contacts will be returned. You can apply filters to your query to customise the returned Contact list.
+
+        '
+      operationId: ListAllContacts
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      - name: name
+        in: query
+        description: Single value, string search
+        style: form
+        schema:
+          type: string
+        example: Some name
+      - name: nickname
+        in: query
+        description: Single value, string search
+        style: form
+        schema:
+          type: string
+        example: Some_nickname
+      - name: email
+        in: query
+        description: Single value, string search
+        style: form
+        schema:
+          type: string
+        example: george@gmail.com
+      - name: bank_account_id
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: 095c5ab7-7fa8-40fd-b317-cddbbf4c8fbc
+      - name: bank_account_branch_code
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: 068231
+      - name: bank_account_account_number
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '4395959'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllContactsResponse'
+  /contacts/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Contacts
+      summary: Get a Contact
+      description: Get a single Contact by its ID
+      operationId: GetAContact
+      parameters:
+      - name: id
+        in: path
+        description: Contact ID (`Contact.data.id`)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: UUID
+        example: 55afddde-4296-4daf-8e49-7ba481ef9608
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAContactResponse'
+        '404':
+          description: Not Found
+    delete:
+      tags:
+      - Contacts
+      summary: Remove a Contact
+      description: "<aside class=\"notice\">\n  <ul>\n    <li>Removing a Contact will not affect your transaction history.</li>\n    <li>Removing a Receivable Contact will deactivate any associated PayIDs.</li>\n  </ul>\n</aside>\n"
+      operationId: RemoveAContact
+      parameters:
+      - name: id
+        in: path
+        description: Contact ID (`Contact.data.id`)
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: UUID
+        example: 55afddde-4296-4daf-8e49-7ba481ef9608
+      responses:
+        '204':
+          description: ''
+    patch:
+      tags:
+      - Contacts
+      summary: Update a Contact
+      description: "You can update the name, email, bank account and metadata of any Contact.\n<aside class=\"notice\">\n  <ul>\n    <li>Previous transactions to this Contact will retain the name and bank account that was used at the time.</li>\n    <li>You cannot update a Contact's bank account details if they currently have an accepted agreement.</li>\n    <li>Any active Bank Connections will be lost if you change the Contact's bank account.</li>\n    <li>See our <a href=\"https://help.zepto.money/en/articles/3829211-how-do-i-change-my-customers-bank-account-details\">Help Article</a> for more information about the nuances and implications of changing a contacts Bank Account.</li>\n  </ul>\n</aside>\n"
+      operationId: UpdateAContact
+      parameters:
+      - name: id
+        in: path
+        description: Contact ID (`Contact.data.id`)
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: 55afddde-4296-4daf-8e49-7ba481ef9608
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAContactRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAContactResponse'
+        '404':
+          description: Not Found
+components:
+  schemas:
+    UpdateAContactResponse:
+      title: Update a Contact (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          id: fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
+          name: My very own alias
+          email: updated@email.com
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '99887766'
+            branch_code: '123456'
+            bank_name: Zepto SANDBOX Bank
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          anyone_account:
+            id: 63232c0a-a783-4ae9-ae73-f0974fe1e345
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/dog-bones-inc/fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
+    AddAnAnyoneContactRequest:
+      title: Add a Contact (request)
+      required:
+      - name
+      - email
+      - branch_code
+      - account_number
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^[ -~]+$
+          maxLength: 140
+          description: The name of the Contact (140 max. characters, ASCII characters only)
+        email:
+          type: string
+          maxLength: 256
+          description: The email of the Contact (256 max. characters)
+        branch_code:
+          type: string
+          description: The bank account BSB of the Contact
+        account_number:
+          type: string
+          description: The bank account number of the Contact
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        name: Hunter Thompson
+        email: hunter@batcountry.com
+        branch_code: '123456'
+        account_number: '13048322'
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    UpdateAContactRequest:
+      title: Update a Contact (request)
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The name of the Contact
+        email:
+          type: string
+          description: The email of the Contact
+        branch_code:
+          type: string
+          description: The bank account BSB of the Contact
+        account_number:
+          type: string
+          description: The bank account number of the Contact
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        name: My very own alias
+        email: updated@email.com
+        branch_code: '123456'
+        account_number: '99887766'
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    ListAllContactsResponse:
+      title: List all Contacts (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Outstanding Tours Pty Ltd
+          email: accounts@outstandingtours.com.au
+          type: Zepto account
+          bank_account:
+            id: 095c5ab7-7fa8-40fd-b317-cddbbf4c8fbc
+            account_number: '494307'
+            branch_code: '435434'
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: split
+            iav_status: active
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          bank_connection:
+            id: c397645b-bd4f-4fc6-b1fe-4993fef6c3c7
+        - id: 49935c67-c5df-4f00-99f4-1413c18a89a0
+          name: Adventure Dudes Pty Ltd
+          email: accounts@adventuredudes.com.au
+          type: Zepto account
+          bank_account:
+            id: 861ff8e4-7acf-4897-9e53-e7c5ae5f7cc0
+            account_number: '4395959'
+            branch_code: 068231
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: split
+            iav_status: credentials_invalid
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          bank_connection:
+            id: c397645b-bd4f-4fc6-b1fe-4993fef6c3c7
+        - id: eb3266f9-e172-4b6c-b802-fe5ac4d3250a
+          name: Surfing World Pty Ltd
+          email: accounts@surfingworld.com.au
+          type: Zepto account
+          bank_account:
+            id: null
+            account_number: null
+            branch_code: null
+            bank_name: null
+            state: disabled
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+        - id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Hunter Thompson
+          email: hunter@batcountry.com
+          type: anyone
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '13048322'
+            branch_code: '123456'
+            bank_name: National Australia Bank
+            state: pending_verification
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+    AddAnAnyoneContactResponse:
+      title: Add a Contact (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Hunter Thompson
+          email: hunter@batcountry.com
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '13048322'
+            branch_code: '123456'
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+    GetAContactResponse:
+      title: Get a Contact (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - id
+          - ref
+          - name
+          - email
+          - type
+          - metadata
+          - bank_account
+          - anyone_account
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The Contact ID
+            ref:
+              type: string
+              format: string
+              description: The Contact ref
+            name:
+              type: string
+              minLength: 3
+              maxLength: 140
+              description: 'The Contact name (Min: 3 - Max: 140)'
+            email:
+              type: string
+              minLength: 6
+              maxLength: 256
+              format: email
+              description: 'The Contact email (Min: 6 - Max: 256)'
+            type:
+              type: string
+              description: (Deprecated) The Contact account type
+              enum:
+              - Zepto account
+              - anyone
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+            bank_account:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: The Bank Account ID
+                account_number:
+                  type: string
+                  minLength: 5
+                  maxLength: 9
+                  description: 'The Bank Account number (Min: 5 - Max: 9)'
+                branch_code:
+                  type: string
+                  minLength: 6
+                  maxLength: 6
+                  description: 'The BSB number (Min: 6 - Max: 6)'
+                state:
+                  type: string
+                  description: The bank account state
+                  enum:
+                  - active
+                  - removed
+                iav_provider:
+                  type:
+                  - string
+                  - 'null'
+                  description: The instant account verification provider
+                  enum:
+                  - split
+                  - proviso
+                  - basiq
+                  - credit_sense
+                  - null
+                iav_status:
+                  type:
+                  - string
+                  - 'null'
+                  description: The instant account verification bank connection status
+                  enum:
+                  - active
+                  - removed
+                  - credentials_invalid
+                  - null
+                blocks:
+                  type: object
+                  properties:
+                    debits_blocked:
+                      type: boolean
+                      description: Used by Zepto admins. Defines whether the bank account is blocked from being debited
+                    credits_blocked:
+                      type: boolean
+                      description: Used by Zepto admins. Defined Whether this bank account is blocked from being credited
+            anyone_account:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: (Deprecated) The Anyone Account ID
+            bank_connection:
+              type: object
+              properties:
+                id:
+                  type:
+                  - string
+                  - 'null'
+                  format: uuid
+                  description: The bank connection ID
+            links:
+              type: object
+              properties:
+                add_bank_connection:
+                  type: string
+                  format: url
+                  description: A unique URL to share with the Contact in order to establish a new bank connection to their bank account
+            payid_details:
+              type: object
+              properties:
+                alias_value:
+                  type: string
+                  format: email
+                  minLength: 6
+                  maxLength: 256
+                  description: The PayID email
+                alias_type:
+                  type: string
+                  description: Type of PayID. Fixed to `email`
+                alias_name:
+                  type: string
+                  minLength: 3
+                  maxLength: 140
+                  description: Your merchant's alias_name
+                state:
+                  type: string
+                  description: Pending -> Active or Failed -> Deregistered (Contact removed)
+                  enum:
+                  - pending
+                  - active
+                  - failed
+                  - deregistered
+      example:
+        data:
+          id: 55afddde-4296-4daf-8e49-7ba481ef9608
+          ref: CNT.123
+          name: Outstanding Tours Pty Ltd
+          email: accounts@outstandingtours.com.au
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
+            account_number: '947434694'
+            branch_code: '304304'
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          anyone_account:
+            id: 31a05f81-25a2-4085-92ef-0d16d0263bff
+          bank_connection:
+            id: null
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+          payid_details:
+            alias_value: otp@pay.travel.com.au
+            alias_type: email
+            alias_name: your merchant's alias_name
+            state: active
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

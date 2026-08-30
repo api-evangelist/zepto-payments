@@ -1,0 +1,1953 @@
+openapi: 3.2.0
+info:
+  title: Zepto Payments API
+  contact:
+    email: support@zepto.com.au
+  version: '1.0'
+  description: 'Operations tagged Payments across 2 of this provider''s published API definitions: zepto-payments-pay-to.yml, zepto-payments-zepto.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Zepto Sandbox
+  url: https://api.sandbox.zeptopayments.com
+- description: Zepto Production
+  url: https://api.zeptopayments.com
+security:
+- bearerAuth: []
+tags:
+- name: Payments
+  description: Make payments using an existing agreement
+paths:
+  /payto/payments:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      summary: create payment
+      tags:
+      - Payments
+      parameters: []
+      responses:
+        '201':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.payment'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Generic validation error:
+                  summary: Generic validation error
+                  value:
+                    errors:
+                    - title: Validation Failed
+                      detail: The value for `invalid_key` is not allowed
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Amount over maximum for agreement:
+                  summary: Amount over maximum for agreement
+                  value:
+                    errors:
+                    - code: ZPPAY12
+                      title: Amount over maximum
+                      detail: The payment amount is larger than the maximum specified in the agreement
+                The given creditor account cannot accept funds via NPP:
+                  summary: The given creditor account cannot accept funds via NPP
+                  value:
+                    errors:
+                    - code: ZPUNP02
+                      title: Invalid creditor account
+                      detail: The given creditor account cannot accept funds via NPP
+                Over daily limit:
+                  summary: Over daily limit
+                  value:
+                    errors:
+                    - code: ZPPAY01
+                      title: Over daily limit
+                      detail: This Payment would cause you to exceed your current daily limit of $1,000.00
+                Amount incorrect:
+                  summary: Amount incorrect
+                  value:
+                    errors:
+                    - code: ZPPAY15
+                      title: Amount incorrect
+                      detail: The payment amount does not match the amount specified in the agreement
+                Last payment date mismatch:
+                  summary: Last payment date mismatch
+                  value:
+                    errors:
+                    - code: ZPPAY13
+                      title: After last payment date
+                      detail: The last payment date specified in the agreement has already passed
+                    - code: ZPPAY20
+                      title: Last payment date mismatch
+                      detail: The payment date does not match the last payment date specified in the agreement
+                First payment date mismatch:
+                  summary: First payment date mismatch
+                  value:
+                    errors:
+                    - code: ZPPAY14
+                      title: First payment date mismatch
+                      detail: The payment date does not match the first payment date specified in the agreement
+                First payment date incorrect:
+                  summary: First payment date incorrect
+                  value:
+                    errors:
+                    - code: ZPPAY18
+                      title: First payment amount incorrect
+                      detail: The payment amount does not match the first payment amount specified in the agreement
+                Last payment amount incorrect:
+                  summary: Last payment amount incorrect
+                  value:
+                    errors:
+                    - code: ZPPAY19
+                      title: Last payment amount incorrect
+                      detail: The payment amount does not match the last payment amount specified in the agreement
+                Last payment made:
+                  summary: Last payment made
+                  value:
+                    errors:
+                    - code: ZPPAY21
+                      title: Last payment made
+                      detail: No further payments can be created for this agreement, as the last payment has been made
+                Too many payments:
+                  summary: Too many payments
+                  value:
+                    errors:
+                    - code: ZPPAY17
+                      title: Too many payments
+                      detail: The maximum number of payments has already been reached for the current frequency period, according to the terms of the agreement
+                Last payment param not given for balloon payment:
+                  summary: Last payment param not given for balloon payment
+                  value:
+                    errors:
+                    - code: ZPPAY09
+                      title: Last payment required for balloon
+                      detail: The last payment parameter must be specified for a payment against a balloon type agreement
+                Last payment param given for non balloon payment:
+                  summary: Last payment param given for non balloon payment
+                  value:
+                    errors:
+                    - code: ZPPAY10
+                      title: Last payment given for non-balloon
+                      detail: The last payment parameter must only be specified for a payment against a balloon type agreement
+                Agreement cannot be found:
+                  summary: Agreement cannot be found
+                  value:
+                    errors:
+                    - code: ZPPAY22
+                      title: Agreement not found
+                      detail: No agreement could be found for the given agreement UID
+                Alias resolution not enabled:
+                  summary: Alias resolution not enabled
+                  value:
+                    errors:
+                    - code: ZPUNP09
+                      title: Alias resolution not enabled
+                      detail: Account not enabled for alias resolution services
+                Custom debtor not allowed:
+                  summary: Custom debtor not allowed
+                  value:
+                    errors:
+                    - code: ZPPAY25
+                      title: Custom debtor not allowed
+                      detail: Not permitted to provide custom debtor party values that differ from agreement
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_payment_errors'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/payto.payment_request'
+      callbacks:
+        payto_payment.settled:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.settled
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.settled'
+              responses:
+                '200':
+                  description: OK
+        payto_payment.failed:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.failed'
+              responses:
+                '200':
+                  description: OK
+        payto_payment.pending:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.pending
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.pending'
+              responses:
+                '200':
+                  description: OK
+        payto_payment.under_investigation:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.under_investigation
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.under_investigation'
+              responses:
+                '200':
+                  description: OK
+    get:
+      summary: list payments
+      parameters:
+      - name: per_page
+        description: Number of results per page
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: starting_after
+        description: Opaque pagination cursor value. Set by following "next" links.
+        in: query
+        schema:
+          type: string
+      - name: state
+        description: Filter payments by state. Multiple values can be separated by commas.
+        in: query
+        explode: false
+        schema:
+          type: array
+          items:
+            enum:
+            - created
+            - submitting
+            - pending
+            - under_investigation
+            - failed
+            - settled
+      - name: min_created_date
+        description: Filter by minimum created_at date. ISO8601 format.
+        example: '2022-01-01'
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: max_created_date
+        description: Filter by maximum created_at date. ISO8601 format.
+        example: '2022-01-31'
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: agreement_uid
+        description: Filter payments by agreement.
+        example: biz_agreement_000123
+        in: query
+        schema:
+          type: string
+      - name: agreement_initiator_name
+        description: Filter payments by initiator name. The filtering is case sensitive and must be an exact match.
+        example: Jane's Flowers
+        in: query
+        schema:
+          type: string
+      - name: refunds
+        description: Filter payments by whether or not they are facilitating a refund.
+        example: included
+        in: query
+        schema:
+          type: string
+          enum:
+          - included
+          - excluded
+          - only
+      tags:
+      - Payments
+      responses:
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Non integer per_page:
+                  summary: Non integer per_page
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: The `per_page` param is not valid.
+                No record with ID matching starting_after param:
+                  summary: No record with ID matching starting_after param
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: Could not find a record for the given `starting_after` param.
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_pagination_errors'
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                Successful request:
+                  summary: Successful request
+                  value:
+                    links: {}
+                    data:
+                    - uid: biz_payment_0000000000860
+                      agreement_uid: biz_agreement_0000000001350
+                      state: settled
+                      amount: 12345
+                      last_payment: null
+                      priority: unattended
+                      reference: null
+                      description: null
+                      creditor:
+                        party_name: Mr Creditor
+                        ultimate_party_name: Ultimate Mr Creditor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      creditor_reference: null
+                      debtor:
+                        ultimate_party_name: Ms Debtor
+                        party_name: Ms Debtor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      failure: null
+                      created_at: '2022-02-01T09:41:00+11:00'
+                      metadata:
+                        custom_key: custom_value
+                      source_payto_refund_uid: null
+                      links:
+                        self: https://api.zeptopayments.com/payto/payments/biz_payment_0000000000860
+                        agreement: https://api.zeptopayments.com/payto/agreements/biz_agreement_0000000001350
+                        source_refund: null
+                    - uid: biz_payment_0000000000850
+                      agreement_uid: biz_agreement_0000000001350
+                      state: settled
+                      amount: 12345
+                      last_payment: null
+                      priority: unattended
+                      reference: null
+                      description: null
+                      creditor:
+                        party_name: Mr Creditor
+                        ultimate_party_name: Ultimate Mr Creditor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      creditor_reference: null
+                      debtor:
+                        ultimate_party_name: Ms Debtor
+                        party_name: Ms Debtor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      failure: null
+                      created_at: '2022-02-01T09:41:00+11:00'
+                      metadata:
+                        custom_key: custom_value
+                      source_payto_refund_uid: null
+                      links:
+                        self: https://api.zeptopayments.com/payto/payments/biz_payment_0000000000850
+                        agreement: https://api.zeptopayments.com/payto/agreements/biz_agreement_0000000001350
+                        source_refund: null
+                    - uid: biz_payment_0000000000840
+                      agreement_uid: biz_agreement_0000000001350
+                      state: settled
+                      amount: 12345
+                      last_payment: null
+                      priority: unattended
+                      reference: null
+                      description: null
+                      creditor:
+                        party_name: Mr Creditor
+                        ultimate_party_name: Ultimate Mr Creditor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      creditor_reference: null
+                      debtor:
+                        ultimate_party_name: Ms Debtor
+                        party_name: Ms Debtor
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      failure: null
+                      created_at: '2022-02-01T09:41:00+11:00'
+                      metadata:
+                        custom_key: custom_value
+                      source_payto_refund_uid: null
+                      links:
+                        self: https://api.zeptopayments.com/payto/payments/biz_payment_0000000000840
+                        agreement: https://api.zeptopayments.com/payto/agreements/biz_agreement_0000000001350
+                        source_refund: null
+              schema:
+                type: object
+                properties:
+                  links:
+                    $ref: '#/components/schemas/payto.pagination_links'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/payto.payment'
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /payto/payments/{payment_uid}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    - name: payment_uid
+      in: path
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_~.-]{1,64}$
+        description: A supplied unique ID
+        example: Payment_00012345
+      required: true
+    get:
+      summary: show payment
+      tags:
+      - Payments
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.payment'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /payto/payments/{payment_uid}/retry:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    - name: payment_uid
+      in: path
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_~.-]{1,64}$
+        description: A supplied unique ID
+        example: Payment_00012345
+      required: true
+    post:
+      summary: retry payment
+      tags:
+      - Payments
+      parameters: []
+      description: Retry a failed payment as long as it has failed due to a [retryable]https://docs.zeptopayments.com/reference/payto-reason-codes) reason as indicated by the `retryable` boolean field within the payment's failure object. Payments may be retried up to 10 times while within the related agreement's validity begin and end dates. Additionally, payments can only be retried 5 times within a 24 hour period (the first submission is included in this count).
+      responses:
+        '202':
+          description: successful
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Generic validation error:
+                  summary: Generic validation error
+                  value:
+                    errors:
+                    - title: Validation Failed
+                      detail: The value for `unexpected_key` is not allowed
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Payment is not retryable:
+                  summary: Payment is not retryable
+                  value:
+                    errors:
+                    - code: ZPPRY00
+                      title: Payment not retryable
+                      detail: Payment is not in a retryable state
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_payment_retry_errors'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/payto.retry_payment_request'
+      callbacks:
+        payto_payment.settled:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.settled
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.settled'
+              responses:
+                '200':
+                  description: OK
+        payto_payment.failed:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_payment.failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_payment.failed'
+              responses:
+                '200':
+                  description: OK
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /payments:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Payments
+      summary: Make a Payment
+      description: "To enable custom payment flows, the required payment channel can be selected by setting the _channel_ attribute to one of the following combinations:\n\n<ul>\n  <li>[\"new_payments_platform\"] - for faster payments 24/7/365</li>\n  <li>[\"direct_entry\"] - for slower traditional payments</li>\n  <li>[\"new_payments_platform\", \"direct_entry\"] - enables automatic channel switching if a payment fails on the NPP</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a href=\"https://docs.zeptopayments.com/v20260101/reference/idempotent-requests\">Idempotent requests guide</a>.</aside>\n"
+      operationId: MakeAPayment
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Idempotency key to support safe retries for 24h
+        required: true
+        schema:
+          type: string
+        example: '{unique-uuid-per-payment}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MakeAPaymentRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MakeAPaymentResponse'
+        '400':
+          description: Bad Request (errors)
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+              examples:
+                Invalid channel:
+                  summary: Invalid channel
+                  value:
+                    errors: 'Channels must be one of: new_payments_platform, direct_entry'
+                Channel not supported by bank account:
+                  summary: Channel not supported by bank account
+                  value:
+                    errors: Channels {channel} is not supported by your bank account. Please contact us for assistance
+                Transaction limit exceeded:
+                  summary: Transaction limit exceeded
+                  value:
+                    errors: The requested amount exceeds the {amount} limit per transaction. Please contact Zepto customer support.
+                Limit exceeded:
+                  summary: Limit exceeded
+                  value:
+                    errors: Amount must be less than or equal to 1000000000
+                Invalid description format:
+                  summary: Invalid description format
+                  value:
+                    errors: Description is in invalid format
+                Mature date in the past:
+                  summary: Mature date in the past
+                  value:
+                    errors: Matures at must not be in the past
+                Not found bank account:
+                  summary: Not found bank account
+                  value:
+                    errors: Your bank account not found
+                Bank account not configured:
+                  summary: Bank account not configured
+                  value:
+                    errors: Your bank account is not configured for payments
+                Bank account removed:
+                  summary: Bank account removed
+                  value:
+                    errors: Recipient contact (#{recipient_contact.id}) bank account has been removed
+                Recipient bank account blocked:
+                  summary: Recipient bank account blocked
+                  value:
+                    errors: Recipient contact (#{recipient_contact.id}) is blocked (reason)
+                Different float accounts:
+                  summary: Different float accounts
+                  value:
+                    errors: Recipient contact (#{recipient_contact.id}) must share the same control account
+                Insufficient funds:
+                  summary: Insufficient funds
+                  value:
+                    errors: Your bank account has insufficient funds
+                Blocked bank account:
+                  summary: Blocked bank account
+                  value:
+                    errors: Your bank account is blocked (reason)
+                Inactive bank account:
+                  summary: Inactive bank account
+                  value:
+                    errors: Your bank account not active
+                Invalid purpose category:
+                  summary: Invalid purpose category
+                  value:
+                    errors: 'Category purpose code must be one of: PENS, SALA, TAXS'
+                Exceeded payout size:
+                  summary: Exceeded payout size
+                  value:
+                    errors: Payouts size cannot be greater than 50
+                Not filled end to end:
+                  summary: Not filled end to end
+                  value:
+                    errors: End to end can't be blank
+    get:
+      tags:
+      - Payments
+      summary: List all Payments
+      description: ''
+      operationId: ListAllPayments
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllPaymentsResponse'
+    servers:
+    - url: https://api.sandbox.zeptopayments.com
+      description: Sandbox API server
+    - url: https://api.zeptopayments.com
+      description: Production API server
+  /payments/{payment_ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Payments
+      summary: Get a Payment
+      description: Get a single payment by its reference
+      operationId: GetAPayment
+      parameters:
+      - name: payment_ref
+        in: path
+        description: Payment reference
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: PB.1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAPaymentResponse'
+    servers:
+    - url: https://api.sandbox.zeptopayments.com
+      description: Sandbox API server
+    - url: https://api.zeptopayments.com
+      description: Production API server
+components:
+  schemas:
+    payto.account_identifier:
+      type: object
+      description: An identifier representing the parties account
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - bban
+          - alias_phone
+          - alias_email
+          - alias_abn
+          - alias_organisation_identifier
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/payto.account_identifiers_bban'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_phone'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_organisation_identifier'
+    payto.payment:
+      type: object
+      additionalProperties: false
+      required:
+      - uid
+      - agreement_uid
+      - state
+      - reference
+      - description
+      - priority
+      - creditor
+      - creditor_reference
+      - debtor
+      - amount
+      - failure
+      - created_at
+      - links
+      - last_payment
+      - source_payto_refund_uid
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for payment, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures payment uniqueness between integrator systems and Zepto.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        agreement_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: A supplied unique ID
+          example: Agreement_00012345
+        source_payto_refund_uid:
+          type:
+          - string
+          - 'null'
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: The UID of the PayTo Refund that created this Payment when this Payment is facilitating a refund.
+          example: Refund_00012345
+        state:
+          type: string
+          description: The current state of the payment
+          enum:
+          - created
+          - submitting
+          - pending
+          - under_investigation
+          - failed
+          - settled
+        reference:
+          type:
+          - string
+          - 'null'
+          description: Free-form text for reconciliation purposes. Typically this field will be shown to both parties on bank statements, however, the debtor can also control this via the agreement. The reference given here takes precedence over the agreeement's reference when it has been set by the debtor.
+          example: 'INVOICE #1003'
+          maxLength: 35
+          pattern: ^[ -~]+$
+        description:
+          type:
+          - string
+          - 'null'
+          description: Free-form text for the matching/reconciliation of a transaction. Similar to the reference field, this can be shown on both parties' bank statements. The difference is that this description can be a longer string and banks can show this seperately from the reference.
+          example: Payment 1 of 6 for Zeptinghouse Smart Fridge 300L
+          maxLength: 280
+        priority:
+          type: string
+          description: Execution priority of payment. `attended` payments will be prioritised over `unattended` payments.
+          enum:
+          - unattended
+          - attended
+        creditor:
+          type: object
+          description: Who and where the payment is sent to. Optional in request if `creditor` details are present on the agreement.
+          required:
+          - ultimate_party_name
+          - party_name
+          - account_identifier
+          properties:
+            party_name:
+              type: string
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name.
+            ultimate_party_name:
+              type:
+              - string
+              - 'null'
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        creditor_reference:
+          type:
+          - string
+          - 'null'
+          example: PYMNT-1003
+          minLength: 1
+          maxLength: 35
+          pattern: ^[ -~]+$
+          description: A reference to aid the creditor in reconciling the payment
+        debtor:
+          type: object
+          description: Who and where the payment is from
+          required:
+          - ultimate_party_name
+          - party_name
+          - account_identifier
+          properties:
+            ultimate_party_name:
+              type: string
+              example: Bob Jane
+              description: The ultimate debtor name for the account. Defaults to `party_name` if not provided.
+            party_name:
+              type: string
+              example: Bob Jean
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The party name of the debtor
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        amount:
+          $ref: '#/components/schemas/payto.amount'
+        last_payment:
+          type:
+          - boolean
+          - 'null'
+          description: This is a required field with agreements that have a payment_terms.type of `balloon`. If `true`, it indicates that this payment is the last payment for the agreement, and should be validated against the last_payment_date and last_payment_amount. No further payments can be made with the agreement once the last payment has been made. This field should be set to `false` for all other payments against a `balloon` agreement, and must be unset for payments on non-`balloon` agreements.
+          example: false
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+        failure:
+          $ref: '#/components/schemas/payto.payment_failure'
+        created_at:
+          type: string
+          format: date-time
+        links:
+          type: object
+          required:
+          - self
+          - agreement
+          - source_refund
+          properties:
+            self:
+              type: string
+              description: A URL to this payment
+              example: https://api.zeptopayments.com/payto/payments/biz_payment_G7MQWwkQZIP8vbfH
+            agreement:
+              type: string
+              description: A URL to the associated agreement
+              example: https://api.zeptopayments.com/payto/agreements/biz_agreement_G7MQWwkQZIP8vbfH
+            source_refund:
+              type:
+              - string
+              - 'null'
+              description: A URL to the associated source refund
+              example: https://api.zeptopayments.com/payto/refunds/biz_refund_G7MQWwkQZIP8vbfH
+          additionalProperties: false
+    payto.event.payto_payment.pending:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    payto.event.resource_metadata:
+      type: object
+      properties:
+        resource_metadata:
+          type:
+          - object
+          - 'null'
+          description: Custom metadata that was supplied to the API when the affected resource was created.
+          example:
+            custom_key: custom_value
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.unprocessable_payment_retry_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_payment_retry_error'
+      required:
+      - errors
+    payto.account_identifiers_alias_abn:
+      type: string
+      title: ABN alias
+      description: A PayID ABN alias
+      example: '123456789'
+      pattern: ^((\d{9})|(\d{11}))$
+    payto.webhook.base:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/payto.event.base'
+        links:
+          type: object
+          properties:
+            resource:
+              type: string
+              description: The api url to the resource
+              example: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+      required:
+      - data
+      - links
+    payto.account_identifiers_alias_phone:
+      type: string
+      title: Phone alias
+      description: A PayID phone alias. e.g. +61-411222333
+      example: +61-411222333
+      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
+    payto.webhook.payto_payment.settled:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.settled'
+      - type: object
+        example:
+          data:
+            type: payto_payment.settled
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.payment_request:
+      type: object
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for payment, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures payment uniqueness between integrator systems and Zepto.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        agreement_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: A supplied unique ID
+          example: Agreement_00012345
+        amount:
+          $ref: '#/components/schemas/payto.amount'
+        priority:
+          type: string
+          description: Execution priority of payment. `attended` payments will be prioritised over `unattended` payments.
+          enum:
+          - unattended
+          - attended
+        reference:
+          type:
+          - string
+          - 'null'
+          description: Free-form text for reconciliation purposes. Typically this field will be shown to both parties on bank statements, however, the debtor can also control this via the agreement. The reference given here takes precedence over the agreeement's reference when it has been set by the debtor.
+          example: 'INVOICE #1003'
+          maxLength: 35
+          pattern: ^[ -~]+$
+        description:
+          type:
+          - string
+          - 'null'
+          description: Free-form text for the matching/reconciliation of a transaction. Similar to the reference field, this can be shown on both parties' bank statements. The difference is that this description can be a longer string and banks can show this seperately from the reference.
+          example: Payment 1 of 6 for Zeptinghouse Smart Fridge 300L
+          maxLength: 280
+        creditor:
+          type: object
+          description: Who and where the payment is sent to. Optional in request if `creditor` details are present on the agreement.
+          required:
+          - party_name
+          - ultimate_party_name
+          - account_identifier
+          properties:
+            party_name:
+              type: string
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name.
+            ultimate_party_name:
+              type:
+              - string
+              - 'null'
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        creditor_reference:
+          type:
+          - string
+          - 'null'
+          example: PYMNT-1003
+          minLength: 1
+          maxLength: 35
+          pattern: ^[ -~]+$
+          description: A reference to aid the creditor in reconciling the payment
+        debtor:
+          type: object
+          description: Optional debtor party name overrides. Allows providing custom debtor party names that differ from the agreement. Only available to integrators with extended KYC permissions. Contact Zepto for more information if you would like this feature enabled for your account.
+          properties:
+            party_name:
+              type: string
+              example: Bob Jean
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The party name of the debtor
+            ultimate_party_name:
+              type: string
+              example: Bob Jane
+              description: The ultimate debtor name for the account. Defaults to `party_name` if not provided.
+        last_payment:
+          type:
+          - boolean
+          - 'null'
+          description: This is a required field with agreements that have a payment_terms.type of `balloon`. If `true`, it indicates that this payment is the last payment for the agreement, and should be validated against the last_payment_date and last_payment_amount. No further payments can be made with the agreement once the last payment has been made. This field should be set to `false` for all other payments against a `balloon` agreement, and must be unset for payments on non-`balloon` agreements.
+          example: false
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate the created payment going through certain scenarios to aid integrators while testing their control flows. Defaults to auto_settle if not given.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - auto_settle
+              - requires_investigation
+              - investigate_and_settle
+              - investigate_and_fail
+              - insufficient_funds
+              - creditor_account_type_not_supported
+              - creditor_account_closed
+              - debtor_account_closed
+              - financial_infrastructure_unavailable
+              - debtor_alias_not_found
+              - creditor_alias_not_found
+              - alias_resolution_service_unavailable
+            delay:
+              type: integer
+              description: An optional attribute that will delay the requested simulation by the given amount of seconds. If `delay` is not provided (default behaviour), the simulated action will happen instantly.
+      required:
+      - uid
+      - agreement_uid
+      - amount
+      - priority
+    payto.pagination_links:
+      type: object
+      properties:
+        next:
+          type: string
+          description: URL for next page of results. Won't be present if there are no further pages.
+    payto.event.base:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of event that triggered the webhook delivery. Value is a UUIDv7
+          example: 019c6f54-1117-7a38-89ae-841bb4e4ac67
+        type:
+          type: string
+          description: Type of event that triggered the webhook delivery
+          example: payto_payment.settled
+        published_at:
+          type: string
+          format: date-time
+          description: When the event was published by Zepto
+          example: '2023-03-07T22:50:40Z'
+        resource_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for resource that the event affected, maximum 64 characters containing only unreserved characters as defined in RFC3986.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        resource_type:
+          type: string
+          description: The type of resource the resource_uid relates to
+          enum:
+          - payto_agreement
+          - payto_payment
+          - payto_refund
+          example: payto_payment
+        body:
+          type:
+          - object
+          - 'null'
+          example: null
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.webhook.payto_payment.pending:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.pending'
+      - type: object
+        example:
+          data:
+            type: payto_payment.pending
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.account_identifiers_alias_email:
+      type: string
+      title: Email alias
+      description: A PayID email alias
+      example: default@example.com
+      pattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$
+    payto.unprocessable_payment_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_payment_error'
+      required:
+      - errors
+    payto.amount:
+      type: integer
+      description: Amount in cents.
+      example: 2495
+      minimum: 1
+      maximum: 1000000000
+    payto.event.payto_payment.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            description: Payment failure details
+            properties:
+              failure:
+                $ref: '#/components/schemas/payto.payment_failure'
+            required:
+            - failure
+    payto.account_identifiers_alias_organisation_identifier:
+      type: string
+      title: Organisation alias
+      description: A PayID organisation identifier alias
+      example: Zepto Pty Ltd, Byron Bay NSW
+      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
+    payto.generic_error:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          example: Title of error
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+      required:
+      - title
+      - detail
+    payto.webhook.payto_payment.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.failed'
+      - type: object
+        example:
+          data:
+            type: payto_payment.failed
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.unprocessable_pagination_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPPGN00
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.unprocessable_payment_retry_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP03
+          - ZPUNP04
+          - ZPUNP05
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - ZPUNP09
+          - ZPPRY00
+          - ZPPRY01
+          - ZPPRY02
+          - ZPPRY03
+          - ZPPRY04
+          - ZPPRY05
+          - ZPREF06
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.unprocessable_pagination_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_pagination_error'
+      required:
+      - errors
+    payto.retry_payment_request:
+      type: object
+      additionalProperties: false
+      properties:
+        creditor:
+          type: object
+          description: Who and where the payment is sent to. Optional - defaults to creditor details from agreement (if present), or the existing creditor details from the payment.
+          required:
+          - ultimate_party_name
+          - party_name
+          - account_identifier
+          properties:
+            party_name:
+              type: string
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name.
+            ultimate_party_name:
+              type:
+              - string
+              - 'null'
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate certain scenarios in regards to the payment retry to aid integrators while testing their control flows.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - auto_settle
+              - requires_investigation
+              - investigate_and_settle
+              - investigate_and_fail
+              - insufficient_funds
+              - creditor_account_type_not_supported
+              - creditor_account_closed
+              - debtor_account_closed
+              - financial_infrastructure_unavailable
+              - debtor_alias_not_found
+              - creditor_alias_not_found
+              - alias_resolution_service_unavailable
+            delay:
+              type: integer
+              description: An optional attribute that will delay the requested simulation by the given amount of seconds. If `delay` is not provided (default behaviour), the simulated action will happen instantly.
+    payto.payment_failure:
+      type:
+      - object
+      - 'null'
+      description: Details about the payment failure, when the state is 'failed'
+      required:
+      - title
+      - detail
+      - code
+      - retryable
+      properties:
+        title:
+          type: string
+          description: A short description of the reason or failure
+          example: Agreement Status Invalid
+        detail:
+          type: string
+          description: A longer description of the reason or failure
+          example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+        code:
+          type: string
+          description: A unique identifier for this specific type of reason or failure
+          example: MMS.API.9104
+          enum:
+          - ZPPAY24
+          - AB01
+          - AB02
+          - AB03
+          - AB04
+          - AB08
+          - AC02
+          - AC03
+          - AC05
+          - AC06
+          - AC07
+          - AC13
+          - AC14
+          - AC15
+          - AG01
+          - AG03
+          - AG07
+          - AGNT
+          - AM01
+          - AM02
+          - AM03
+          - AM04
+          - AM06
+          - AM09
+          - AM12
+          - AM19
+          - AM21
+          - BE05
+          - BE06
+          - BE08
+          - BE22
+          - CH20
+          - CH21
+          - CURR
+          - CUST
+          - DT02
+          - DT04
+          - ED05
+          - ED06
+          - FF04
+          - FF08
+          - FF10
+          - FF11
+          - FRAD
+          - MD01
+          - MD02
+          - MD20
+          - MS02
+          - MS03
+          - NARR
+          - NAUT
+          - RR02
+          - RR03
+          - RR04
+          - RC05
+          - SL01
+          - SL11
+          - SL12
+          - SL13
+          - SL14
+          - TD03
+          - TM01
+          - AVED
+          - BVSD
+          - MCGP
+          - NACT
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - UKNWN
+        retryable:
+          type: boolean
+          example: false
+          description: A boolean value indicating whether or not this payment can be retried.
+    payto.webhook.payto_payment.under_investigation:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.under_investigation'
+      - type: object
+        example:
+          data:
+            type: payto_payment.under_investigation
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.metadata:
+      type:
+      - object
+      - 'null'
+      description: Use for your custom data. A place to store any miscellaneous information your system may need in regards to the record you are creating. This will be included in associated webhook payloads under the `resource_metadata` key. Nested values (i.e., objects and arrays) are not allowed. The maximum size of this parameter is 2kb.
+      example:
+        custom_key: custom_value
+    payto.account_identifiers_bban:
+      type: string
+      title: BBAN
+      description: A branch code (BSB) and account number separated with a hyphen
+      example: 123456-98765432
+      pattern: ^\d{6}-[ -~]{1,28}$
+    payto.event.payto_payment.settled:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    payto.unprocessable_payment_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP03
+          - ZPUNP04
+          - ZPUNP05
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - ZPUNP09
+          - ZPPAY00
+          - ZPPAY01
+          - ZPPAY02
+          - ZPPAY03
+          - ZPPAY04
+          - ZPPAY05
+          - ZPPAY06
+          - ZPPAY07
+          - ZPPAY08
+          - ZPPAY09
+          - ZPPAY10
+          - ZPPAY11
+          - ZPPAY12
+          - ZPPAY13
+          - ZPPAY14
+          - ZPPAY15
+          - ZPPAY16
+          - ZPPAY17
+          - ZPPAY18
+          - ZPPAY19
+          - ZPPAY20
+          - ZPPAY21
+          - ZPPAY22
+          - ZPPAY23
+          - ZPPAY24
+          - ZPPAY25
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.generic_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.generic_error'
+      required:
+      - errors
+    payto.event.payto_payment.under_investigation:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    MakeAPaymentRequest:
+      title: Make a Payment (request)
+      required:
+      - description
+      - matures_at
+      - payouts
+      - your_bank_account_id
+      - channels
+      type: object
+      properties:
+        description:
+          type: string
+          description: User description. Only visible to the payer. ASCII-printable characters and unicode emojis are accepted.
+          pattern: ^[ -~\p{Emoji}]+$
+          example: The SuperPackage
+        matures_at:
+          type: string
+          format: date-time
+          description: Date & time in UTC ISO8601 the Payment should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
+          example: '2016-09-13T00:00:00Z'
+        your_bank_account_id:
+          type: string
+          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
+          example: 83623359-e86e-440c-9780-432a3bc3626f
+        channels:
+          type: array
+          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
+        payouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payout'
+          description: One Payout object only
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        description: The SuperPackage
+        matures_at: '2021-06-13T00:00:00Z'
+        your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+        channels:
+        - new_payments_platform
+        payouts:
+        - amount: 30000
+          description: A tandem skydive jump SB23094
+          recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+          metadata:
+            invoice_ref: BILL-0001
+            invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    GetAPaymentResponse:
+      title: Get a Payment (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - direct_entry
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: The SuperPackage
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44'
+            status: maturing
+            amount: 30000
+            description: A tandem skydive jump SB23094
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    MakeAPaymentResponse:
+      title: Make a Payment (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - new_payments_platform
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: The SuperPackage
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: A tandem skydive jump SB23094
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            category_purpose_code: PENS
+            end_to_end_id: FFC6D34847134E4D8BF4B9B41BDC94C8
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    ListAllPaymentsResponse:
+      title: List all Payments (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - new_payments_platform
+          - direct_entry
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: This description is only available to the payer
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: The recipient will see this description
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          - ref: D.2
+            recipient_contact_id: dc6f1e60-3803-43ca-a200-7d641816f57f
+            batch_description: This description is only available to the payer
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: The recipient will see this description
+            from_id: 48b89364-1577-4c81-ba02-96705895d457
+            to_id: f989d9cd-87fc-4c73-b0a4-1eb0e8768d3b
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    Payout:
+      title: Payout
+      required:
+      - amount
+      - description
+      - recipient_contact_id
+      description: The actual Payout
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: Amount in cents to pay the recipient
+          example: 30000
+        description:
+          type: string
+          description: Description that both the payer and recipient can see. For Direct Entry payments, the payout recipient will see the first 9 characters of this description. For NPP payments, the payout recipient will see the first 280 characters of this description. ASCII-printable characters and unicode emojis are accepted.
+          pattern: ^[ -~\p{Emoji}]+$
+          example: A tandem skydive jump SB23094
+        recipient_contact_id:
+          type: string
+          description: Contact to pay (`Contact.data.id`)
+          example: 48b89364-1577-4c81-ba02-96705895d457
+        category_purpose_code:
+          type: string
+          description: ISO 20022 code for payment category purpose (see supported values below).
+          enum:
+          - PENS
+          - SALA
+          - TAXS
+          example: PENS
+        end_to_end_id:
+          type: string
+          maxLength: 35
+          description: 'End-To-End ID (35 max. characters). Required when a category purpose code is present. For superannuation or tax payments, set this to the Payment Reference Number (PRN). For salary payments, set this to the Employee Reference.
+
+            '
+          example: FFC6D34847134E4D8BF4B9B41BDC94C8
+        metadata:
+          type: object
+          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+externalDocs:
+  description: Zepto API v1.0
+  url: https://docs.zeptopayments.com
+x-refined-from:
+- zepto-payments-pay-to.yml
+- zepto-payments-zepto.yml

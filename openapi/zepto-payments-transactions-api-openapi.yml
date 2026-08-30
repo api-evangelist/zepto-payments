@@ -1,0 +1,549 @@
+openapi: 3.2.0
+info:
+  title: Zepto Transactions API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Transactions
+  description: "By default, the transactions endpoint provides a detailed look at all past, current and future debits & credits related to your account.\n\n<aside class=\"notice\">Want to also know about the debits & credits applied to the other party? No problem! Use the <code>both_parties=true</code> query string.</aside>\n\n##Lifecycle\n\nA transaction (debit or credit) can have the following statuses:\n\n| Status | Description |\n|--------|-------------|\n| `maturing` | The maturation date has not yet been reached. |\n| `matured` | The maturation date has been reached and the transaction is eligible for processing. |\n| `preprocessing` | The transaction is undergoing pre-checks before being sent to the bank. |\n| `processing` | The transaction has been submitted to the bank. |\n| `clearing` | Waiting for confirmation from the bank that the transaction has succeeded. |\n| `cleared` | The transaction is complete. |\n| `rejected` | The bank has rejected the transaction due to incorrect bank account details. |\n| `returned` | The transaction did not successfully clear. |\n| `voided` | The transaction has been cancelled and is no longer eligible for processing. |\n| `pending_verification` | The bank account must be verified before the transaction can proceed. |\n| `paused` | The transaction has temporary been paused by Zepto pending internal review. |\n| `channel_switched` | The initial payment channel has failed and the credit has automatically switched to attempt the payment using the next available channel. |\n## Failure codes\n> Example response\n\n```json\n{\n  \"data\": [\n    {\n      \"ref\": \"D.3\",\n      \"parent_ref\": null,\n      \"type\": \"debit\",\n      \"category\": \"payout_refund\",\n      \"created_at\": \"2021-04-07T23:15:00Z\",\n      \"matures_at\": \"2021-04-10T23:15:00Z\",\n      \"cleared_at\": null,\n      \"bank_ref\": null,\n      \"status\": \"returned\",\n      \"status_changed_at\": \"2021-04-08T23:15:00Z\",\n      \"failure\" : {\n        \"code\": \"E251\",\n        \"title\": \"Voided By Initiator\",\n        \"detail\": \"The transaction was voided by its initiator.\",\n      },\n      \"failure_details\": \"Wrong amount - approved by Stacey\"\n      \"party_contact_id\": \"26297f44-c5e1-40a1-9864-3e0b0754c32a\",\n      \"party_name\": \"Sanford-Rees\",\n      \"party_nickname\": \"sanford-rees-8\",\n      \"description\": null,\n      \"amount\": 1,\n      \"bank_account_id\": \"56df206a-aaff-471a-b075-11882bc8906a\"\n      \"channels\": [\"float_account\"]\n      \"current_channel\": \"float_account\"\n    }\n  ]\n}\n```\nThe rejected, returned & voided statuses are always accompanied by a failure code, title and detail as listed below.\n### DE credit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E101 | Invalid BSB Number | The BSB is not valid or is no longer active. |\n| E102 | Payment Stopped | The target institution has blocked transactions to this account. Please refer to customer. |\n| E103 | Account Closed | The target account is closed. |\n| E104 | Customer Deceased | The target account's owner has been listed as deceased. |\n| E105 | Account Not Found | The target account number cannot be found by the financial institution. |\n| E106 | Refer to Customer | Usually means that there is an issue with the account receiving a credit that only the customer and their financial institution can resolve. Please refer to customer. |\n| E107 | Account Deleted | The target account is deleted. |\n| E108 | Invalid UserID | Please contact Zepto for further information. |\n| E109 | Technically Invalid | Usually means that the account is not creditable or that the reason for failure cannot be categorised within the standard BECS return codes. Please refer to customer. |\n| E150 | Voided By Admin | The transaction was voided by an administrator. |\n| E151 | Voided By Initiator | The transaction was voided by its initiator. |\n| E152 | Insufficient Funds | There were insufficient funds to complete the transaction. |\n| E153 | System Error | The transaction was unable to complete. Please contact Zepto for assistance. |\n| E154 | Account Blocked | The target account is blocked and cannot receive funds. |\n| E199 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |\n### DE debit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E201 | Invalid BSB Number | The BSB is not valid or is no longer active. |\n| E202 | Payment Stopped | The target institution has blocked transactions to this account. Please refer to customer. |\n| E203 | Account Closed | The target account is closed. |\n| E204 | Customer Deceased | The target account's owner has been listed as deceased. |\n| E205 | Account Not Found | The target account number cannot be found by the financial institution. |\n| E206 | Refer to Customer | Usually means insufficient funds or that the target account has breached their transaction limits. |\n| E207 | Account Deleted | The target account is deleted. |\n| E208 | Invalid UserID | Please contact Zepto for further information. |\n| E209 | Technically Invalid | Usually means that the account is not debitable or that the reason for failure can not be categorised within the standard BECS return codes. Please refer to customer. |\n| E250 | Voided By Admin | The transaction was voided by an administrator. |\n| E251 | Voided By Initiator | The transaction was voided by its initiator. |\n| E252 | Insufficient Funds | There were insufficient funds to complete the transaction. |\n| E253 | System Error | The transaction was unable to complete. Please contact Zepto for assistance. |\n| E299 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |\n### NPP credit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E301 | Upstream Network Outage | An upstream network issue occurred. Please try again later. |\n| E302 | BSB Not NPP Enabled | The target BSB is not NPP enabled. Please try another channel. |\n| E303 | Account Not NPP Enabled | The target account exists but cannot accept funds via the NPP. Please try another channel. |\n| E304 | Account Not Found | The target account number cannot be found. |\n| E305 | Intermittent Outage At Target Institution | The target financial institution is experiencing technical difficulties. Please try again later. |\n| E306 | Account Closed | The target account is closed. |\n| E307 | Target Institution Offline | The target financial institution is undergoing maintenance or experiencing an outage. Please try again later. |\n| E308 | Account Blocked | The target account is blocked and cannot receive funds. |\n| E399 | Unknown NPP Error | An unknown NPP error occurred. Please contact Zepto for assistance. |\n"
+paths:
+  /transactions:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Transactions
+      summary: List all transactions
+      description: <aside class="notice">By default, Zepto will search and return all transactions created in the <strong>last 30 days</strong>. You can adjust this up to <strong>1 year</strong> by defining the <code>min_created_date</code> query string parameter defined below.</aside>
+      operationId: ListAllTransactions
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      - name: ref (debit or credit)
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: D.1i
+      - name: parent_ref
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: PRF.92a
+      - name: bank_ref
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: DT.12
+      - name: both_parties
+        in: query
+        description: Single value, exact match. Will also list debits & credits applied to the other party
+        style: form
+        schema:
+          type: boolean
+        example: true
+      - name: status
+        in: query
+        description: Multiple values, exact match
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+          enum:
+          - maturing
+          - matured
+          - preprocessing
+          - processing
+          - clearing
+          - cleared
+          - rejected
+          - returned
+          - voided
+          - pending_verification
+          - paused
+        example:
+        - maturing
+      - name: category
+        in: query
+        description: Multiple values, exact match
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+          enum:
+          - payout
+          - payout_refund
+          - invoice
+        example:
+        - payout
+      - name: type
+        in: query
+        description: Multiple values, exact match
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+          enum:
+          - debit
+          - credit
+        example:
+        - debit
+      - name: other_party
+        in: query
+        description: Single value, string search. Cannot be combine with <code>both_parties</code> query string
+        style: form
+        schema:
+          type: string
+        example: party people
+      - name: other_party_bank_ref
+        in: query
+        description: Single value, exact match
+        style: form
+        schema:
+          type: string
+        example: CT.3a
+      - name: party_contact_id
+        in: query
+        description: Single value, exact match. Cannot be combine with <code>both_parties</code> query string
+        style: form
+        schema:
+          type: string
+        example: a67036fc-217e-437a-83f4-89e90724bea0
+      - name: description
+        in: query
+        description: Single value, string search
+        style: form
+        schema:
+          type: string
+        example: some description
+      - name: min_amount
+        in: query
+        description: Cents, single value, exact match
+        style: form
+        schema:
+          type: integer
+        example: 500
+      - name: max_amount
+        in: query
+        description: Cents, single value, exact match
+        style: form
+        schema:
+          type: integer
+        example: 1000
+      - name: min_created_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-05-10T00:00:00Z'
+      - name: max_created_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-06-10T00:00:00Z'
+      - name: min_matured_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-05-10T00:00:00Z'
+      - name: max_matured_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-06-10T00:00:00Z'
+      - name: min_cleared_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-05-10T00:00:00Z'
+      - name: max_cleared_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-06-10T00:00:00Z'
+      - name: min_status_changed_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-05-10T00:00:00Z'
+      - name: max_status_changed_date
+        in: query
+        description: Date/time UTC ISO 8601 format, single value, exact match
+        style: form
+        schema:
+          type: string
+          format: date-time
+        example: '2017-06-10T00:00:00Z'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllTransactionsResponse'
+components:
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  schemas:
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    Failure:
+      title: Failure object (see [Transaction/Failure codes](#failure-codes) for more info)
+      required:
+      - code
+      - title
+      - detail
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+      example:
+        code: E205
+        title: Account Not Found
+        detail: The target account number cannot be found by the financial institution.
+    TransactionResponse:
+      title: A transaction (response)
+      required:
+      - ref
+      - parent_ref
+      - type
+      - category
+      - created_at
+      - matured_at
+      - cleared_at
+      - bank_ref
+      - status
+      - status_changed_at
+      - party_contact_id
+      - party_name
+      - party_nickname
+      - party_bank_ref
+      - description
+      - amount
+      - bank_account_id
+      - channels
+      - current_channel
+      type: object
+      properties:
+        ref:
+          type: string
+          description: The ref of the transaction (`C.*` or `D.*`)
+        parent_ref:
+          type:
+          - string
+          - 'null'
+          description: The ref of the parent of this transaction
+        type:
+          type: string
+          description: The type of the transaction
+          enum:
+          - credit
+          - debit
+        category:
+          type: string
+          description: The category of the transaction
+          enum:
+          - payout
+          - payout_refund
+          - invoice
+          - payout_reversal
+          - transfer
+          - recovery
+        created_at:
+          type: string
+          format: date-time
+          description: When the transaction was created
+        matures_at:
+          type: string
+          format: date-time
+          description: When the transaction was processed
+        cleared_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the transaction was cleared
+        bank_ref:
+          type:
+          - string
+          - 'null'
+          description: The ref that is sent to the bank
+        status:
+          type: string
+          description: The status of the transaction (see [Transactions/Lifecycle](#lifecycle-4) for more info)
+          enum:
+          - maturing
+          - matured
+          - preprocessing
+          - processing
+          - clearing
+          - cleared
+          - rejected
+          - returned
+          - voided
+          - pending_verification
+          - paused
+          - channel_switched
+        status_changed_at:
+          type: string
+          description: When the status was last changed
+        failure_details:
+          type: string
+          description: Details if a failure occured
+        failure:
+          $ref: '#/components/schemas/Failure'
+        party_contact_id:
+          type: string
+          format: uuid
+          description: The transaction party's contact ID
+        party_name:
+          type: string
+          description: The transaction party's name
+        party_nickname:
+          type:
+          - string
+          - 'null'
+          description: The transaction party's nickname
+        party_bank_ref:
+          type:
+          - string
+          - 'null'
+          description: The transaction party's bank ref
+        description:
+          type:
+          - string
+          - 'null'
+          description: The transaction's description
+        amount:
+          type: integer
+          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+        bank_account_id:
+          type: string
+          format: uuid
+          description: The bank account ID of this transaction
+        channels:
+          type: array
+          description: Which payment channels this transaction can use (see [Payments/Make a payment](#make-a-payment) for more info)
+        current_channel:
+          type: string
+          description: The current payment channel in use for this transaction
+          enum:
+          - direct_entry
+          - float_account
+          - new_payments_platform
+        reversal_details:
+          type: object
+          description: Reversal details (see [Payments/Lifecyle](#lifecycle-3) for more info)
+          properties:
+            source_debit_ref:
+              type: string
+              description: The source debit ref of the reversal
+            source_credit_failure:
+              $ref: '#/components/schemas/Failure'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        ref: C.2
+        parent_ref: PB.s0z
+        type: credit
+        category: payout
+        created_at: '2016-12-05T23:15:00Z'
+        matured_at: '2016-12-06T23:15:00Z'
+        cleared_at: '2016-12-09T23:15:00Z'
+        bank_ref: CT.1
+        status: cleared
+        status_changed_at: '2016-12-09T23:15:00Z'
+        party_contact_id: 33c6e31d-1dc1-448b-9512-0320bc44fdcf
+        party_name: Price and Sons
+        party_nickname: price-and-sons-2
+        party_bank_ref: null
+        description: Online purchase
+        amount: 19999
+        bank_account_id: c2e329ae-606f-4311-a9ab-a751baa1915c
+        channels:
+        - direct_entry
+        current_channel: direct_entry
+        metadata:
+          customer_id: xur4492
+          product_ref: TSXL392110x
+    ListAllTransactionsResponse:
+      title: List all transactions (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+      example:
+        data:
+        - ref: D.3
+          parent_ref: null
+          type: debit
+          category: payout_refund
+          created_at: '2021-04-07T23:15:00Z'
+          matured_at: '2021-04-07T23:15:00Z'
+          cleared_at: '2021-04-10T23:15:00Z'
+          bank_ref: DT.9a
+          status: cleared
+          status_changed_at: '2021-04-10T23:15:00Z'
+          party_contact_id: 31354923-b1e9-4d65-b03c-415ead89cbf3
+          party_name: Sanford-Rees
+          party_nickname: null
+          party_bank_ref: CT.11
+          description: null
+          amount: 20000
+          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
+          channels:
+          - float account
+          current_channel: float_account
+        - ref: D.2
+          parent_ref: PB.2
+          type: debit
+          category: payout
+          created_at: '2016-12-06T23:15:00Z'
+          matured_at: '2016-12-09T23:15:00Z'
+          cleared_at: null
+          bank_ref: null
+          status: maturing
+          status_changed_at: '2016-12-06T23:15:00Z'
+          party_contact_id: 3c6e31d3-1dc1-448b-9512-0320bc44fdcf
+          party_name: Gutmann-Schmidt
+          party_nickname: null
+          party_bank_ref: null
+          description: Batteries for hire
+          amount: 2949299
+          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
+          channels:
+          - float_account
+          current_channel: float_account
+        - ref: C.2
+          parent_ref: PB.s0z
+          type: credit
+          category: payout
+          created_at: '2016-12-05T23:15:00Z'
+          matured_at: '2016-12-06T23:15:00Z'
+          cleared_at: '2016-12-09T23:15:00Z'
+          bank_ref: CT.1
+          status: cleared
+          status_changed_at: '2016-12-09T23:15:00Z'
+          party_contact_id: 33c6e31d-1dc1-448b-9512-0320bc44fdcf
+          party_name: Price and Sons
+          party_nickname: price-and-sons-2
+          party_bank_ref: null
+          description: Online purchase
+          amount: 19999
+          bank_account_id: c2e329ae-606f-4311-a9ab-a751baa1915c
+          channels:
+          - new_payments_platform
+          - direct_entry
+          current_channel: direct_entry
+          metadata:
+            customer_id: xur4492
+            product_ref: TSXL392110x
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

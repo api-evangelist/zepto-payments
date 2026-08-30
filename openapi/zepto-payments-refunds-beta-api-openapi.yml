@@ -1,0 +1,953 @@
+openapi: 3.2.0
+info:
+  title: Zepto PayTo Refunds (Beta) API
+  version: '20260101'
+  description: Documentation for the Zepto PayTo API.
+  termsOfService: https://www.zepto.com.au/terms-of-service/
+  contact:
+    email: support@zepto.com.au
+servers:
+- description: Zepto Sandbox
+  url: https://api.sandbox.zeptopayments.com
+- description: Zepto Production
+  url: https://api.zeptopayments.com
+security:
+- bearerAuth: []
+tags:
+- name: Refunds (Beta)
+  description: 'Refund existing settled PayTo Payments
+
+
+    ## Beta Release
+
+
+    We''re excited to announce that this feature is now in beta! While we''ll aim to minimize breaking changes,
+
+    some adjustments may occur as we refine it. Rest assured, we''ll notify you of any major changes in advance.
+
+    Access is limited to selected merchants who applied. Your feedback is crucial in helping us improve and stabilize
+
+    the feature so please share your experiences!
+
+    '
+paths:
+  /payto/refunds:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      summary: create refund
+      tags:
+      - Refunds (Beta)
+      parameters: []
+      responses:
+        '201':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.refund'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Generic validation error:
+                  summary: Generic validation error
+                  value:
+                    errors:
+                    - code: ZPUNP09
+                      title: Alias resolution not enabled
+                      detail: Account not enabled for alias resolution services
+                Invalid uid:
+                  summary: Invalid uid
+                  value:
+                    errors:
+                    - code: ZPUNP00
+                      title: One or more fields violate the relevant schema
+                      detail: params.uid must be filled
+                Non-Unique uid:
+                  summary: Non-Unique uid
+                  value:
+                    errors:
+                    - code: ZPREF00
+                      title: Duplicate UID
+                      detail: A refund with the given UID already exists
+                Before Agreement's validity start date:
+                  summary: Before Agreement's validity start date
+                  value:
+                    errors:
+                    - code: ZPPAY08
+                      title: Before validity start date
+                      detail: The validity start date specified in the agreement has not yet passed
+                After Agreement's validity end date:
+                  summary: After Agreement's validity end date
+                  value:
+                    errors:
+                    - code: ZPPAY07
+                      title: After validity end date
+                      detail: The validity end date specified in the agreement has already passed
+                Amount over maximum for agreement:
+                  summary: Amount over maximum for agreement
+                  value:
+                    errors:
+                    - code: ZPPAY12
+                      title: Amount over maximum
+                      detail: The payment amount is larger than the maximum specified in the agreement
+                First payment date incorrect:
+                  summary: First payment date incorrect
+                  value:
+                    errors:
+                    - code: ZPPAY18
+                      title: First payment amount incorrect
+                      detail: The payment amount does not match the first payment amount specified in the agreement
+                First payment date mismatch:
+                  summary: First payment date mismatch
+                  value:
+                    errors:
+                    - code: ZPPAY14
+                      title: First payment date mismatch
+                      detail: The payment date does not match the first payment date specified in the agreement
+                Last payment made:
+                  summary: Last payment made
+                  value:
+                    errors:
+                    - code: ZPPAY21
+                      title: Last payment made
+                      detail: No further payments can be created for this agreement, as the last payment has been made
+                Too many payments:
+                  summary: Too many payments
+                  value:
+                    errors:
+                    - code: ZPPAY17
+                      title: Too many payments
+                      detail: The maximum number of payments has already been reached for the current frequency period, according to the terms of the agreement
+                Amount incorrect:
+                  summary: Amount incorrect
+                  value:
+                    errors:
+                    - code: ZPPAY15
+                      title: Amount incorrect
+                      detail: The payment amount does not match the amount specified in the agreement
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_refund_errors'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Generic validation error:
+                  summary: Generic validation error
+                  value:
+                    errors:
+                    - title: Validation Failed
+                      detail: The value for `invalid_key` is not allowed
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/payto.refund_request'
+      callbacks:
+        payto_refund.processed:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_refund.processed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_refund.processed'
+              responses:
+                '200':
+                  description: OK
+        payto_refund.failed:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_refund.failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_refund.failed'
+              responses:
+                '200':
+                  description: OK
+    get:
+      summary: list refunds
+      parameters:
+      - name: per_page
+        description: Number of results per page
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: starting_after
+        description: Opaque pagination cursor value. Set by following "next" links.
+        in: query
+        schema:
+          type: string
+      - name: min_created_date
+        description: Filter by minimum created_at date. ISO8601 format.
+        example: '2022-01-01'
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: max_created_date
+        description: Filter by maximum created_at date. ISO8601 format.
+        example: '2022-01-31'
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: original_payment_uid
+        description: Filter refunds by original payment uid.
+        example: biz_payment_000123
+        in: query
+        schema:
+          type: string
+      tags:
+      - Refunds (Beta)
+      responses:
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Non integer per_page:
+                  summary: Non integer per_page
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: The `per_page` param is not valid.
+                No record with ID matching starting_after param:
+                  summary: No record with ID matching starting_after param
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: Could not find a record for the given `starting_after` param.
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_pagination_errors'
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                Successful request:
+                  summary: Successful request
+                  value:
+                    links: {}
+                    data:
+                    - uid: refund-uid-4
+                      original_payment_uid: biz_payment_000123
+                      refund_payment:
+                        type: float_bank_payment
+                        float_bank_account_id: my_identifier
+                        amount: 12345
+                        description: null
+                      state: created
+                      failure: null
+                      created_at: '2022-02-03T00:00:00+11:00'
+                      metadata:
+                        custom_key: custom_value
+                      links:
+                        self: https://api.zeptopayments.com/payto/refunds/refund-uid-4
+                        original_payment: https://api.zeptopayments.com/payto/payments/biz_payment_000123
+                    - uid: refund-uid-3
+                      original_payment_uid: biz_payment_000123
+                      refund_payment:
+                        type: float_bank_payment
+                        float_bank_account_id: my_identifier
+                        amount: 12345
+                        description: null
+                      state: created
+                      failure: null
+                      created_at: '2022-02-02T00:00:00+11:00'
+                      metadata:
+                        custom_key: custom_value
+                      links:
+                        self: https://api.zeptopayments.com/payto/refunds/refund-uid-3
+                        original_payment: https://api.zeptopayments.com/payto/payments/biz_payment_000123
+              schema:
+                type: object
+                properties:
+                  links:
+                    $ref: '#/components/schemas/payto.pagination_links'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/payto.refund'
+  /payto/refunds/{refund_uid}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    - name: refund_uid
+      in: path
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_~.-]{1,64}$
+        description: A supplied unique ID
+        example: Refund_00012345
+      required: true
+    get:
+      summary: show refund
+      tags:
+      - Refunds (Beta)
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.refund'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    payto.event.resource_metadata:
+      type: object
+      properties:
+        resource_metadata:
+          type:
+          - object
+          - 'null'
+          description: Custom metadata that was supplied to the API when the affected resource was created.
+          example:
+            custom_key: custom_value
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.unprocessable_refund_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_refund_error'
+      required:
+      - errors
+    payto.webhook.payto_refund.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_refund.failed'
+      - type: object
+        example:
+          data:
+            type: payto_refund.failed
+            resource_type: payto_refund
+          links:
+            resource: https://api.zeptopayments.com/payto/refunds/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.webhook.base:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/payto.event.base'
+        links:
+          type: object
+          properties:
+            resource:
+              type: string
+              description: The api url to the resource
+              example: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+      required:
+      - data
+      - links
+    payto.refund_failure:
+      type:
+      - object
+      - 'null'
+      description: Details about the refund failure, when the state is 'failed'
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          description: A short description of the failure
+          example: The provided fund source has insufficient funds
+        detail:
+          type: string
+          description: A longer description of the failure
+          example: The provided fund source has insufficient funds to process this refund
+        code:
+          type: string
+          description: A unique identifier for this specific type of failure
+          example: ZPREF07
+          enum:
+          - ZPPAY00
+          - ZPREF07
+          - AC02
+          - AC03
+          - AC05
+          - AC06
+          - AC07
+          - AC14
+          - AG01
+          - AG03
+          - AGNT
+          - AM01
+          - AM02
+          - AM03
+          - AM06
+          - AM12
+          - AM19
+          - BE06
+          - BE08
+          - BE22
+          - CH20
+          - CH21
+          - DT02
+          - ED06
+          - FF04
+          - FF08
+          - FF10
+          - FF11
+          - TD03
+          - AB01
+          - AB02
+          - ZPPAY24
+          - AB03
+          - AB04
+          - AB08
+          - AC13
+          - AC15
+          - AG07
+          - AM04
+          - AM09
+          - AM21
+          - BE05
+          - CURR
+          - CUST
+          - DT04
+          - ED05
+          - FRAD
+          - MD01
+          - MD02
+          - MD20
+          - MS02
+          - MS03
+          - NARR
+          - NAUT
+          - RR02
+          - RR03
+          - RR04
+          - RC05
+          - SL01
+          - SL11
+          - SL12
+          - SL13
+          - SL14
+          - TM01
+          - AVED
+          - BVSD
+          - MCGP
+          - NACT
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - UKNWN
+    payto.refund.float_bank_payment:
+      type: object
+      required:
+      - type
+      - float_bank_account_id
+      - amount
+      - description
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum:
+          - float_bank_payment
+          - pay_to_payment
+          description: The type of payment that should be used to facilitate this refund
+        float_bank_account_id:
+          type: string
+          format: uuid
+          description: The ID of the float account that should be debited to facilitate this payment
+        amount:
+          $ref: '#/components/schemas/payto.amount'
+        description:
+          type:
+          - string
+          - 'null'
+          description: '**MUST start with the word `REFUND`.** Free-form text for the matching/reconciliation of a transaction. This can be shown on both parties'' bank statements. ASCII-printable characters and unicode emojis are accepted.'
+          example: 'REFUND: 1 of 6 for Zeptinghouse Smart Fridge 300L'
+          pattern: ^REFUND[ -~\p{Emoji}]+$
+          minLength: 1
+          maxLength: 280
+    payto.pagination_links:
+      type: object
+      properties:
+        next:
+          type: string
+          description: URL for next page of results. Won't be present if there are no further pages.
+    payto.event.base:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of event that triggered the webhook delivery. Value is a UUIDv7
+          example: 019c6f54-1117-7a38-89ae-841bb4e4ac67
+        type:
+          type: string
+          description: Type of event that triggered the webhook delivery
+          example: payto_payment.settled
+        published_at:
+          type: string
+          format: date-time
+          description: When the event was published by Zepto
+          example: '2023-03-07T22:50:40Z'
+        resource_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for resource that the event affected, maximum 64 characters containing only unreserved characters as defined in RFC3986.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        resource_type:
+          type: string
+          description: The type of resource the resource_uid relates to
+          enum:
+          - payto_agreement
+          - payto_payment
+          - payto_refund
+          example: payto_payment
+        body:
+          type:
+          - object
+          - 'null'
+          example: null
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.refund.pay_to_payment:
+      type: object
+      required:
+      - type
+      - agreement_uid
+      - amount
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum:
+          - float_bank_payment
+          - pay_to_payment
+          description: The type of payment that should be used to facilitate this refund
+        agreement_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: The uid related to the mandate that should be used to facilitate this refund, maximum 64 characters containing only unreserved characters as defined in RFC3986.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Optional supplied unique identifier for payto payment that will be made to complete this refund, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures payment uniqueness between integrator systems and Zepto. If no uid is provided here, the payto payment that will be made to complete this refund will inherit the uid of this refund as supplied in the `uid` paramater in the top level request object.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        amount:
+          $ref: '#/components/schemas/payto.amount'
+        description:
+          type:
+          - string
+          - 'null'
+          description: Free-form text for the matching/reconciliation of a transaction. This can be shown on both parties' bank statements. ASCII-printable characters and unicode emojis are accepted.
+          example: Refund 1 of 6 for Zeptinghouse Smart Fridge 300L
+          pattern: ^[ -~\p{Emoji}]+$
+          minLength: 1
+          maxLength: 280
+    payto.refund:
+      type: object
+      required:
+      - uid
+      - original_payment_uid
+      - state
+      - refund_payment
+      - failure
+      - created_at
+      - links
+      additionalProperties: false
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for refund, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures refund uniqueness between integrator systems and Zepto.
+          example: biz_refund_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        state:
+          type: string
+          description: The current state of the refund
+          enum:
+          - created
+          - processing
+          - processed
+          - failed
+        original_payment_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: The supplied UID related to the PayTo Payment to be refunded
+          example: Payment_00012345
+        refund_payment:
+          type: object
+          anyOf:
+          - $ref: '#/components/schemas/payto.refund.float_bank_payment'
+          - $ref: '#/components/schemas/payto.refund.pay_to_payment'
+          discriminator:
+            propertyName: type
+            mapping:
+              float_bank_payment: '#/components/schemas/payto.refund.float_bank_payment'
+              pay_to_payment: '#/components/schemas/payto.refund.pay_to_payment'
+        created_at:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+        failure:
+          $ref: '#/components/schemas/payto.refund_failure'
+        links:
+          type: object
+          required:
+          - self
+          - original_payment
+          properties:
+            self:
+              type: string
+              description: A URL to this refund
+              example: https://api.zeptopayments.com/payto/refunds/biz_refund_G7MQWwkQZIP8vbfH
+            original_payment:
+              type: string
+              description: A URL to the associated original payment
+              example: https://api.zeptopayments.com/payto/payments/biz_payment_G7MQWwkQZIP8vbfH
+          additionalProperties: false
+    payto.amount:
+      type: integer
+      description: Amount in cents.
+      example: 2495
+      minimum: 1
+      maximum: 1000000000
+    payto.generic_error:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          example: Title of error
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+      required:
+      - title
+      - detail
+    payto.unprocessable_pagination_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPPGN00
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.refund_request:
+      type: object
+      required:
+      - uid
+      - original_payment_uid
+      - refund_payment
+      additionalProperties: false
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for refund, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures refund uniqueness between integrator systems and Zepto.
+          example: biz_refund_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        original_payment_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: The supplied UID related to the PayTo Payment to be refunded
+          example: Payment_00012345
+        refund_payment:
+          type: object
+          description: Describes the payment that will be used to facilitate this refund
+          anyOf:
+          - $ref: '#/components/schemas/payto.refund.float_bank_payment'
+          - $ref: '#/components/schemas/payto.refund.pay_to_payment'
+          discriminator:
+            propertyName: type
+            mapping:
+              float_bank_payment: '#/components/schemas/payto.refund.float_bank_payment'
+              pay_to_payment: '#/components/schemas/payto.refund.pay_to_payment'
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate the created refund going through certain scenarios to aid integrators while testing their control flows. Defaults to success if not given.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - creditor_alias_not_found
+              - creditor_account_closed
+              - success
+    payto.unprocessable_pagination_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_pagination_error'
+      required:
+      - errors
+    payto.event.payto_refund.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            description: Refund failure details
+            properties:
+              failure:
+                $ref: '#/components/schemas/payto.refund_failure'
+            required:
+            - failure
+    payto.metadata:
+      type:
+      - object
+      - 'null'
+      description: Use for your custom data. A place to store any miscellaneous information your system may need in regards to the record you are creating. This will be included in associated webhook payloads under the `resource_metadata` key. Nested values (i.e., objects and arrays) are not allowed. The maximum size of this parameter is 2kb.
+      example:
+        custom_key: custom_value
+    payto.unprocessable_refund_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPREF00
+          - ZPREF01
+          - ZPREF02
+          - ZPREF03
+          - ZPREF04
+          - ZPREF05
+          - ZPREF06
+          - ZPREF07
+          - ZPREF09
+          - ZPREF10
+          - ZPREF12
+          - ZPUNP00
+          - ZPPAY00
+          - ZPPAY03
+          - ZPPAY04
+          - ZPPAY05
+          - ZPPAY06
+          - ZPPAY07
+          - ZPPAY08
+          - ZPUNP09
+          - ZPPAY12
+          - ZPPAY13
+          - ZPPAY14
+          - ZPPAY15
+          - ZPPAY16
+          - ZPPAY17
+          - ZPPAY18
+          - ZPPAY21
+          - ZPPAY22
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.webhook.payto_refund.processed:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_refund.processed'
+      - type: object
+        example:
+          data:
+            type: payto_refund.processed
+            resource_type: payto_refund
+          links:
+            resource: https://api.zeptopayments.com/payto/refunds/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.generic_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.generic_error'
+      required:
+      - errors
+    payto.event.payto_refund.processed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+externalDocs:
+  description: Zepto API v1.0
+  url: https://docs.zeptopayments.com

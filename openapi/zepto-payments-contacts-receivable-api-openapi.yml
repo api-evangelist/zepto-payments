@@ -1,0 +1,391 @@
+openapi: 3.2.0
+info:
+  title: Zepto Contacts (Receivable) API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Contacts (Receivable)
+paths:
+  /contacts/receivable:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Contacts (Receivable)
+      summary: Add a Receivable Contact
+      description: "Receive funds from a Contact by allowing them to pay to a personalised PayID or account number. Perfect for reconciling incoming funds to a customer, receiving funds instantly, eliminating human error & improving your customer's experience.\n\n\n<aside class=\"notice\">\n  To enable this feature, please contact our support team with the following information:\n    <li>Your full legal business name</li>\n    <li>A legally owned domain name: for your PayID email addresses</li>\n    <li><strong>alias_name</strong>: the business name that will be displayed to your customers upon PayID resolution. We suggest using a shortened name appropriate for mobile displays</li>\n</aside>\n<aside class=\"notice\">\n  There are two strategies supported for PayID assignment when creating this type of Contact:\n  <li><strong>On-demand PayID</strong>: provide a <code>payid_email</code> and we'll create a contact and register a PayID with the given email address. The PayID registration process happens when the request is received. The initial response for <code>payid_details.state</code> will always be <code>pending</code>. It will transition to <code>active</code> when the PayID registration process is complete. This can take up to a few seconds. You can use webhooks to be informed of this state change.</li>\n  <li><strong>Pooled PayID</strong>: provide your <code>payid_email_domain</code> and we'll create a contact and assign them a PayID from your pool. Pooled PayIDs are pre-registered. The PayID email value is generated using a random value and the email domain from your PayID pool configuration. Providing both <code>payid_email</code> and <code>payid_email_domain</code> will ignore your pool and use the \"On-demand PayID\" strategy instead.</li>\n</aside>\n<aside class=\"notice\">\n  While unlikely, it is possible that we will be unable to register the given PayID. In this case <code>payid_details.state</code> will transition to <code>failed</code>.\n\n  You can simulate this path in sandbox by adding <code>+failure</code> to your <code>payid_email</code> e.g <code>test+failure@zeptopayments.com</code>\n</aside>\n<aside class=\"notice\">\n  You can test receiving payments to a Receivable Contact in our sandbox environment using the <a href=\"https://docs.zeptopayments.com/reference/simulateincomingpayidpayment\">PayID simulation endpoint</a>.\n</aside>\n"
+      operationId: AddAReceivableContact
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAReceivableContactRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddAReceivableContactResponse'
+        '404':
+          description: Not Found
+  /contacts/{contact_id}/receivable/disable:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Contacts (Receivable)
+      summary: Disable a Receivable Contact
+      description: 'This endpoint should be used to Disable a Receivable Contact.
+
+
+        This will reject all payments made to the relevant Account number or PayID and return them to your customer. Payments made via DE and NPP will be rejected.
+
+        '
+      operationId: DisableAReceivableContact
+      parameters:
+      - name: contact_id
+        in: path
+        description: Receivable Contact ID (`ReceivableContact.data.id`)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: UUID
+        example: 2d2429c2-b868-455e-80ef-915df7c115a7
+      responses:
+        '204':
+          description: No Content (success)
+        '400':
+          description: Bad Request (errors)
+        '404':
+          description: Not Found
+  /contacts/{contact_id}/receivable/activate:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Contacts (Receivable)
+      summary: Reactivate a Receivable Contact
+      description: 'This endpoint should be used to Reactivate a Receivable Contact that has been previously Disabled.
+
+
+        This will once again allow you to receive funds from your customer via both DE and NPP channels.
+
+        '
+      operationId: ActivateAReceivableContact
+      parameters:
+      - name: contact_id
+        in: path
+        description: Receivable Contact ID (`ReceivableContact.data.id`)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: UUID
+        example: 2d2429c2-b868-455e-80ef-915df7c115a7
+      responses:
+        '204':
+          description: No Content (success)
+        '400':
+          description: Bad Request (errors)
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+              examples:
+                Contact is not receivable:
+                  summary: Contact is not receivable
+                  value:
+                    errors: Contact is not receivable
+                PayID is not disabled:
+                  summary: PayID is not disabled
+                  value:
+                    errors: Contact must be 'disabled' but is '{status}'.
+                Contact blocked by a Zepto admin:
+                  summary: Contact blocked by a Zepto admin
+                  value:
+                    errors: This receivable contact can only be enabled by Zepto support. Please contact Zepto for further information
+                Bank account not blocked:
+                  summary: Bank account not blocked
+                  value:
+                    errors: Bank account must be blocked.
+                Bank account already unblocked:
+                  summary: Bank account already unblocked
+                  value:
+                    errors: Bank account is already unblocked
+                Bank account already unblocked for credits:
+                  summary: Bank account already unblocked for credits
+                  value:
+                    errors: Bank account is already unblocked for credits
+                Bank account already unblocked for debits:
+                  summary: Bank account already unblocked for debits
+                  value:
+                    errors: Bank account is already unblocked for debits
+        '404':
+          description: Not Found
+  /contacts/{contact_id}/receivable:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    patch:
+      tags:
+      - Contacts (Receivable)
+      summary: Update a Receivable Contact
+      description: "You can update the PayID name of a Receivable Contact.\n\n<aside class=\"notice\">\n  The Receivable Contact you are updating must be active.\n</aside>\n"
+      operationId: UpdateAReceivableContact
+      parameters:
+      - name: contact_id
+        in: path
+        description: Receivable Contact ID (`ReceivableContact.data.id`)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: UUID
+        example: 2d2429c2-b868-455e-80ef-915df7c115a7
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAReceivableContactRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad Request (errors)
+        '404':
+          description: Not Found
+components:
+  schemas:
+    UpdateAReceivableContactRequest:
+      title: Update a Receivable Contact (request)
+      type: object
+      required:
+      - payid_name
+      properties:
+        payid_name:
+          type: string
+          pattern: ^[ -~]+$
+          description: The PayID name of the Receivable Contact
+      example:
+        payid_name: Bob Smith
+    AddAReceivableContactRequest:
+      title: Add a Receivable Contact (request)
+      required:
+      - name
+      - email
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: 'Contact name (Min: 3 - Max: 140)'
+        email:
+          type: string
+          minLength: 6
+          maxLength: 256
+          description: 'Contact email (Min: 6 - Max: 256)'
+        payid_email:
+          type: string
+          minLength: 6
+          maxLength: 256
+          description: 'Contact PayID email (Min: 6 - Max: 256)'
+        payid_email_domain:
+          type: string
+          minLength: 3
+          maxLength: 254
+          description: 'PayID pool email domain (Min: 3 - Max: 254)'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        name: Delphine Jestin
+        email: delphine@gmail.com
+        payid_email: delphine_123@merchant.com.au
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    AddAReceivableContactResponse:
+      title: Add a Receivable Contact (response)
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              minLength: 3
+              maxLength: 140
+              description: 'Contact name (Min: 3 - Max: 140)'
+            email:
+              type: string
+              minLength: 6
+              maxLength: 256
+              description: 'Contact email (Min: 6 - Max: 256)'
+            type:
+              type: string
+              description: Fixed to 'anyone'
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+            bank_account:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                account_number:
+                  type: string
+                  minLength: 5
+                  maxLength: 9
+                  description: 'Zepto generated account number (Min: 5 - Max: 9)'
+                branch_code:
+                  type: string
+                  minLength: 6
+                  maxLength: 6
+                  description: 'Zepto branch code (Min: 6 - Max: 6)'
+                bank_name:
+                  type: string
+                  description: Fixed to 'Zepto Float Acount'
+                state:
+                  type: string
+                  description: Fixed to 'Active'
+                  enum:
+                  - active
+                  - removed
+                iav_provider:
+                  type:
+                  - string
+                  - 'null'
+                  description: Always null
+                iav_status:
+                  type:
+                  - string
+                  - 'null'
+                  description: Always null
+                blocks:
+                  type: object
+                  properties:
+                    debits_blocked:
+                      type: boolean
+                      description: Used by Zepto admins. Defines whether the bank account is blocked from being debited
+                    credits_blocked:
+                      type: boolean
+                      description: Used by Zepto admins. Defined Whether this bank account is blocked from being credited
+            anyone_account:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+            payid_details:
+              type: object
+              properties:
+                alias_value:
+                  type: string
+                  format: email
+                  minLength: 6
+                  maxLength: 256
+                  description: The PayID email
+                alias_type:
+                  type: string
+                  description: Type of PayID. Fixed to `email`
+                alias_name:
+                  type: string
+                  minLength: 3
+                  maxLength: 140
+                  description: Your merchant's alias_name
+                state:
+                  type: string
+                  description: Pending -> Active or Failed -> Deregistered (Contact removed)
+                  enum:
+                  - pending
+                  - active
+                  - failed
+                  - deregistered
+      example:
+        data:
+          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Delphine Jestin
+          email: delphine@gmail.com
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '1408281'
+            branch_code: '802919'
+            bank_name: Zepto Float Account
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          anyone_account:
+            id: 77be6ecc-5fa7-454b-86d6-02a5f147878d
+          payid_details:
+            alias_value: delphine_123@merchant.com.au
+            alias_type: email
+            alias_name: your merchant's alias_name
+            state: pending
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers

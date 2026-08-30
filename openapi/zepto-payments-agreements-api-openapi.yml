@@ -1,0 +1,2965 @@
+openapi: 3.2.0
+info:
+  title: Zepto Payments Agreements API
+  contact:
+    email: support@zepto.com.au
+  version: '1.0'
+  description: 'Operations tagged Agreements across 2 of this provider''s published API definitions: zepto-payments-pay-to.yml, zepto-payments-zepto.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Zepto Sandbox
+  url: https://api.sandbox.zeptopayments.com
+- description: Zepto Production
+  url: https://api.zeptopayments.com
+security:
+- bearerAuth: []
+tags:
+- name: Agreements
+  description: Create and query agreements
+paths:
+  /payto/agreements:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      summary: create agreement
+      tags:
+      - Agreements
+      parameters: []
+      responses:
+        '201':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.agreement'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Generic validation error:
+                  summary: Generic validation error
+                  value:
+                    errors:
+                    - title: Validation Failed
+                      detail: The value for `debtor.account_identifier.number` is not allowed
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Only zeroes account number:
+                  summary: Only zeroes account number
+                  value:
+                    errors:
+                    - code: ZPAGR14
+                      title: Debtor branch code does not exist
+                      detail: Debtor branch code does not exist
+                    - code: ZPAGR12
+                      title: Debtor account number only zeroes
+                      detail: Debtor account number contains only zeroes
+                cancel_if_unresolved given with no resolution_requested_before:
+                  summary: cancel_if_unresolved given with no resolution_requested_before
+                  value:
+                    errors:
+                    - code: ZPAGR17
+                      title: Auto-Cancel Needs Resolution Date
+                      detail: '''cancel_if_unresolved'' must be accompanied by ''resolution_requested_before'''
+                Amount given for variable mandate:
+                  summary: Amount given for variable mandate
+                  value:
+                    errors:
+                    - code: ZPUNP00
+                      title: One or more fields violate the relevant schema
+                      detail: Amount must not be present on the agreement unless the payment type is 'fixed' or 'balloon'
+                Validity start date in the past:
+                  summary: Validity start date in the past
+                  value:
+                    errors:
+                    - code: ZPAGR04
+                      title: Past validity start date
+                      detail: Validity start date must not be in the past
+                Debtor's financial institution does not support PayTo:
+                  summary: Debtor's financial institution does not support PayTo
+                  value:
+                    errors:
+                    - code: ZPUNP01
+                      title: Debtor's financial institution does not support PayTo
+                      detail: Cannot create agreement with provided debtor account
+                The given creditor account cannot accept funds via NPP:
+                  summary: The given creditor account cannot accept funds via NPP
+                  value:
+                    errors:
+                    - code: ZPUNP02
+                      title: Invalid creditor account
+                      detail: The given creditor account cannot accept funds via NPP
+                Resolution requested before too far in the future:
+                  summary: Resolution requested before too far in the future
+                  value:
+                    errors:
+                    - code: ZPAGR02
+                      title: Invalid resolution requested before
+                      detail: Resolution requested before cannot be after 2022-01-06T14:53:23+11:00
+                Mandate initiator missing ABN or ACN:
+                  summary: Mandate initiator missing ABN or ACN
+                  value:
+                    errors:
+                    - code: ZPAGR18
+                      title: Initiator must include exactly one of ABN, ACN, or client_id
+                      detail: You must provide exactly one of initiator ABN, ACN, or client_id
+                Mandate initiator includes both ABN and ACN:
+                  summary: Mandate initiator includes both ABN and ACN
+                  value:
+                    errors:
+                    - code: ZPAGR18
+                      title: Initiator must include exactly one of ABN, ACN, or client_id
+                      detail: You must provide exactly one of initiator ABN, ACN, or client_id
+                Too many mandates created for the given debtor within the last 24 hours:
+                  summary: Too many mandates created for the given debtor within the last 24 hours
+                  value:
+                    errors:
+                    - code: ZPAGR15
+                      title: Mandate limit reached
+                      detail: You have reached the maximum number of mandates you can create for a debtor per 24 hours
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_mandate_errors'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payto.agreement_request'
+      callbacks:
+        payto_agreement.activated:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_agreement.activated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_agreement.activated'
+              responses:
+                '200':
+                  description: OK
+        payto_agreement.declined:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_agreement.declined
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_agreement.declined'
+              responses:
+                '200':
+                  description: OK
+        payto_agreement.expired:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_agreement.expired
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_agreement.expired'
+              responses:
+                '200':
+                  description: OK
+        payto_agreement.failed:
+          DESTINATION_WEBHOOK_URL:
+            post:
+              summary: payto_agreement.failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/payto.webhook.payto_agreement.failed'
+              responses:
+                '200':
+                  description: OK
+    get:
+      summary: list agreements
+      parameters:
+      - name: per_page
+        description: Number of results per page
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: starting_after
+        description: Opaque pagination cursor value. Set by following "next" links.
+        in: query
+        schema:
+          type: string
+      - name: state
+        description: Filter agreements by state. Multiple values can be separated by commas.
+        in: query
+        explode: false
+        schema:
+          type: array
+          items:
+            enum:
+            - pending
+            - created
+            - active
+            - suspended
+            - cancelled
+            - declined
+            - failed
+            - expired
+      - name: initiator_name
+        description: Filter agreements by initiator name. The filtering is case sensitive and must be an exact match.
+        example: Jane's Flowers
+        in: query
+        explode: false
+        schema:
+          type: string
+      - name: min_created_date
+        description: Filter by minimum created_at date. ISO8601 format.
+        example: '2022-01-01'
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: max_created_date
+        description: Filter by maximum created_at date. ISO8601 format.
+        example: '2022-01-31'
+        in: query
+        schema:
+          type: string
+          format: date
+      tags:
+      - Agreements
+      responses:
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Non integer per_page:
+                  summary: Non integer per_page
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: The `per_page` param is not valid.
+                No record with ID matching starting_after param:
+                  summary: No record with ID matching starting_after param
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: Could not find a record for the given `starting_after` param.
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_pagination_errors'
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                Successful request:
+                  summary: Successful request
+                  value:
+                    links: {}
+                    data: []
+              schema:
+                type: object
+                properties:
+                  links:
+                    $ref: '#/components/schemas/payto.pagination_links'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/payto.agreement'
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /payto/agreements/{agreement_uid}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    - name: agreement_uid
+      in: path
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_~.-]{1,64}$
+        description: A supplied unique ID
+        example: Agreement_00012345
+      required: true
+    get:
+      summary: show agreement
+      tags:
+      - Agreements
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                Successful request:
+                  summary: Successful request
+                  value:
+                    data:
+                      uid: biz_agreement_000123
+                      state_reason: null
+                      state: active
+                      mms_agreement_id: 3d2dc5bc031b1db680f3491697703a6f
+                      created_at: '2022-02-02T12:01:01+11:00'
+                      purpose: tax
+                      resolution_requested_before: null
+                      cancel_if_unresolved: false
+                      payment_terms:
+                        type: usage_based
+                        frequency: monthly
+                        count: null
+                        max_amount: 8999
+                        amount: null
+                        first_payment_amount: null
+                        last_payment_amount: null
+                        first_payment_date: null
+                        last_payment_date: null
+                      debtor:
+                        party_name: Janiel Smith
+                        ultimate_party_name: Janiel Smith
+                        account_identifier:
+                          type: bban
+                          value: 123456-456789
+                      creditor: null
+                      initiator:
+                        name: Jane's Flowers
+                        legal_name: Blossoming Flowers Pty Ltd
+                        abn: '56192755287'
+                        acn: null
+                      description: Tax payment
+                      validity_start_date: '2023-01-01'
+                      validity_end_date: '2023-12-31'
+                      state_caused_by: debtor
+                      metadata:
+                        custom_key: custom_value
+                      links:
+                        self: https://api.zeptopayments.com/payto/agreements/biz_agreement_000123
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/payto.agreement'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /payto/agreements/{agreement_uid}/history:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    - name: agreement_uid
+      in: path
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_~.-]{1,64}$
+        description: A supplied unique ID
+        example: Agreement_00012345
+      required: true
+    get:
+      summary: list agreement history
+      tags:
+      - Agreements
+      parameters:
+      - name: per_page
+        description: Number of results per page
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: starting_after
+        description: Opaque pagination cursor value. Set by following "next" links.
+        in: query
+        schema:
+          type: string
+      responses:
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Non integer per_page:
+                  summary: Non integer per_page
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: The `per_page` param is not valid.
+                No record with ID matching starting_after param:
+                  summary: No record with ID matching starting_after param
+                  value:
+                    errors:
+                    - code: ZPPGN00
+                      title: One or more paramaters are invalid
+                      detail: Could not find a record for the given `starting_after` param.
+              schema:
+                $ref: '#/components/schemas/payto.unprocessable_pagination_errors'
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                Successful request:
+                  summary: Successful request
+                  value:
+                    links:
+                      next: /payto/agreements/biz_agreement_000123/history?per_page=20&starting_after=aaaaaaaa-0000-0000-0000-00000000000e
+                    data:
+                    - id: aaaaaaaa-0000-0000-0000-00000000002a
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:35:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.suspension_failed
+                    - id: aaaaaaaa-0000-0000-0000-000000000029
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:33:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        reason:
+                          code: AC06
+                          title: Blocked Account
+                          detail: The Payer Customer Account is blocked
+                        caused_by: debtor
+                      type: payto_agreement.suspended
+                    - id: aaaaaaaa-0000-0000-0000-000000000028
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:31:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.reactivation_failed
+                    - id: aaaaaaaa-0000-0000-0000-000000000027
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:29:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        caused_by: debtor
+                      type: payto_agreement.reactivated
+                    - id: aaaaaaaa-0000-0000-0000-000000000026
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:27:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.failed
+                    - id: aaaaaaaa-0000-0000-0000-000000000025
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:25:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.expired
+                    - id: aaaaaaaa-0000-0000-0000-000000000024
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:23:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        reason:
+                          code: AC02
+                          title: Invalid Debtor Account
+                          detail: The Payer Customer Account does not exist within NPP
+                        caused_by: debtor
+                      type: payto_agreement.declined
+                    - id: aaaaaaaa-0000-0000-0000-000000000023
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:21:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        reason:
+                          code: AC05
+                          title: Closed Debtor Account
+                          detail: The Payer Customer account is closed
+                        caused_by: debtor
+                      type: payto_agreement.cancelled
+                    - id: aaaaaaaa-0000-0000-0000-000000000022
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:19:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.cancellation_failed
+                    - id: aaaaaaaa-0000-0000-0000-000000000021
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:17:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.amendment_recalled
+                    - id: aaaaaaaa-0000-0000-0000-000000000020
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:15:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.amendment_recall_failed
+                    - id: aaaaaaaa-0000-0000-0000-00000000001f
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:13:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        failure:
+                          code: UKNWN
+                          title: Unknown Error
+                          detail: An unexpected error occured. Reach out to Zepto for more information
+                      type: payto_agreement.amendment_failed
+                    - id: aaaaaaaa-0000-0000-0000-00000000001e
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:11:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.amendment_expired
+                    - id: aaaaaaaa-0000-0000-0000-00000000001d
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:09:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        caused_by: debtor
+                      type: payto_agreement.amendment_declined
+                    - id: aaaaaaaa-0000-0000-0000-00000000001c
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:07:00.000Z'
+                      resource_type: payto_agreement
+                      body:
+                        changes:
+                          description: new description
+                        caused_by: initiator
+                      type: payto_agreement.amended
+                    - id: aaaaaaaa-0000-0000-0000-00000000001b
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:05:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.activated
+                    - id: aaaaaaaa-0000-0000-0000-000000000010
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:03:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.activated
+                    - id: aaaaaaaa-0000-0000-0000-00000000000f
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:03:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.activated
+                    - id: aaaaaaaa-0000-0000-0000-000000000008
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:03:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.activated
+                    - id: aaaaaaaa-0000-0000-0000-00000000000e
+                      resource_uid: biz_agreement_000123
+                      published_at: '2022-01-01T02:03:00.000Z'
+                      resource_type: payto_agreement
+                      body: null
+                      type: payto_agreement.activated
+              schema:
+                type: object
+                properties:
+                  links:
+                    $ref: '#/components/schemas/payto.pagination_links'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      anyOf:
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.activated'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amended'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amendment_declined'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amendment_expired'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amendment_failed'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amendment_recall_failed'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.amendment_recalled'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.cancellation_failed'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.cancelled'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.declined'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.expired'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.failed'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.reactivated'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.reactivation_failed'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.suspended'
+                      - $ref: '#/components/schemas/payto.event.payto_agreement.suspension_failed'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorised access token:
+                  summary: Unauthorised access token
+                  value:
+                    errors:
+                    - title: Unauthorised access token
+                      detail: Access token is expired or not valid
+                      links:
+                        about: https://docs.zeptopayments.com/docs/zepto-api#authentication-and-authorisation
+              schema:
+                $ref: '#/components/schemas/payto.generic_errors'
+        '403':
+          description: forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    servers:
+    - description: Zepto Sandbox
+      url: https://api.sandbox.zeptopayments.com
+    - description: Zepto Production
+      url: https://api.zeptopayments.com
+  /agreements/outgoing:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Agreements
+      summary: List Agreements
+      description: By default, all outgoing Agreements will be returned. You can apply filters to your query to customise the returned Agreements.
+      operationId: ListOutgoingAgreements
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      - name: authoriser_id
+        in: query
+        description: Authoriser ID (`Contact.data.account.id`), single value, exact match
+        style: form
+        schema:
+          type: string
+        example: 2c4dec90-8a4c-4685-b620-bd1d7ca05a60
+      - name: contact_id
+        in: query
+        description: Contact ID (`Contact.data.id`), single value, exact match
+        style: form
+        schema:
+          type: string
+        example: e5edc264-1771-4809-9cf5-b40baaee15f7
+      - name: status
+        in: query
+        description: Exact match
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+          enum:
+          - proposed
+          - accepted
+          - declined
+          - cancelled
+        example:
+        - proposed
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOutgoingAgreementsResponse'
+    servers:
+    - url: https://api.sandbox.zeptopayments.com
+      description: Sandbox API server
+    - url: https://api.zeptopayments.com
+      description: Production API server
+  /agreements/{agreement_ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Agreements
+      summary: Get an Agreement
+      description: Get a single Agreement by its reference
+      operationId: GetAgreement
+      parameters:
+      - name: agreement_ref
+        in: path
+        description: Single value, exact match
+        required: true
+        style: simple
+        schema:
+          type: string
+          pattern: ^[ -~]+$
+        example: A.2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAgreementResponse'
+    delete:
+      tags:
+      - Agreements
+      summary: Cancel an Agreement
+      description: An Agreement can be cancelled by the initiator at any time whilst the authoriser (Agreement recipient) can only cancel a previously accepted Agreement.
+      operationId: CancelAgreement
+      parameters:
+      - name: agreement_ref
+        in: path
+        description: Single value, exact match.
+        required: true
+        style: simple
+        schema:
+          type: string
+          pattern: ^[ -~]+$
+        example: A.2
+      responses:
+        '204':
+          description: No Content
+    servers:
+    - url: https://api.sandbox.zeptopayments.com
+      description: Sandbox API server
+    - url: https://api.zeptopayments.com
+      description: Production API server
+components:
+  schemas:
+    payto.account_identifier:
+      type: object
+      description: An identifier representing the parties account
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - bban
+          - alias_phone
+          - alias_email
+          - alias_abn
+          - alias_organisation_identifier
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/payto.account_identifiers_bban'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_phone'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_organisation_identifier'
+    payto.event.payto_agreement.reactivation_failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.agreement_action_failed'
+    payto.event.resource_metadata:
+      type: object
+      properties:
+        resource_metadata:
+          type:
+          - object
+          - 'null'
+          description: Custom metadata that was supplied to the API when the affected resource was created.
+          example:
+            custom_key: custom_value
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.event.payto_agreement.amendment_failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            description: More information about the failure
+            properties:
+              failure:
+                properties:
+                  title:
+                    type: string
+                    description: A short description of the reason or failure
+                    example: Agreement Status Invalid
+                  detail:
+                    type: string
+                    description: A longer description of the reason or failure
+                    example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                  code:
+                    type: string
+                    description: A unique identifier for this specific type of reason or failure
+                    example: MMS.API.9104
+                    enum:
+                    - MMS.API.9000
+                    - MMS.API.9001
+                    - MMS.API.9002
+                    - MMS.API.9003
+                    - MMS.API.9005
+                    - MMS.API.9006
+                    - MMS.API.9007
+                    - MMS.API.9008
+                    - MMS.API.9009
+                    - MMS.API.9010
+                    - MMS.API.9011
+                    - MMS.API.9013
+                    - MMS.API.9015
+                    - MMS.API.9016
+                    - MMS.API.9017
+                    - MMS.API.9018
+                    - MMS.API.9019
+                    - MMS.API.9101
+                    - MMS.API.9102
+                    - MMS.API.9103
+                    - MMS.API.9104
+                    - MMS.API.9105
+                    - MMS.API.9106
+                    - MMS.API.9107
+                    - MMS.API.9108
+                    - MMS.API.9109
+                    - MMS.API.9110
+                    - MMS.API.9111
+                    - MMS.API.9112
+                    - MMS.API.9113
+                    - MMS.API.9114
+                    - MMS.API.9115
+                    - MMS.API.9116
+                    - MMS.API.9117
+                    - MMS.API.9118
+                    - MMS.API.9119
+                    - MMS.API.9120
+                    - MMS.API.9121
+                    - MMS.API.9301
+                    - MMS.API.9302
+                    - MMS.API.9303
+                    - MMS.API.9401
+                    - MMS.API.9402
+                    - MMS.API.9501
+                    - MMS.API.9601
+                    - MMS.API.9900
+                    - MMS.API.9901
+                    - ZPUNP01
+                    - ZPUNP02
+                    - ZPUNP06
+                    - ZPUNP07
+                    - ZPUNP08
+                    - UKNWN
+            required:
+            - failure
+    payto.event.payto_agreement.amendment_recalled:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+    payto.account_identifiers_alias_abn:
+      type: string
+      title: ABN alias
+      description: A PayID ABN alias
+      example: '123456789'
+      pattern: ^((\d{9})|(\d{11}))$
+    payto.event.payto_agreement.declined:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            required:
+            - caused_by
+            - reason
+            - mms_agreement_id
+            properties:
+              mms_agreement_id:
+                type: string
+                description: The agreement ID as per the MMS. Formatted as a Universally Unique Identifier (UUID) version 1, as described in IETC RFC 4122 without the 4 hyphen separators.
+                example: 3de455278b21196da0c4599025cb7dfa
+                pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+              caused_by:
+                type: string
+                description: The party that caused the agreement to be declined
+                enum:
+                - debtor
+              reason:
+                properties:
+                  title:
+                    type: string
+                    description: A short description of the reason or failure
+                    example: Agreement Status Invalid
+                  detail:
+                    type: string
+                    description: A longer description of the reason or failure
+                    example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                  code:
+                    type: string
+                    description: A unique identifier for this specific type of reason or failure
+                    example: MMS.API.9104
+                    enum:
+                    - AC02
+                    - AC05
+                    - AC06
+                    - AC13
+                    - AG01
+                    - AG03
+                    - AM03
+                    - AM12
+                    - AM14
+                    - BE06
+                    - MD09
+                    - MD16
+                    - MD21
+                    - NOAS
+                    - RR04
+                    - SL11
+                    - SL12
+                    - UKNWN
+    payto.webhook.base:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/payto.event.base'
+        links:
+          type: object
+          properties:
+            resource:
+              type: string
+              description: The api url to the resource
+              example: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+      required:
+      - data
+      - links
+    payto.account_identifiers_alias_phone:
+      type: string
+      title: Phone alias
+      description: A PayID phone alias. e.g. +61-411222333
+      example: +61-411222333
+      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
+    payto.event.payto_agreement.cancelled:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            properties:
+              caused_by:
+                type: string
+                description: The party that caused the agreement to be cancelled
+                enum:
+                - debtor
+                - initiator
+                - zepto_admin
+                - zepto_system
+              reason:
+                properties:
+                  title:
+                    type: string
+                    description: A short description of the reason or failure
+                    example: Agreement Status Invalid
+                  detail:
+                    type: string
+                    description: A longer description of the reason or failure
+                    example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                  code:
+                    type: string
+                    description: A unique identifier for this specific type of reason or failure
+                    example: MMS.API.9104
+                    enum:
+                    - AC02
+                    - AC04
+                    - AC05
+                    - AC06
+                    - AC13
+                    - AG01
+                    - AG03
+                    - AM03
+                    - AM12
+                    - AM14
+                    - MD07
+                    - MD08
+                    - MD09
+                    - MD16
+                    - MD17
+                    - MD20
+                    - MD21
+                    - MS02
+                    - MS03
+                    - NARR
+                    - RR04
+                    - SL01
+                    - SL11
+                    - SL12
+                    - CTAM
+                    - CTCA
+                    - CTEX
+                    - MCFC
+                    - MCOC
+                    - MSUC
+                    - NOAS
+                  narrative:
+                    description: Free text description to accompany the given reason
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 256
+                    example: custom description
+    payto.pagination_links:
+      type: object
+      properties:
+        next:
+          type: string
+          description: URL for next page of results. Won't be present if there are no further pages.
+    payto.event.base:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of event that triggered the webhook delivery. Value is a UUIDv7
+          example: 019c6f54-1117-7a38-89ae-841bb4e4ac67
+        type:
+          type: string
+          description: Type of event that triggered the webhook delivery
+          example: payto_payment.settled
+        published_at:
+          type: string
+          format: date-time
+          description: When the event was published by Zepto
+          example: '2023-03-07T22:50:40Z'
+        resource_uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for resource that the event affected, maximum 64 characters containing only unreserved characters as defined in RFC3986.
+          example: biz_20221231_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        resource_type:
+          type: string
+          description: The type of resource the resource_uid relates to
+          enum:
+          - payto_agreement
+          - payto_payment
+          - payto_refund
+          example: payto_payment
+        body:
+          type:
+          - object
+          - 'null'
+          example: null
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
+    payto.event.payto_agreement.amendment_expired:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+    payto.event.payto_agreement.amendment_declined:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            properties:
+              caused_by:
+                type: string
+                description: The party that caused the amendment to be declined
+                enum:
+                - debtor
+    payto.event.payto_agreement.amended:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            required:
+            - caused_by
+            - changes
+            properties:
+              caused_by:
+                type: string
+                description: The party that caused the amendment
+                enum:
+                - debtor
+                - initiator
+              changes:
+                type: object
+                properties:
+                  description:
+                    type: string
+                    example: 'Payment plan for loan #1234'
+                    pattern: ^[ -~]+$
+                    minLength: 1
+                    maxLength: 140
+                    description: The reason for the agreement, as narrative text. ASCII-printable characters only.
+                  validity_end_date:
+                    type:
+                    - string
+                    - 'null'
+                    format: date
+                    description: End date of the validity of the agreement. If specified, the agreement will be valid until 23:59:59.999 Australia Sydney time on this date.
+                    pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+                    example: '2023-12-31'
+                  payment_terms:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: The pattern that payments will follow
+                        enum:
+                        - balloon
+                        - fixed
+                        - usage_based
+                        - variable
+                        example: fixed
+                      frequency:
+                        type: string
+                        description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+                        enum:
+                        - adhoc
+                        - daily
+                        - weekly
+                        - fortnightly
+                        - monthly
+                        - quarterly
+                        - semi_annual
+                        - annual
+                        example: monthly
+                      count:
+                        type:
+                        - integer
+                        - 'null'
+                        description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+                        example: 1
+                        minimum: 1
+                      amount:
+                        type:
+                        - integer
+                        - 'null'
+                        description: Fixed amount to be debited from the debtor's account. Required for 'fixed' and 'balloon' types.
+                        example: 10000
+                        minimum: 1
+                        maximum: 1000000000
+                      max_amount:
+                        type:
+                        - integer
+                        - 'null'
+                        description: The maximum allowed payment amount, in cents.
+                        example: 100000
+                        minimum: 1
+                        maximum: 1000000000
+                      first_payment_amount:
+                        type:
+                        - integer
+                        - 'null'
+                        description: Optional specified payment amount for first payment, in cents. Applicable only to 'balloon' terms type.
+                        example: 100000
+                        minimum: 1
+                        maximum: 1000000000
+                      last_payment_amount:
+                        type:
+                        - integer
+                        - 'null'
+                        description: Optional specified payment amount for last payment, in cents. Applicable only to 'balloon' terms type.
+                        example: 100000
+                        minimum: 1
+                        maximum: 1000000000
+                      first_payment_date:
+                        type:
+                        - string
+                        - 'null'
+                        format: date
+                        description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+                        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+                        example: '2023-12-31'
+                      last_payment_date:
+                        type:
+                        - string
+                        - 'null'
+                        format: date
+                        description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+                        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+                        example: '2024-12-31'
+                  creditor:
+                    type: object
+                    description: Who and where the payment will be made to
+                    properties:
+                      ultimate_party_name:
+                        type: string
+                        example: Billie Jean Senior
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name. HTML name entities are not allowed.
+                      party_name:
+                        type: string
+                        example: Billie Jean Junior
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name. HTML name entities are not allowed.
+                      account_identifier:
+                        $ref: '#/components/schemas/payto.account_identifier'
+                  debtor:
+                    type: object
+                    description: Who and where the payment is taken from
+                    properties:
+                      ultimate_party_name:
+                        type: string
+                        example: Billie Jean Senior
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The ultimate debtor name for the account. Defaults to `party_name` if not provided. HTML name entities are not allowed.
+                      party_name:
+                        type: string
+                        example: Billie Jean Junior
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The name of the debtor party for this agreement. HTML name entities are not allowed.
+                      account_identifier:
+                        $ref: '#/components/schemas/payto.account_identifier'
+                  initiator:
+                    type: object
+                    description: The details of the party that initiated this agreement
+                    properties:
+                      name:
+                        type: string
+                        example: Jane's Flowers
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The name of the initating party for this agreement. Displayed to the end customer by their financial institution. HTML name entities are not allowed.
+                      legal_name:
+                        type: string
+                        example: Blossoming Flowers Pty Ltd
+                        minLength: 1
+                        maxLength: 140
+                        pattern: ^[ -~]+$
+                        description: The legal name of the initating party for this agreement. HTML name entities are not allowed.
+                      abn:
+                        type:
+                        - string
+                        - 'null'
+                        example: '56192755287'
+                        minLength: 11
+                        maxLength: 11
+                        pattern: ^\d{11}$
+                        description: The Australian Business Number (ABN) of the initiating party for this agreement.
+                      acn:
+                        type:
+                        - string
+                        - 'null'
+                        example: '192755287'
+                        minLength: 9
+                        maxLength: 9
+                        pattern: ^\d{9}$
+                        description: The Australian Company Number (ACN) of the initiating party for this agreement.
+    payto.account_identifiers_alias_email:
+      type: string
+      title: Email alias
+      description: A PayID email alias
+      example: default@example.com
+      pattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$
+    payto.payment_terms_variable:
+      type: object
+      description: An agreement that supports variable payments based up to an optional max amount
+      required:
+      - type
+      - frequency
+      properties:
+        type:
+          type: string
+          description: The pattern that payments will follow
+          enum:
+          - variable
+          example: variable
+        frequency:
+          type: string
+          description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+          enum:
+          - adhoc
+          - daily
+          - weekly
+          - fortnightly
+          - monthly
+          - quarterly
+          - semi_annual
+          - annual
+          example: monthly
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+          example: 1
+          minimum: 1
+        max_amount:
+          type:
+          - integer
+          - 'null'
+          description: The maximum allowed payment amount, in cents.
+          example: 100000
+          minimum: 1
+          maximum: 1000000000
+        first_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2024-12-31'
+    payto.webhook.payto_agreement.expired:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_agreement.expired'
+      - type: object
+        example:
+          data:
+            type: payto_agreement.expired
+            resource_type: payto_agreement
+          links:
+            resource: https://api.zeptopayments.com/payto/agreements/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.webhook.payto_agreement.declined:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_agreement.declined'
+      - type: object
+        example:
+          data:
+            type: payto_agreement.declined
+            resource_type: payto_agreement
+          links:
+            resource: https://api.zeptopayments.com/payto/agreements/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.unprocessable_mandate_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP03
+          - ZPUNP04
+          - ZPUNP05
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - ZPUNP09
+          - ZPAGR00
+          - ZPAGR01
+          - ZPAGR02
+          - ZPAGR03
+          - ZPAGR04
+          - ZPAGR05
+          - ZPAGR06
+          - ZPAGR07
+          - ZPAGR08
+          - ZPAGR09
+          - ZPAGR10
+          - ZPAGR11
+          - ZPAGR12
+          - ZPAGR13
+          - ZPAGR14
+          - ZPAGR15
+          - ZPAGR16
+          - ZPAGR17
+          - ZPAGR18
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.event.payto_agreement.activated:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            required:
+            - mms_agreement_id
+            properties:
+              mms_agreement_id:
+                type: string
+                description: The agreement ID as per the MMS. Formatted as a Universally Unique Identifier (UUID) version 1, as described in IETC RFC 4122 without the 4 hyphen separators.
+                example: 3de455278b21196da0c4599025cb7dfa
+                pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+    payto.event.agreement_action_failed:
+      type: object
+      properties:
+        body:
+          type: object
+          description: More information about the failure
+          properties:
+            failure:
+              properties:
+                title:
+                  type: string
+                  description: A short description of the reason or failure
+                  example: Agreement Status Invalid
+                detail:
+                  type: string
+                  description: A longer description of the reason or failure
+                  example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                code:
+                  type: string
+                  description: A unique identifier for this specific type of reason or failure
+                  example: MMS.API.9104
+                  enum:
+                  - MMS.API.9000
+                  - MMS.API.9001
+                  - MMS.API.9002
+                  - MMS.API.9003
+                  - MMS.API.9005
+                  - MMS.API.9006
+                  - MMS.API.9007
+                  - MMS.API.9008
+                  - MMS.API.9009
+                  - MMS.API.9010
+                  - MMS.API.9011
+                  - MMS.API.9013
+                  - MMS.API.9015
+                  - MMS.API.9016
+                  - MMS.API.9017
+                  - MMS.API.9018
+                  - MMS.API.9019
+                  - MMS.API.9101
+                  - MMS.API.9102
+                  - MMS.API.9103
+                  - MMS.API.9104
+                  - MMS.API.9105
+                  - MMS.API.9106
+                  - MMS.API.9107
+                  - MMS.API.9108
+                  - MMS.API.9109
+                  - MMS.API.9110
+                  - MMS.API.9111
+                  - MMS.API.9112
+                  - MMS.API.9113
+                  - MMS.API.9114
+                  - MMS.API.9115
+                  - MMS.API.9116
+                  - MMS.API.9117
+                  - MMS.API.9118
+                  - MMS.API.9119
+                  - MMS.API.9120
+                  - MMS.API.9121
+                  - MMS.API.9301
+                  - MMS.API.9302
+                  - MMS.API.9303
+                  - MMS.API.9401
+                  - MMS.API.9402
+                  - MMS.API.9501
+                  - MMS.API.9601
+                  - MMS.API.9900
+                  - MMS.API.9901
+                  - UKNWN
+          required:
+          - failure
+    payto.initiator_with_abn:
+      required:
+      - abn
+      - name
+      - legal_name
+      properties:
+        name:
+          type: string
+          example: Jane's Flowers
+          minLength: 1
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The name of the initating party for this agreement. Displayed to the end customer by their financial institution. HTML name entities are not allowed.
+        legal_name:
+          type: string
+          example: Blossoming Flowers Pty Ltd
+          minLength: 1
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The legal name of the initating party for this agreement. HTML name entities are not allowed.
+        abn:
+          type:
+          - string
+          - 'null'
+          example: '56192755287'
+          minLength: 11
+          maxLength: 11
+          pattern: ^\d{11}$
+          description: The Australian Business Number (ABN) of the initiating party for this agreement.
+    payto.event.payto_agreement.expired:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            required:
+            - mms_agreement_id
+            properties:
+              mms_agreement_id:
+                type: string
+                description: The agreement ID as per the MMS. Formatted as a Universally Unique Identifier (UUID) version 1, as described in IETC RFC 4122 without the 4 hyphen separators.
+                example: 3de455278b21196da0c4599025cb7dfa
+                pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+    payto.event.payto_agreement.suspension_failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.agreement_action_failed'
+    payto.initiator_with_acn:
+      required:
+      - acn
+      - name
+      - legal_name
+      properties:
+        name:
+          type: string
+          example: Jane's Flowers
+          minLength: 1
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The name of the initating party for this agreement. Displayed to the end customer by their financial institution. HTML name entities are not allowed.
+        legal_name:
+          type: string
+          example: Blossoming Flowers Pty Ltd
+          minLength: 1
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The legal name of the initating party for this agreement. HTML name entities are not allowed.
+        acn:
+          type:
+          - string
+          - 'null'
+          example: '192755287'
+          minLength: 9
+          maxLength: 9
+          pattern: ^\d{9}$
+          description: The Australian Company Number (ACN) of the initiating party for this agreement.
+    payto.event.payto_agreement.suspended:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            properties:
+              caused_by:
+                type: string
+                description: The party that caused the agreement to be suspended
+                enum:
+                - debtor
+                - initiator
+                - zepto_admin
+                - zepto_system
+              reason:
+                properties:
+                  title:
+                    type: string
+                    description: A short description of the reason or failure
+                    example: Agreement Status Invalid
+                  detail:
+                    type: string
+                    description: A longer description of the reason or failure
+                    example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                  code:
+                    type: string
+                    description: A unique identifier for this specific type of reason or failure
+                    example: MMS.API.9104
+                    enum:
+                    - AC02
+                    - AC04
+                    - AC05
+                    - AC06
+                    - AC13
+                    - AG01
+                    - AG03
+                    - AM03
+                    - AM12
+                    - AM14
+                    - MD07
+                    - MD08
+                    - MD09
+                    - MD16
+                    - MD17
+                    - MD20
+                    - MD21
+                    - MS02
+                    - MS03
+                    - NARR
+                    - RR04
+                    - SL01
+                    - SL11
+                    - SL12
+                    - CTAM
+                    - CTCA
+                    - CTEX
+                    - MCFC
+                    - MCOC
+                    - MSUC
+                    - NOAS
+                  narrative:
+                    description: Free text description to accompany the given reason_code
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 256
+                    example: custom description
+    payto.account_identifiers_alias_organisation_identifier:
+      type: string
+      title: Organisation alias
+      description: A PayID organisation identifier alias
+      example: Zepto Pty Ltd, Byron Bay NSW
+      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
+    payto.generic_error:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          example: Title of error
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+      required:
+      - title
+      - detail
+    payto.event.payto_agreement.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            description: Agreement creation failure details
+            properties:
+              reason:
+                properties:
+                  title:
+                    type: string
+                    description: A short description of the reason or failure
+                    example: Agreement Status Invalid
+                  detail:
+                    type: string
+                    description: A longer description of the reason or failure
+                    example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+                  code:
+                    type: string
+                    description: A unique identifier for this specific type of reason or failure
+                    example: MMS.API.9104
+                    enum:
+                    - MMS.API.9000
+                    - MMS.API.9001
+                    - MMS.API.9002
+                    - MMS.API.9003
+                    - MMS.API.9005
+                    - MMS.API.9006
+                    - MMS.API.9007
+                    - MMS.API.9008
+                    - MMS.API.9009
+                    - MMS.API.9010
+                    - MMS.API.9011
+                    - MMS.API.9013
+                    - MMS.API.9015
+                    - MMS.API.9016
+                    - MMS.API.9017
+                    - MMS.API.9018
+                    - MMS.API.9019
+                    - MMS.API.9101
+                    - MMS.API.9102
+                    - MMS.API.9103
+                    - MMS.API.9104
+                    - MMS.API.9105
+                    - MMS.API.9106
+                    - MMS.API.9107
+                    - MMS.API.9108
+                    - MMS.API.9109
+                    - MMS.API.9110
+                    - MMS.API.9111
+                    - MMS.API.9112
+                    - MMS.API.9113
+                    - MMS.API.9114
+                    - MMS.API.9115
+                    - MMS.API.9116
+                    - MMS.API.9117
+                    - MMS.API.9118
+                    - MMS.API.9119
+                    - MMS.API.9120
+                    - MMS.API.9121
+                    - MMS.API.9301
+                    - MMS.API.9302
+                    - MMS.API.9303
+                    - MMS.API.9401
+                    - MMS.API.9402
+                    - MMS.API.9501
+                    - MMS.API.9601
+                    - MMS.API.9900
+                    - MMS.API.9901
+                    - ZPUNP01
+                    - ZPUNP02
+                    - ZPUNP06
+                    - ZPUNP07
+                    - ZPUNP08
+                    - UKNWN
+            required:
+            - reason
+    payto.unprocessable_pagination_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPPGN00
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.webhook.payto_agreement.activated:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_agreement.activated'
+      - type: object
+        example:
+          data:
+            type: payto_agreement.activated
+            resource_type: payto_agreement
+          links:
+            resource: https://api.zeptopayments.com/payto/agreements/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.unprocessable_pagination_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_pagination_error'
+      required:
+      - errors
+    payto.webhook.payto_agreement.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_agreement.failed'
+      - type: object
+        example:
+          data:
+            type: payto_agreement.failed
+            resource_type: payto_agreement
+          links:
+            resource: https://api.zeptopayments.com/payto/agreements/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.agreement_request:
+      type: object
+      required:
+      - uid
+      - purpose
+      - description
+      - payment_terms
+      - debtor
+      additionalProperties: false
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for agreement, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures agreement uniqueness between integrator systems and Zepto.
+          example: biz_agreement_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        purpose:
+          type: string
+          description: The nature of the agreement with the debtor
+          enum:
+          - mortgage
+          - utility
+          - loan
+          - dependant_support
+          - gambling
+          - retail
+          - salary
+          - personal
+          - government
+          - pension
+          - tax
+          - other
+          example: loan
+        debtor:
+          type: object
+          description: Who and where the payment is taken from
+          required:
+          - party_name
+          - account_identifier
+          properties:
+            ultimate_party_name:
+              type: string
+              example: Billie Jean Senior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate debtor name for the account. Defaults to `party_name` if not provided. HTML name entities are not allowed.
+            party_name:
+              type: string
+              example: Billie Jean Junior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the debtor party for this agreement. HTML name entities are not allowed.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        creditor:
+          type:
+          - object
+          - 'null'
+          description: Who and where the payment will be made to
+          required:
+          - party_name
+          - ultimate_party_name
+          - account_identifier
+          properties:
+            ultimate_party_name:
+              type: string
+              example: Billie Jean Senior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name. HTML name entities are not allowed.
+            party_name:
+              type: string
+              example: Billie Jean Junior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name. HTML name entities are not allowed.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        initiator:
+          type: object
+          description: The details of the party that initiated this agreement. Provide either ABN or ACN. The values provided in `initiator` will be ignored unless the merchant has been approved as a third-party payment processor.
+          oneOf:
+          - $ref: '#/components/schemas/payto.initiator_with_abn'
+          - $ref: '#/components/schemas/payto.initiator_with_acn'
+        description:
+          type: string
+          example: 'Payment plan for loan #1234'
+          pattern: ^[ -~]+$
+          minLength: 1
+          maxLength: 140
+          description: The reason for the agreement, as narrative text. ASCII-printable characters only.
+        resolution_requested_before:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Requested resolution (accept/decline) deadline for this agreement. It will be provided in any notification sent to the debtor. This time is for informational purposes only and does not affect the expiry time. If not provided, it defaults to 5 days from agreement creation. Value must be an ISO8601 date-time in UTC timezone.
+          example: '2022-01-20T12:34:56Z'
+        cancel_if_unresolved:
+          type:
+          - boolean
+          - 'null'
+          description: An optional field to indicate whether or not Zepto should auto cancel this agreement if it is not authorized by the debtor by the resolution_requested_before point in time. This field must be accompanied by the resolution_requested_before attribute and if not, will result in a 422 response and error code.
+          example: true
+        validity_start_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Start date for validity of agreement. If specified, the agreement will be valid from 00:00:00 Australia Sydney time on specified date. If no date specified, the current date will be populated.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-01-01'
+        validity_end_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: End date of the validity of the agreement. If specified, the agreement will be valid until 23:59:59.999 Australia Sydney time on this date.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+        payment_terms:
+          type: object
+          description: Defines the terms of what payments can be initiated from agreement
+          anyOf:
+          - $ref: '#/components/schemas/payto.payment_terms_fixed'
+          - $ref: '#/components/schemas/payto.payment_terms_variable'
+          - $ref: '#/components/schemas/payto.payment_terms_usage_based'
+          - $ref: '#/components/schemas/payto.payment_terms_balloon'
+          discriminator:
+            propertyName: type
+            mapping:
+              fixed: '#/components/schemas/payto.payment_terms_fixed'
+              variable: '#/components/schemas/payto.payment_terms_variable'
+              usage_based: '#/components/schemas/payto.payment_terms_usage_based'
+              balloon: '#/components/schemas/payto.payment_terms_balloon'
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate the debtor performing certain actions against the created agreement to aid integrators while testing their control flows. Defaults to debtor_accept if not given.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - debtor_accept
+              - debtor_decline
+              - expire
+              - debtor_account_type_not_supported
+              - debtor_alias_not_found
+              - creditor_alias_not_found
+              - alias_resolution_service_unavailable
+              - agreement_service_unavailable
+            delay:
+              type: integer
+              description: An optional attribute that will delay the requested simulation by the given amount of seconds. If `delay` is not provided (default behaviour), the simulated action will happen instantly.
+    payto.unprocessable_mandate_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_mandate_error'
+      required:
+      - errors
+    payto.event.payto_agreement.cancellation_failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.agreement_action_failed'
+    payto.event.payto_agreement.amendment_recall_failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.agreement_action_failed'
+    payto.agreement:
+      type: object
+      additionalProperties: false
+      required:
+      - uid
+      - state
+      - purpose
+      - created_at
+      - payment_terms
+      - debtor
+      - initiator
+      - validity_start_date
+      - validity_end_date
+      - links
+      - state_caused_by
+      - mms_agreement_id
+      - description
+      - resolution_requested_before
+      - cancel_if_unresolved
+      - creditor
+      - state_reason
+      properties:
+        uid:
+          type: string
+          pattern: ^[A-Za-z0-9_~.-]{1,64}$
+          description: Supplied unique identifier for agreement, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures agreement uniqueness between integrator systems and Zepto.
+          example: biz_agreement_G7MQWwkQZIP8vbfH
+          minLength: 1
+          maxLength: 64
+        state:
+          type: string
+          description: The current state of the agreement
+          enum:
+          - pending
+          - created
+          - active
+          - suspended
+          - cancelled
+          - declined
+          - failed
+          - expired
+        created_at:
+          type: string
+          format: date-time
+          description: An ISO 8601 datetime, with offset
+          example: '2022-01-20T12:34:56+11:00'
+        state_caused_by:
+          type: string
+          description: The party that caused the agreement to be in its current state
+          enum:
+          - debtor
+          - initiator
+          - zepto_admin
+          - zepto_system
+        mms_agreement_id:
+          type:
+          - string
+          - 'null'
+          description: The agreement ID as per the MMS. Formatted as a Universally Unique Identifier (UUID) version 1, as described in IETC RFC 4122 without the 4 hyphen separators.
+          example: 3de455278b21196da0c4599025cb7dfa
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+        links:
+          type: object
+          required:
+          - self
+          properties:
+            self:
+              type: string
+              description: A URL to this agreement
+              example: https://api.zeptopayments.com/payto/agreements/biz_agreement_G7MQWwkQZIP8vbfH
+          additionalProperties: false
+        description:
+          type: string
+          example: 'Payment plan for loan #1234'
+          pattern: ^[ -~]+$
+          minLength: 1
+          maxLength: 140
+          description: The reason for the agreement, as narrative text. ASCII-printable characters only.
+        purpose:
+          type: string
+          description: The nature of the agreement with the debtor
+          enum:
+          - mortgage
+          - utility
+          - loan
+          - dependant_support
+          - gambling
+          - retail
+          - salary
+          - personal
+          - government
+          - pension
+          - tax
+          - other
+          example: loan
+        resolution_requested_before:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Requested resolution (accept/decline) deadline for this agreement. It will be provided in any notification sent to the debtor. This time is for informational purposes only and does not affect the expiry time. If not provided, it defaults to 5 days from agreement creation. Value must be an ISO8601 date-time in UTC timezone.
+          example: '2022-01-20T12:34:56Z'
+        cancel_if_unresolved:
+          type:
+          - boolean
+          - 'null'
+          description: An optional field to indicate whether or not Zepto should auto cancel this agreement if it is not authorized by the debtor by the resolution_requested_before point in time. This field must be accompanied by the resolution_requested_before attribute and if not, will result in a 422 response and error code.
+          example: true
+        payment_terms:
+          type: object
+          required:
+          - type
+          - frequency
+          - amount
+          - max_amount
+          - count
+          - first_payment_amount
+          - last_payment_amount
+          - first_payment_date
+          - last_payment_date
+          properties:
+            type:
+              type: string
+              description: The pattern that payments will follow
+              enum:
+              - balloon
+              - fixed
+              - usage_based
+              - variable
+              example: fixed
+            frequency:
+              type: string
+              description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+              enum:
+              - adhoc
+              - daily
+              - weekly
+              - fortnightly
+              - monthly
+              - quarterly
+              - semi_annual
+              - annual
+              example: monthly
+            count:
+              type:
+              - integer
+              - 'null'
+              description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+              example: 1
+              minimum: 1
+            amount:
+              type:
+              - integer
+              - 'null'
+              description: Fixed amount to be debited from the debtor's account. Required for 'fixed' and 'balloon' types.
+              example: 10000
+              minimum: 1
+              maximum: 1000000000
+            max_amount:
+              type:
+              - integer
+              - 'null'
+              description: The maximum allowed payment amount, in cents.
+              example: 100000
+              minimum: 1
+              maximum: 1000000000
+            first_payment_amount:
+              type:
+              - integer
+              - 'null'
+              description: Optional specified payment amount for first payment, in cents. Applicable only to 'balloon' terms type.
+              example: 100000
+              minimum: 1
+              maximum: 1000000000
+            last_payment_amount:
+              type:
+              - integer
+              - 'null'
+              description: Optional specified payment amount for last payment, in cents. Applicable only to 'balloon' terms type.
+              example: 100000
+              minimum: 1
+              maximum: 1000000000
+            first_payment_date:
+              type:
+              - string
+              - 'null'
+              format: date
+              description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+              pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+              example: '2023-12-31'
+            last_payment_date:
+              type:
+              - string
+              - 'null'
+              format: date
+              description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+              pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+              example: '2024-12-31'
+        debtor:
+          type: object
+          description: Who and where the payment is taken from
+          required:
+          - party_name
+          - account_identifier
+          - ultimate_party_name
+          properties:
+            ultimate_party_name:
+              type: string
+              example: Billie Jean Senior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate debtor name for the account. Defaults to `party_name` if not provided. HTML name entities are not allowed.
+            party_name:
+              type: string
+              example: Billie Jean Junior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the debtor party for this agreement. HTML name entities are not allowed.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        creditor:
+          type:
+          - object
+          - 'null'
+          description: Who and where the payment will be made to
+          required:
+          - party_name
+          - account_identifier
+          - ultimate_party_name
+          properties:
+            ultimate_party_name:
+              type: string
+              example: Billie Jean Senior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name. HTML name entities are not allowed.
+            party_name:
+              type: string
+              example: Billie Jean Junior
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name. HTML name entities are not allowed.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        initiator:
+          type: object
+          description: The details of the party that initiated this agreement
+          required:
+          - name
+          - legal_name
+          - abn
+          - acn
+          properties:
+            name:
+              type: string
+              example: Jane's Flowers
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the initating party for this agreement. Displayed to the end customer by their financial institution. HTML name entities are not allowed.
+            legal_name:
+              type: string
+              example: Blossoming Flowers Pty Ltd
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The legal name of the initating party for this agreement. HTML name entities are not allowed.
+            abn:
+              type:
+              - string
+              - 'null'
+              example: '56192755287'
+              minLength: 11
+              maxLength: 11
+              pattern: ^\d{11}$
+              description: The Australian Business Number (ABN) of the initiating party for this agreement.
+            acn:
+              type:
+              - string
+              - 'null'
+              example: '192755287'
+              minLength: 9
+              maxLength: 9
+              pattern: ^\d{9}$
+              description: The Australian Company Number (ACN) of the initiating party for this agreement.
+        validity_start_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Start date for validity of agreement. If specified, the agreement will be valid from 00:00:00 Australia Sydney time on specified date. If no date specified, the current date will be populated.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-01-01'
+        validity_end_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: End date of the validity of the agreement. If specified, the agreement will be valid until 23:59:59.999 Australia Sydney time on this date.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        state_reason:
+          type:
+          - object
+          - 'null'
+          description: Details about why the agreement is in the state it is when applicable.
+          required:
+          - title
+          - detail
+          - code
+          properties:
+            title:
+              type: string
+              description: A short description of the reason or failure
+              example: Agreement Status Invalid
+            detail:
+              type: string
+              description: A longer description of the reason or failure
+              example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+            code:
+              type: string
+              description: A unique identifier for this specific type of reason or failure
+              example: MMS.API.9104
+              enum:
+              - MMS.API.9000
+              - MMS.API.9001
+              - MMS.API.9002
+              - MMS.API.9003
+              - MMS.API.9005
+              - MMS.API.9006
+              - MMS.API.9007
+              - MMS.API.9008
+              - MMS.API.9009
+              - MMS.API.9010
+              - MMS.API.9011
+              - MMS.API.9013
+              - MMS.API.9015
+              - MMS.API.9016
+              - MMS.API.9017
+              - MMS.API.9018
+              - MMS.API.9019
+              - MMS.API.9101
+              - MMS.API.9102
+              - MMS.API.9103
+              - MMS.API.9104
+              - MMS.API.9105
+              - MMS.API.9106
+              - MMS.API.9107
+              - MMS.API.9108
+              - MMS.API.9109
+              - MMS.API.9110
+              - MMS.API.9111
+              - MMS.API.9112
+              - MMS.API.9113
+              - MMS.API.9114
+              - MMS.API.9115
+              - MMS.API.9116
+              - MMS.API.9117
+              - MMS.API.9118
+              - MMS.API.9119
+              - MMS.API.9120
+              - MMS.API.9121
+              - MMS.API.9301
+              - MMS.API.9302
+              - MMS.API.9303
+              - MMS.API.9401
+              - MMS.API.9402
+              - MMS.API.9501
+              - MMS.API.9601
+              - MMS.API.9900
+              - MMS.API.9901
+              - AC02
+              - AC05
+              - AC06
+              - AC13
+              - AG01
+              - AG03
+              - AM03
+              - AM12
+              - AM14
+              - BE06
+              - MD09
+              - MD16
+              - MD21
+              - NOAS
+              - RR04
+              - SL11
+              - SL12
+              - AC04
+              - MD07
+              - MD08
+              - MD17
+              - MD20
+              - MS02
+              - MS03
+              - NARR
+              - SL01
+              - CTAM
+              - CTCA
+              - CTEX
+              - MCFC
+              - MCOC
+              - MSUC
+              - ZPUNP01
+              - ZPUNP02
+              - ZPUNP06
+              - ZPUNP07
+              - ZPUNP08
+              - UKNWN
+        metadata:
+          $ref: '#/components/schemas/payto.metadata'
+    payto.metadata:
+      type:
+      - object
+      - 'null'
+      description: Use for your custom data. A place to store any miscellaneous information your system may need in regards to the record you are creating. This will be included in associated webhook payloads under the `resource_metadata` key. Nested values (i.e., objects and arrays) are not allowed. The maximum size of this parameter is 2kb.
+      example:
+        custom_key: custom_value
+    payto.account_identifiers_bban:
+      type: string
+      title: BBAN
+      description: A branch code (BSB) and account number separated with a hyphen
+      example: 123456-98765432
+      pattern: ^\d{6}-[ -~]{1,28}$
+    payto.generic_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.generic_error'
+      required:
+      - errors
+    payto.payment_terms_balloon:
+      type: object
+      description: An agreement that supports a balloon amount for first and last payments.
+      required:
+      - type
+      - frequency
+      - amount
+      properties:
+        type:
+          type: string
+          description: The pattern that payments will follow
+          enum:
+          - balloon
+          example: balloon
+        frequency:
+          type: string
+          description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+          enum:
+          - adhoc
+          - daily
+          - weekly
+          - fortnightly
+          - monthly
+          - quarterly
+          - semi_annual
+          - annual
+          example: monthly
+        amount:
+          type: integer
+          description: Fixed amount to be debited from the debtor's account. Required for 'balloon' type agreements. 'first_payment_amount' and 'last_payment_amount' will override this value for their corresponding first and last amounts.
+          example: 10000
+          minimum: 1
+          maximum: 1000000000
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+          example: 1
+          minimum: 1
+        first_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Optional specified payment amount for first payment, in cents. Applicable only to 'balloon' terms type.
+          example: 100000
+          minimum: 1
+          maximum: 1000000000
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Optional specified payment amount for last payment, in cents. Applicable only to 'balloon' terms type.
+          example: 100000
+          minimum: 1
+          maximum: 1000000000
+        first_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2024-12-31'
+    payto.event.payto_agreement.reactivated:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - type: object
+        properties:
+          body:
+            type: object
+            properties:
+              caused_by:
+                type: string
+                description: The party that caused the agreement to be reactivated
+                enum:
+                - debtor
+                - initiator
+                - zepto_admin
+                - zepto_system
+    payto.payment_terms_usage_based:
+      type: object
+      description: An agreement that supports payments based on usage up to an optional max amount
+      required:
+      - type
+      - frequency
+      properties:
+        type:
+          type: string
+          description: The pattern that payments will follow
+          enum:
+          - usage_based
+          example: usage_based
+        frequency:
+          type: string
+          description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+          enum:
+          - adhoc
+          - daily
+          - weekly
+          - fortnightly
+          - monthly
+          - quarterly
+          - semi_annual
+          - annual
+          example: monthly
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+          example: 1
+          minimum: 1
+        max_amount:
+          type:
+          - integer
+          - 'null'
+          description: The maximum allowed payment amount, in cents.
+          example: 100000
+          minimum: 1
+          maximum: 1000000000
+        first_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2024-12-31'
+    payto.payment_terms_fixed:
+      type: object
+      description: An agreement that supports payments for a given fixed amount only
+      required:
+      - type
+      - frequency
+      - amount
+      properties:
+        type:
+          type: string
+          description: The pattern that payments will follow
+          enum:
+          - fixed
+          example: fixed
+        frequency:
+          type: string
+          description: The frequency at which payments will be made. Can be used in conjunction with `count` to allow more than one payment per period.
+          enum:
+          - adhoc
+          - daily
+          - weekly
+          - fortnightly
+          - monthly
+          - quarterly
+          - semi_annual
+          - annual
+          example: monthly
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: Fixed amount to be debited from the debtor's account. Required for 'fixed' type agreements.
+          example: 10000
+          minimum: 1
+          maximum: 1000000000
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Count of payments allowed per frequency period. With non-adhoc frequency periods, if count is not given, one payment per frequency period will be allowed. If frequency is adhoc and count is not given, unlimited payments will be allowed.
+          example: 1
+          minimum: 1
+        first_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date first payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2023-12-31'
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date last payment will be initiated for agreement. Date timezone is Australia Sydney.
+          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+          example: '2024-12-31'
+    GetAgreementResponse:
+      title: Get an Agreement (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - initiator_id
+          - authoriser_id
+          - contact_id
+          - bank_account_id
+          - status
+          - status_reason
+          - responded_at
+          - created_at
+          - terms
+          properties:
+            ref:
+              type: string
+              minLength: 3
+              maxLength: 18
+              description: 'The Agreement reference (Min: 3 - Max: 18)'
+            initiator_id:
+              type: string
+              format: uuid
+              description: Your Zepto account ID
+            authoriser_id:
+              type: string
+              format: uuid
+              description: The authoriser's account ID (AnyoneAccount)
+            contact_id:
+              type: string
+              format: uuid
+              description: The contact ID representing the authoriser within Zepto
+            bank_account_id:
+              type: string
+              format: uuid
+              description: The authoriser's bank account ID
+            status:
+              type: string
+              description: The status of the Agreement
+              enum:
+              - proposed
+              - accepted
+              - cancelled
+              - declined
+              - expended
+            status_reason:
+              type: string
+              description: The reason the agreement was cancelled. This is a free text field.
+            responded_at:
+              type: string
+              format: date-time
+              description: The date-time when the Agreement status changed
+            created_at:
+              type: string
+              format: date-time
+              description: The date-time when the Agreement was created
+            terms:
+              $ref: '#/components/schemas/Terms'
+            metadata:
+              type: object
+              description: Your custom keyed data
+      example:
+        data:
+          ref: A.2
+          initiator_id: 4e2728cc-b4ba-42c2-a6c3-26a7758de58d
+          authoriser_id: 8df89c16-330f-462b-8891-808d7bdceb7f
+          contact_id: 0d290763-bd5a-4b4d-a8ce-06c64c4a697b
+          bank_account_id: fb9381ec-22af-47fd-8998-804f947aaca3
+          status: accepted
+          status_reason: reason
+          responded_at: '2017-03-20T02:13:11Z'
+          created_at: '2017-03-20T00:53:27Z'
+          terms:
+            per_payout:
+              max_amount: 10000
+              min_amount: 1
+            per_frequency:
+              days: 7
+              max_amount: 1000000
+    ListOutgoingAgreementsResponse:
+      title: List outgoing Agreements (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - ref: A.4
+          initiator_id: 4e2728cc-b4ba-42c2-a6c3-26a7758de58d
+          authoriser_id: 8df89c16-330f-462b-8891-808d7bdceb7f
+          contact_id: a80ac411-c8fb-45c0-9557-607c54649907
+          bank_account_id: fa80ac411-c8fb-45c0-9557-607c54649907
+          status: proposed
+          status_reason: null
+          responded_at: null
+          created_at: '2017-03-20T00:53:27Z'
+          terms:
+            per_payout:
+              max_amount: 10000
+              min_amount: 1
+            per_frequency:
+              days: 7
+              max_amount: 1000000
+        - ref: A.3
+          initiator_id: 4e2728cc-b4ba-42c2-a6c3-26a7758de58d
+          authoriser_id: 56df206a-aaff-471a-b075-11882bc8906a
+          contact_id: a80ac411-c8fb-45c0-9557-607c54649907
+          bank_account_id: fa80ac411-c8fb-45c0-9557-607c54649907
+          status: proposed
+          status_reason: null
+          responded_at: null
+          created_at: '2017-03-16T22:51:48Z'
+          terms:
+            per_payout:
+              max_amount: 5000
+              min_amount: 0
+            per_frequency:
+              days: '1'
+              max_amount: 10000
+    PerPayout:
+      title: Per payout terms
+      required:
+      - min_amount
+      - max_amount
+      type: object
+      properties:
+        min_amount:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          description: Minimum amount in cents a Payment Request can be in order to be auto-approved. Specify <code>null</code> for no limit.
+          example: 1
+        max_amount:
+          type: integer
+          minimum: 1
+          description: Maximum amount in cents a Payment Request can be in order to be auto-approved. Specify <code>null</code> for no limit.
+          example: 10000
+    PerFrequency:
+      title: Per frequency terms
+      required:
+      - days
+      - max_amount
+      type: object
+      properties:
+        days:
+          type: integer
+          description: Amount of days to apply against the frequency. Specify <code>null</code> for no limit.
+          example: 7
+        max_amount:
+          type: integer
+          description: Maximum amount in cents the total of all PRs can be for the duration of the frequency. Specify <code>null</code> for no limit.
+          example: 1000000
+    Terms:
+      title: Agreement terms
+      required:
+      - per_payout
+      - per_frequency
+      type: object
+      description: Terms
+      properties:
+        per_payout:
+          $ref: '#/components/schemas/PerPayout'
+        per_frequency:
+          $ref: '#/components/schemas/PerFrequency'
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+externalDocs:
+  description: Zepto API v1.0
+  url: https://docs.zeptopayments.com
+x-refined-from:
+- zepto-payments-pay-to.yml
+- zepto-payments-zepto.yml

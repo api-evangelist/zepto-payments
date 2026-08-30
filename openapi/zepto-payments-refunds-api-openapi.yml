@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Zepto Refunds API
+  contact:
+    email: support@zepto.com.au
+  description: Zepto allows you to make, get and manage payments using nothing but bank accounts.
+  version: '1.0'
+servers:
+- url: https://api.sandbox.zeptopayments.com
+  description: Sandbox API server
+- url: https://api.zeptopayments.com
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Refunds
+  description: '
+
+    Refunds can be issued for any successfully completed Payment Request transaction. This includes:
+
+
+    1. Payment Requests for direct debit payments **(Collections)**:
+
+    2. Payment Requests for funds received via DE/NPP **(Receivables)**:
+
+
+    This allows you to return any funds that were previously collected or received into one of your bank/float accounts.
+
+    '
+paths:
+  /credits/{credit_ref}/refunds:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    post:
+      tags:
+      - Refunds
+      summary: Issue a Refund
+      description: "Certain rules apply to the issuance of a refund:\n<ul>\n  <li>Must be applied against a successfully cleared Payment Request (Collections or Receivables)</li>\n  <li>Many refunds may be created against the original Payment Request</li>\n  <li>The total refunded amount must not exceed the original value</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate refunds. To understand more on how to make idempotent requests, please refer to our <a href=\"https://docs.zeptopayments.com/v20260101/reference/idempotent-requests\">Idempotent requests guide</a>.</aside>\n"
+      operationId: IssueARefund
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Idempotency key to support safe retries for 24h
+        required: true
+        schema:
+          type: string
+        example: '{unique-uuid-per-refund}'
+      - name: credit_ref
+        in: path
+        description: The credit reference number e.g C.625v
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: C.625v
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueARefundRequest'
+        required: true
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueARefundResponse'
+  /refunds/outgoing:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Refunds
+      summary: List Refunds
+      description: ''
+      operationId: ListOutgoingRefunds
+      parameters:
+      - name: page
+        in: query
+        description: Page of results to return, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '1'
+      - name: per_page
+        in: query
+        description: Number of results per page, single value, exact match
+        style: form
+        schema:
+          type: string
+        example: '100'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            Per-Page:
+              $ref: '#/components/headers/Per-Page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOutgoingRefundsResponse'
+  /refunds/{refund_ref}:
+    parameters:
+    - $ref: '#/components/parameters/ZeptoAPIVersion'
+    get:
+      tags:
+      - Refunds
+      summary: Retrieve a Refund
+      description: Get a single Refund by its reference
+      operationId: RetrieveARefund
+      parameters:
+      - name: refund_ref
+        in: path
+        description: Single value, exact match
+        required: true
+        style: simple
+        schema:
+          type: string
+        example: PRF.75f
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveARefundResponse'
+components:
+  headers:
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+  schemas:
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    IssueARefundResponse:
+      title: Issue a Refund (response)
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - for_ref
+          - debit_ref
+          - your_bank_account_id
+          - created_at
+          - amount
+          - reason
+          properties:
+            ref:
+              type: string
+              description: 'The Refund request reference (PRF.*) (Min: 5 - Max: 9)'
+            for_ref:
+              type: string
+              description: The associated credit reference (C.*)
+            debit_ref:
+              type: string
+              description: The associated debit reference (C.*)
+            your_bank_account_id:
+              type: string
+              format: uuid
+              description: The source bank/float account (UUID)
+            created_at:
+              type: string
+              format: date-time
+              description: The date-time when the Payment Request was created
+              example: '2021-06-01T08:30:12Z'
+            amount:
+              type: integer
+              description: 'The amount value provided (Min: 1 - Max: 99999999999)'
+            channels:
+              type: array
+              description: The requested payment channel(s) to be used, in order. (new_payments_platform, direct_entry, or both)
+            reason:
+              type: string
+              description: Reason for the refund
+            contacts:
+              type: object
+              properties:
+                source_contact_id:
+                  type: string
+                  description: The original 'Receivable Contact' ID (only visible when refunding Receivables)
+                target_contact_id:
+                  type: string
+                  description: The new Contact ID receiving the funds (only visible when refunding Receivables)
+      example:
+        data:
+          ref: PRF.7f4
+          for_ref: C.1gf22
+          debit_ref: D.63hgf
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          created_at: '2021-06-01T07:20:24Z'
+          amount: 500
+          channels:
+          - direct_entry
+          reason: Subscription refund
+          contacts:
+            source_contact_id: 194b0237-6c2c-4705-b4fb-308274b14eda
+            target_contact_id: 3694ff53-32ea-40ae-8392-821e48d7bd5a
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    RetrieveARefundResponse:
+      title: Retrieve a Refund (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PRF.1
+          for_ref: C.59
+          debit_ref: D.hi
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          created_at: '2017-05-08T07:20:24Z'
+          amount: 500
+          reason: Because reason
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    ListOutgoingRefundsResponse:
+      title: List outgoing Refunds (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - ref: PRF.2
+          for_ref: C.5
+          debit_ref: D.5a
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          created_at: '2017-05-09T04:45:26Z'
+          amount: 5
+          reason: Because reason
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    IssueARefundRequest:
+      title: Issue a Refund (request)
+      required:
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
+          example: 500
+        channels:
+          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
+          type: array
+        reason:
+          type: string
+          pattern: ^[ -~]+$
+          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
+          example: Because reason
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        amount: 500
+        channels:
+        - direct_entry
+        reason: Because reason
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            public: Access your public information
+            contacts: Manage your contacts
+            payments: Manage your payments
+            payment_requests: Manage your payment requests
+            refunds: Manage your refunds
+            agreements: Manage your agreements
+            transactions: Access your transaction history
+            open_agreements: Manage your open agreements
+            transfers: Manage your Transfers
