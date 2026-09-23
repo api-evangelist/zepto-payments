@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Zepto Validate API (Confirmation of Payee) CoP Account Validations API
+  title: Zepto Validate API (Confirmation of Payee) CoP Account…
   version: '20260101'
   description: The Zepto Validate API (Confirmation of Payee) endpoints. Access to this API is limited. Please contact Zepto for more information.
 servers:
@@ -174,34 +174,21 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/cop.account_validations.request'
+      operationId: postCopAccountValidate
+      x-operation-id-source: derived
 components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    cop.account_validations.errors.forbidden:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            required:
-            - title
-            - detail
-            properties:
-              code:
-                type: string
-                description: A code assigned to the type of error received
-                example: ZCOPR00
-              title:
-                type: string
-                description: A short summary of the error
-                example: Unauthorised
-              detail:
-                type: string
-                description: A detailed explanation of the error
-                example: This user is not permitted to perform the requested action.
-      description: Unsuccessful validation response due to forbidden access
     cop.account_validations.success:
       type: object
       required:
@@ -272,23 +259,11 @@ components:
             - de.dc
           uid: biz_cop_request_123456
       description: Successful validation response
-    cop.account_validations.errors.not_found:
+    cop.account_validations.errors.unprocessable:
       type: object
       required:
       - errors
-      - data
       properties:
-        data:
-          type: object
-          required:
-          - uid
-          properties:
-            uid:
-              type: string
-              description: Supplied unique identifier for CoP lookup, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures CoP lookup uniqueness between integrator systems and Zepto.
-              example: biz_cop_request_123456
-              minLength: 1
-              maxLength: 64
         errors:
           type: array
           items:
@@ -300,20 +275,20 @@ components:
               code:
                 type: string
                 description: A code assigned to the type of error received
-                example: ZCOPR02
+                example: ZCOPR00
               title:
                 type: string
                 description: A short summary of the error
-                example: No account found
+                example: Unable to confirm
               detail:
                 type: string
                 description: A detailed explanation of the error
-                example: No record of the account can be found.
+                example: We could not confirm the account name match.
               retryable:
                 type: boolean
                 description: A boolean value indicating whether or not this lookup may be retried. When retrying, a new unique UID must be supplied for each attempt.
                 example: false
-      description: Account not found error response
+      description: Unsuccessful validation response
     cop.account_validations.request:
       type: object
       properties:
@@ -382,6 +357,32 @@ components:
       - account_identifier
       - party_name
       - requester
+    cop.account_validations.errors.forbidden:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+            - title
+            - detail
+            properties:
+              code:
+                type: string
+                description: A code assigned to the type of error received
+                example: ZCOPR00
+              title:
+                type: string
+                description: A short summary of the error
+                example: Unauthorised
+              detail:
+                type: string
+                description: A detailed explanation of the error
+                example: This user is not permitted to perform the requested action.
+      description: Unsuccessful validation response due to forbidden access
     cop.account_validations.errors.unauthorised:
       type: object
       required:
@@ -411,11 +412,23 @@ components:
                     description: A link to more information about the error
                     example: https://example.com
       description: Unsuccessful validation response due to unauthorised access
-    cop.account_validations.errors.unprocessable:
+    cop.account_validations.errors.not_found:
       type: object
       required:
       - errors
+      - data
       properties:
+        data:
+          type: object
+          required:
+          - uid
+          properties:
+            uid:
+              type: string
+              description: Supplied unique identifier for CoP lookup, maximum 64 characters containing only unreserved characters as defined in RFC3986. This identifier ensures CoP lookup uniqueness between integrator systems and Zepto.
+              example: biz_cop_request_123456
+              minLength: 1
+              maxLength: 64
         errors:
           type: array
           items:
@@ -427,31 +440,20 @@ components:
               code:
                 type: string
                 description: A code assigned to the type of error received
-                example: ZCOPR00
+                example: ZCOPR02
               title:
                 type: string
                 description: A short summary of the error
-                example: Unable to confirm
+                example: No account found
               detail:
                 type: string
                 description: A detailed explanation of the error
-                example: We could not confirm the account name match.
+                example: No record of the account can be found.
               retryable:
                 type: boolean
                 description: A boolean value indicating whether or not this lookup may be retried. When retrying, a new unique UID must be supplied for each attempt.
                 example: false
-      description: Unsuccessful validation response
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+      description: Account not found error response
   securitySchemes:
     bearerAuth:
       type: http

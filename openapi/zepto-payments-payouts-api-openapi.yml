@@ -14,7 +14,17 @@ security:
 - bearerAuth: []
 tags:
 - name: Payouts
-  description: "This endpoint gives you some control over a transaction:\n\n* After it has been created; and\n* Before it has been submitted to the banks.\n\n<aside class=\"notice\">\n  Payments and Payment Requests are made up of individual Debits and Credits. These debits and credits\n  were once referred to as Payouts [Legacy naming].\n</aside>\n"
+  description: 'This endpoint gives you some control over a transaction:
+
+
+    * After it has been created; and
+
+    * Before it has been submitted to the banks.
+
+
+    Payments and Payment Requests are made up of individual Debits and Credits. These debits and credits
+
+    were once referred to as Payouts [Legacy naming].'
 paths:
   /payouts/{ref}:
     parameters:
@@ -23,9 +33,7 @@ paths:
       tags:
       - Payouts
       summary: Void a Payment
-      description: 'You can void any Payment from your account that has not yet matured.
-
-        '
+      description: You can void any Payment from your account that has not yet matured.
       operationId: VoidAPayment
       parameters:
       - name: ref

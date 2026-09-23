@@ -17,9 +17,7 @@ tags:
   description: 'Your Contacts form an address book of parties with whom you can interact. In order to initiate any type of transaction you must first have the party in your Contact list.
 
 
-    <aside class="notice">In the case of Open Agreements, the authorising party will be automatically added to your Contacts list.</aside>
-
-    '
+    In the case of Open Agreements, the authorising party will be automatically added to your Contacts list.'
 paths:
   /contacts/anyone:
     parameters:
@@ -28,7 +26,10 @@ paths:
       tags:
       - Contacts
       summary: Add a Contact
-      description: "Use this endpoint when you want to pay somebody.\n\n<aside class=\"notice\">\n  A Contact added this way cannot be debited.\n</aside>\n"
+      description: 'Use this endpoint when you want to pay somebody.
+
+
+        A Contact added this way cannot be debited.'
       operationId: AddAnAnyoneContact
       parameters: []
       requestBody:
@@ -52,9 +53,7 @@ paths:
       tags:
       - Contacts
       summary: List all Contacts
-      description: 'By default, all Contacts will be returned. You can apply filters to your query to customise the returned Contact list.
-
-        '
+      description: By default, all Contacts will be returned. You can apply filters to your query to customise the returned Contact list.
       operationId: ListAllContacts
       parameters:
       - name: page
@@ -158,7 +157,10 @@ paths:
       tags:
       - Contacts
       summary: Remove a Contact
-      description: "<aside class=\"notice\">\n  <ul>\n    <li>Removing a Contact will not affect your transaction history.</li>\n    <li>Removing a Receivable Contact will deactivate any associated PayIDs.</li>\n  </ul>\n</aside>\n"
+      description: 'Removing a Contact will not affect your transaction history.
+
+
+        Removing a Receivable Contact will deactivate any associated PayIDs.'
       operationId: RemoveAContact
       parameters:
       - name: id
@@ -177,7 +179,19 @@ paths:
       tags:
       - Contacts
       summary: Update a Contact
-      description: "You can update the name, email, bank account and metadata of any Contact.\n<aside class=\"notice\">\n  <ul>\n    <li>Previous transactions to this Contact will retain the name and bank account that was used at the time.</li>\n    <li>You cannot update a Contact's bank account details if they currently have an accepted agreement.</li>\n    <li>Any active Bank Connections will be lost if you change the Contact's bank account.</li>\n    <li>See our <a href=\"https://help.zepto.money/en/articles/3829211-how-do-i-change-my-customers-bank-account-details\">Help Article</a> for more information about the nuances and implications of changing a contacts Bank Account.</li>\n  </ul>\n</aside>\n"
+      description: 'You can update the name, email, bank account and metadata of any Contact.
+
+
+        Previous transactions to this Contact will retain the name and bank account that was used at the time.
+
+
+        You cannot update a Contact''s bank account details if they currently have an accepted agreement.
+
+
+        Any active Bank Connections will be lost if you change the Contact''s bank account.
+
+
+        See our Help Article for more information about the nuances and implications of changing a contacts Bank Account.'
       operationId: UpdateAContact
       parameters:
       - name: id
@@ -205,39 +219,18 @@ paths:
         '404':
           description: Not Found
 components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    UpdateAContactResponse:
-      title: Update a Contact (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-      example:
-        data:
-          id: fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
-          name: My very own alias
-          email: updated@email.com
-          type: anyone
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-          bank_account:
-            id: 55afddde-4296-4daf-8e49-7ba481ef9608
-            account_number: '99887766'
-            branch_code: '123456'
-            bank_name: Zepto SANDBOX Bank
-            state: active
-            iav_provider: null
-            iav_status: null
-            blocks:
-              debits_blocked: false
-              credits_blocked: false
-          anyone_account:
-            id: 63232c0a-a783-4ae9-ae73-f0974fe1e345
-          links:
-            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/dog-bones-inc/fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
     AddAnAnyoneContactRequest:
       title: Add a Contact (request)
       required:
@@ -269,34 +262,6 @@ components:
         email: hunter@batcountry.com
         branch_code: '123456'
         account_number: '13048322'
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
-    UpdateAContactRequest:
-      title: Update a Contact (request)
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 140
-          pattern: ^[ -~]+$
-          description: The name of the Contact
-        email:
-          type: string
-          description: The email of the Contact
-        branch_code:
-          type: string
-          description: The bank account BSB of the Contact
-        account_number:
-          type: string
-          description: The bank account number of the Contact
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-      example:
-        name: My very own alias
-        email: updated@email.com
-        branch_code: '123456'
-        account_number: '99887766'
         metadata:
           custom_key: Custom string
           another_custom_key: Maybe a URL
@@ -389,8 +354,36 @@ components:
               credits_blocked: false
           links:
             add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
-    AddAnAnyoneContactResponse:
-      title: Add a Contact (response)
+    UpdateAContactRequest:
+      title: Update a Contact (request)
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          pattern: ^[ -~]+$
+          description: The name of the Contact
+        email:
+          type: string
+          description: The email of the Contact
+        branch_code:
+          type: string
+          description: The bank account BSB of the Contact
+        account_number:
+          type: string
+          description: The bank account number of the Contact
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        name: My very own alias
+        email: updated@email.com
+        branch_code: '123456'
+        account_number: '99887766'
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    UpdateAContactResponse:
+      title: Update a Contact (response)
       required:
       - data
       type: object
@@ -399,26 +392,28 @@ components:
           type: object
       example:
         data:
-          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
-          name: Hunter Thompson
-          email: hunter@batcountry.com
+          id: fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
+          name: My very own alias
+          email: updated@email.com
           type: anyone
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
           bank_account:
             id: 55afddde-4296-4daf-8e49-7ba481ef9608
-            account_number: '13048322'
+            account_number: '99887766'
             branch_code: '123456'
-            bank_name: National Australia Bank
+            bank_name: Zepto SANDBOX Bank
             state: active
             iav_provider: null
             iav_status: null
             blocks:
               debits_blocked: false
               credits_blocked: false
+          anyone_account:
+            id: 63232c0a-a783-4ae9-ae73-f0974fe1e345
           links:
-            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/dog-bones-inc/fcabeacb-2ef6-4b27-ba19-4f6fa0d57dcb
     GetAContactResponse:
       title: Get a Contact (response)
       required:
@@ -597,28 +592,47 @@ components:
             alias_type: email
             alias_name: your merchant's alias_name
             state: active
+    AddAnAnyoneContactResponse:
+      title: Add a Contact (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Hunter Thompson
+          email: hunter@batcountry.com
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '13048322'
+            branch_code: '123456'
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
   headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
     Link:
       schema:
         type: string
       description: Contains pagination link for next page of collection, if next page exists.
       example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
+    Per-Page:
       schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   securitySchemes:
     bearerAuth:
       type: oauth2

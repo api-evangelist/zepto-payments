@@ -242,6 +242,8 @@ paths:
               responses:
                 '200':
                   description: OK
+      operationId: postPaytoPayments
+      x-operation-id-source: derived
     get:
       summary: list payments
       parameters:
@@ -441,6 +443,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/payto.payment'
+      operationId: getPaytoPayments
+      x-operation-id-source: derived
     servers:
     - description: Zepto Sandbox
       url: https://api.sandbox.zeptopayments.com
@@ -494,6 +498,8 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+      operationId: getPaytoPaymentsByPaymentUid
+      x-operation-id-source: derived
     servers:
     - description: Zepto Sandbox
       url: https://api.sandbox.zeptopayments.com
@@ -598,6 +604,8 @@ paths:
               responses:
                 '200':
                   description: OK
+      operationId: postPaytoPaymentsByPaymentUidRetry
+      x-operation-id-source: derived
     servers:
     - description: Zepto Sandbox
       url: https://api.sandbox.zeptopayments.com
@@ -610,7 +618,19 @@ paths:
       tags:
       - Payments
       summary: Make a Payment
-      description: "To enable custom payment flows, the required payment channel can be selected by setting the _channel_ attribute to one of the following combinations:\n\n<ul>\n  <li>[\"new_payments_platform\"] - for faster payments 24/7/365</li>\n  <li>[\"direct_entry\"] - for slower traditional payments</li>\n  <li>[\"new_payments_platform\", \"direct_entry\"] - enables automatic channel switching if a payment fails on the NPP</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our <a href=\"https://docs.zeptopayments.com/v20260101/reference/idempotent-requests\">Idempotent requests guide</a>.</aside>\n"
+      description: 'To enable custom payment flows, the required payment channel can be selected by setting the _channel_ attribute to one of the following combinations:
+
+
+        ["new_payments_platform"] - for faster payments 24/7/365
+
+
+        ["direct_entry"] - for slower traditional payments
+
+
+        ["new_payments_platform", "direct_entry"] - enables automatic channel switching if a payment fails on the NPP
+
+
+        We now require supplying an Idempotency-Key header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate payments. To understand more on how to make idempotent requests, please refer to our Idempotent requests guide.'
       operationId: MakeAPayment
       parameters:
       - name: Idempotency-Key
@@ -781,28 +801,251 @@ paths:
       description: Production API server
 components:
   schemas:
-    payto.account_identifier:
-      type: object
-      description: An identifier representing the parties account
+    payto.account_identifiers_alias_email:
+      type: string
+      title: Email alias
+      description: A PayID email alias
+      example: default@example.com
+      pattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$
+    payto.payment_failure:
+      type:
+      - object
+      - 'null'
+      description: Details about the payment failure, when the state is 'failed'
       required:
-      - type
-      - value
+      - title
+      - detail
+      - code
+      - retryable
       properties:
-        type:
+        title:
           type: string
+          description: A short description of the reason or failure
+          example: Agreement Status Invalid
+        detail:
+          type: string
+          description: A longer description of the reason or failure
+          example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
+        code:
+          type: string
+          description: A unique identifier for this specific type of reason or failure
+          example: MMS.API.9104
           enum:
-          - bban
-          - alias_phone
-          - alias_email
-          - alias_abn
-          - alias_organisation_identifier
-        value:
-          anyOf:
-          - $ref: '#/components/schemas/payto.account_identifiers_bban'
-          - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
-          - $ref: '#/components/schemas/payto.account_identifiers_alias_phone'
-          - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
-          - $ref: '#/components/schemas/payto.account_identifiers_alias_organisation_identifier'
+          - ZPPAY24
+          - AB01
+          - AB02
+          - AB03
+          - AB04
+          - AB08
+          - AC02
+          - AC03
+          - AC05
+          - AC06
+          - AC07
+          - AC13
+          - AC14
+          - AC15
+          - AG01
+          - AG03
+          - AG07
+          - AGNT
+          - AM01
+          - AM02
+          - AM03
+          - AM04
+          - AM06
+          - AM09
+          - AM12
+          - AM19
+          - AM21
+          - BE05
+          - BE06
+          - BE08
+          - BE22
+          - CH20
+          - CH21
+          - CURR
+          - CUST
+          - DT02
+          - DT04
+          - ED05
+          - ED06
+          - FF04
+          - FF08
+          - FF10
+          - FF11
+          - FRAD
+          - MD01
+          - MD02
+          - MD20
+          - MS02
+          - MS03
+          - NARR
+          - NAUT
+          - RR02
+          - RR03
+          - RR04
+          - RC05
+          - SL01
+          - SL11
+          - SL12
+          - SL13
+          - SL14
+          - TD03
+          - TM01
+          - AVED
+          - BVSD
+          - MCGP
+          - NACT
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - UKNWN
+        retryable:
+          type: boolean
+          example: false
+          description: A boolean value indicating whether or not this payment can be retried.
+    payto.unprocessable_pagination_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_pagination_error'
+      required:
+      - errors
+    payto.event.payto_payment.settled:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    payto.account_identifiers_alias_abn:
+      type: string
+      title: ABN alias
+      description: A PayID ABN alias
+      example: '123456789'
+      pattern: ^((\d{9})|(\d{11}))$
+    payto.unprocessable_pagination_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPPGN00
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.event.payto_payment.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+      - type: object
+        properties:
+          body:
+            type: object
+            description: Payment failure details
+            properties:
+              failure:
+                $ref: '#/components/schemas/payto.payment_failure'
+            required:
+            - failure
+    payto.event.payto_payment.under_investigation:
+      allOf:
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    payto.generic_error:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          example: Title of error
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+      required:
+      - title
+      - detail
+    payto.pagination_links:
+      type: object
+      properties:
+        next:
+          type: string
+          description: URL for next page of results. Won't be present if there are no further pages.
+    payto.event.resource_metadata:
+      type: object
+      properties:
+        resource_metadata:
+          type:
+          - object
+          - 'null'
+          description: Custom metadata that was supplied to the API when the affected resource was created.
+          example:
+            custom_key: custom_value
+      required:
+      - id
+      - type
+      - published_at
+      - resource_uid
+      - resource_type
+      - body
     payto.payment:
       type: object
       additionalProperties: false
@@ -966,78 +1209,64 @@ components:
               description: A URL to the associated source refund
               example: https://api.zeptopayments.com/payto/refunds/biz_refund_G7MQWwkQZIP8vbfH
           additionalProperties: false
-    payto.event.payto_payment.pending:
-      allOf:
-      - $ref: '#/components/schemas/payto.event.base'
-      - $ref: '#/components/schemas/payto.event.resource_metadata'
-    payto.event.resource_metadata:
+    payto.unprocessable_payment_retry_error:
       type: object
-      properties:
-        resource_metadata:
-          type:
-          - object
-          - 'null'
-          description: Custom metadata that was supplied to the API when the affected resource was created.
-          example:
-            custom_key: custom_value
+      additionalProperties: false
       required:
-      - id
-      - type
-      - published_at
-      - resource_uid
-      - resource_type
-      - body
-    payto.unprocessable_payment_retry_errors:
-      type: object
+      - title
+      - detail
+      - code
       properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.unprocessable_payment_retry_error'
-      required:
-      - errors
-    payto.account_identifiers_alias_abn:
-      type: string
-      title: ABN alias
-      description: A PayID ABN alias
-      example: '123456789'
-      pattern: ^((\d{9})|(\d{11}))$
-    payto.webhook.base:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/payto.event.base'
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPUNP00
+          - ZPUNP01
+          - ZPUNP02
+          - ZPUNP03
+          - ZPUNP04
+          - ZPUNP05
+          - ZPUNP06
+          - ZPUNP07
+          - ZPUNP08
+          - ZPUNP09
+          - ZPPRY00
+          - ZPPRY01
+          - ZPPRY02
+          - ZPPRY03
+          - ZPPRY04
+          - ZPPRY05
+          - ZPREF06
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
         links:
           type: object
           properties:
-            resource:
+            about:
               type: string
-              description: The api url to the resource
-              example: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
-      required:
-      - data
-      - links
-    payto.account_identifiers_alias_phone:
-      type: string
-      title: Phone alias
-      description: A PayID phone alias. e.g. +61-411222333
-      example: +61-411222333
-      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
-    payto.webhook.payto_payment.settled:
-      allOf:
-      - $ref: '#/components/schemas/payto.webhook.base'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/payto.event.payto_payment.settled'
-      - type: object
-        example:
-          data:
-            type: payto_payment.settled
-            resource_type: payto_payment
-          links:
-            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
     payto.payment_request:
       type: object
       properties:
@@ -1163,12 +1392,86 @@ components:
       - agreement_uid
       - amount
       - priority
-    payto.pagination_links:
+    payto.account_identifiers_alias_organisation_identifier:
+      type: string
+      title: Organisation alias
+      description: A PayID organisation identifier alias
+      example: Zepto Pty Ltd, Byron Bay NSW
+      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
+    payto.account_identifier:
+      type: object
+      description: An identifier representing the parties account
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - bban
+          - alias_phone
+          - alias_email
+          - alias_abn
+          - alias_organisation_identifier
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/payto.account_identifiers_bban'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_phone'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
+          - $ref: '#/components/schemas/payto.account_identifiers_alias_organisation_identifier'
+    payto.unprocessable_payment_errors:
       type: object
       properties:
-        next:
-          type: string
-          description: URL for next page of results. Won't be present if there are no further pages.
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_payment_error'
+      required:
+      - errors
+    payto.webhook.payto_payment.under_investigation:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.under_investigation'
+      - type: object
+        example:
+          data:
+            type: payto_payment.under_investigation
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.webhook.base:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/payto.event.base'
+        links:
+          type: object
+          properties:
+            resource:
+              type: string
+              description: The api url to the resource
+              example: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+      required:
+      - data
+      - links
+    payto.account_identifiers_alias_phone:
+      type: string
+      title: Phone alias
+      description: A PayID phone alias. e.g. +61-411222333
+      example: +61-411222333
+      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
+    payto.metadata:
+      type:
+      - object
+      - 'null'
+      description: Use for your custom data. A place to store any miscellaneous information your system may need in regards to the record you are creating. This will be included in associated webhook payloads under the `resource_metadata` key. Nested values (i.e., objects and arrays) are not allowed. The maximum size of this parameter is 2kb.
+      example:
+        custom_key: custom_value
     payto.event.base:
       type: object
       properties:
@@ -1212,407 +1515,16 @@ components:
       - resource_uid
       - resource_type
       - body
-    payto.webhook.payto_payment.pending:
+    payto.event.payto_payment.pending:
       allOf:
-      - $ref: '#/components/schemas/payto.webhook.base'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/payto.event.payto_payment.pending'
-      - type: object
-        example:
-          data:
-            type: payto_payment.pending
-            resource_type: payto_payment
-          links:
-            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
-    payto.account_identifiers_alias_email:
-      type: string
-      title: Email alias
-      description: A PayID email alias
-      example: default@example.com
-      pattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$
-    payto.unprocessable_payment_errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.unprocessable_payment_error'
-      required:
-      - errors
+      - $ref: '#/components/schemas/payto.event.base'
+      - $ref: '#/components/schemas/payto.event.resource_metadata'
     payto.amount:
       type: integer
       description: Amount in cents.
       example: 2495
       minimum: 1
       maximum: 1000000000
-    payto.event.payto_payment.failed:
-      allOf:
-      - $ref: '#/components/schemas/payto.event.base'
-      - $ref: '#/components/schemas/payto.event.resource_metadata'
-      - type: object
-        properties:
-          body:
-            type: object
-            description: Payment failure details
-            properties:
-              failure:
-                $ref: '#/components/schemas/payto.payment_failure'
-            required:
-            - failure
-    payto.account_identifiers_alias_organisation_identifier:
-      type: string
-      title: Organisation alias
-      description: A PayID organisation identifier alias
-      example: Zepto Pty Ltd, Byron Bay NSW
-      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
-    payto.generic_error:
-      type: object
-      additionalProperties: false
-      properties:
-        title:
-          type: string
-          example: Title of error
-        detail:
-          type: string
-          description: A short description of the error
-          example: Description of error
-        links:
-          type: object
-          properties:
-            about:
-              type: string
-              description: An optional link to more information on the error
-              example: https://docs.zeptopayments.com/docs/zepto-environments
-          required:
-          - about
-        meta:
-          type: object
-          description: Optional meta information about the error
-          properties:
-            resource_ref:
-              type: string
-              description: Resource reference of the resource impacted by the error
-              example: P2PAY.1000
-            resource_uid:
-              type: string
-              description: Supplied ID of the resource impacted by the error
-              example: payment_34fj8djh2
-      required:
-      - title
-      - detail
-    payto.webhook.payto_payment.failed:
-      allOf:
-      - $ref: '#/components/schemas/payto.webhook.base'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/payto.event.payto_payment.failed'
-      - type: object
-        example:
-          data:
-            type: payto_payment.failed
-            resource_type: payto_payment
-          links:
-            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
-    payto.unprocessable_pagination_error:
-      type: object
-      additionalProperties: false
-      required:
-      - title
-      - detail
-      - code
-      properties:
-        title:
-          type: string
-          example: Title of error
-        code:
-          type: string
-          description: A code assigned to the type of error received
-          example: E100
-          enum:
-          - ZPUNP00
-          - ZPPGN00
-        detail:
-          type: string
-          description: A short description of the error
-          example: Description of error
-        links:
-          type: object
-          properties:
-            about:
-              type: string
-              description: An optional link to more information on the error
-              example: https://docs.zeptopayments.com/docs/zepto-environments
-          required:
-          - about
-        meta:
-          type: object
-          description: Optional meta information about the error
-          properties:
-            resource_ref:
-              type: string
-              description: Resource reference of the resource impacted by the error
-              example: P2PAY.1000
-            resource_uid:
-              type: string
-              description: Supplied ID of the resource impacted by the error
-              example: payment_34fj8djh2
-    payto.unprocessable_payment_retry_error:
-      type: object
-      additionalProperties: false
-      required:
-      - title
-      - detail
-      - code
-      properties:
-        title:
-          type: string
-          example: Title of error
-        code:
-          type: string
-          description: A code assigned to the type of error received
-          example: E100
-          enum:
-          - ZPUNP00
-          - ZPUNP01
-          - ZPUNP02
-          - ZPUNP03
-          - ZPUNP04
-          - ZPUNP05
-          - ZPUNP06
-          - ZPUNP07
-          - ZPUNP08
-          - ZPUNP09
-          - ZPPRY00
-          - ZPPRY01
-          - ZPPRY02
-          - ZPPRY03
-          - ZPPRY04
-          - ZPPRY05
-          - ZPREF06
-        detail:
-          type: string
-          description: A short description of the error
-          example: Description of error
-        links:
-          type: object
-          properties:
-            about:
-              type: string
-              description: An optional link to more information on the error
-              example: https://docs.zeptopayments.com/docs/zepto-environments
-          required:
-          - about
-        meta:
-          type: object
-          description: Optional meta information about the error
-          properties:
-            resource_ref:
-              type: string
-              description: Resource reference of the resource impacted by the error
-              example: P2PAY.1000
-            resource_uid:
-              type: string
-              description: Supplied ID of the resource impacted by the error
-              example: payment_34fj8djh2
-    payto.unprocessable_pagination_errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.unprocessable_pagination_error'
-      required:
-      - errors
-    payto.retry_payment_request:
-      type: object
-      additionalProperties: false
-      properties:
-        creditor:
-          type: object
-          description: Who and where the payment is sent to. Optional - defaults to creditor details from agreement (if present), or the existing creditor details from the payment.
-          required:
-          - ultimate_party_name
-          - party_name
-          - account_identifier
-          properties:
-            party_name:
-              type: string
-              example: Jane Smith
-              minLength: 1
-              maxLength: 140
-              pattern: ^[ -~]+$
-              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name.
-            ultimate_party_name:
-              type:
-              - string
-              - 'null'
-              example: Jane Smith
-              minLength: 1
-              maxLength: 140
-              pattern: ^[ -~]+$
-              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name.
-            account_identifier:
-              $ref: '#/components/schemas/payto.account_identifier'
-        sandbox:
-          type: object
-          required:
-          - simulate
-          description: 'SANDBOX ONLY: Parameter that allows you to simulate certain scenarios in regards to the payment retry to aid integrators while testing their control flows.'
-          properties:
-            simulate:
-              type: string
-              enum:
-              - auto_settle
-              - requires_investigation
-              - investigate_and_settle
-              - investigate_and_fail
-              - insufficient_funds
-              - creditor_account_type_not_supported
-              - creditor_account_closed
-              - debtor_account_closed
-              - financial_infrastructure_unavailable
-              - debtor_alias_not_found
-              - creditor_alias_not_found
-              - alias_resolution_service_unavailable
-            delay:
-              type: integer
-              description: An optional attribute that will delay the requested simulation by the given amount of seconds. If `delay` is not provided (default behaviour), the simulated action will happen instantly.
-    payto.payment_failure:
-      type:
-      - object
-      - 'null'
-      description: Details about the payment failure, when the state is 'failed'
-      required:
-      - title
-      - detail
-      - code
-      - retryable
-      properties:
-        title:
-          type: string
-          description: A short description of the reason or failure
-          example: Agreement Status Invalid
-        detail:
-          type: string
-          description: A longer description of the reason or failure
-          example: Contact Zepto for more information - The requested operation cannot be performed for the current status of the agreement
-        code:
-          type: string
-          description: A unique identifier for this specific type of reason or failure
-          example: MMS.API.9104
-          enum:
-          - ZPPAY24
-          - AB01
-          - AB02
-          - AB03
-          - AB04
-          - AB08
-          - AC02
-          - AC03
-          - AC05
-          - AC06
-          - AC07
-          - AC13
-          - AC14
-          - AC15
-          - AG01
-          - AG03
-          - AG07
-          - AGNT
-          - AM01
-          - AM02
-          - AM03
-          - AM04
-          - AM06
-          - AM09
-          - AM12
-          - AM19
-          - AM21
-          - BE05
-          - BE06
-          - BE08
-          - BE22
-          - CH20
-          - CH21
-          - CURR
-          - CUST
-          - DT02
-          - DT04
-          - ED05
-          - ED06
-          - FF04
-          - FF08
-          - FF10
-          - FF11
-          - FRAD
-          - MD01
-          - MD02
-          - MD20
-          - MS02
-          - MS03
-          - NARR
-          - NAUT
-          - RR02
-          - RR03
-          - RR04
-          - RC05
-          - SL01
-          - SL11
-          - SL12
-          - SL13
-          - SL14
-          - TD03
-          - TM01
-          - AVED
-          - BVSD
-          - MCGP
-          - NACT
-          - ZPUNP01
-          - ZPUNP02
-          - ZPUNP06
-          - ZPUNP07
-          - ZPUNP08
-          - UKNWN
-        retryable:
-          type: boolean
-          example: false
-          description: A boolean value indicating whether or not this payment can be retried.
-    payto.webhook.payto_payment.under_investigation:
-      allOf:
-      - $ref: '#/components/schemas/payto.webhook.base'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/payto.event.payto_payment.under_investigation'
-      - type: object
-        example:
-          data:
-            type: payto_payment.under_investigation
-            resource_type: payto_payment
-          links:
-            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
-    payto.metadata:
-      type:
-      - object
-      - 'null'
-      description: Use for your custom data. A place to store any miscellaneous information your system may need in regards to the record you are creating. This will be included in associated webhook payloads under the `resource_metadata` key. Nested values (i.e., objects and arrays) are not allowed. The maximum size of this parameter is 2kb.
-      example:
-        custom_key: custom_value
-    payto.account_identifiers_bban:
-      type: string
-      title: BBAN
-      description: A branch code (BSB) and account number separated with a hyphen
-      example: 123456-98765432
-      pattern: ^\d{6}-[ -~]{1,28}$
-    payto.event.payto_payment.settled:
-      allOf:
-      - $ref: '#/components/schemas/payto.event.base'
-      - $ref: '#/components/schemas/payto.event.resource_metadata'
     payto.unprocessable_payment_error:
       type: object
       additionalProperties: false
@@ -1690,6 +1602,118 @@ components:
               type: string
               description: Supplied ID of the resource impacted by the error
               example: payment_34fj8djh2
+    payto.webhook.payto_payment.pending:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.pending'
+      - type: object
+        example:
+          data:
+            type: payto_payment.pending
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.retry_payment_request:
+      type: object
+      additionalProperties: false
+      properties:
+        creditor:
+          type: object
+          description: Who and where the payment is sent to. Optional - defaults to creditor details from agreement (if present), or the existing creditor details from the payment.
+          required:
+          - ultimate_party_name
+          - party_name
+          - account_identifier
+          properties:
+            party_name:
+              type: string
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The name of the creditor party must accurately represent the creditor party and may be the same as the ultimate_party_name.
+            ultimate_party_name:
+              type:
+              - string
+              - 'null'
+              example: Jane Smith
+              minLength: 1
+              maxLength: 140
+              pattern: ^[ -~]+$
+              description: The ultimate creditor name must accurately represent the ultimate creditor party and may be the same as the party_name.
+            account_identifier:
+              $ref: '#/components/schemas/payto.account_identifier'
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate certain scenarios in regards to the payment retry to aid integrators while testing their control flows.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - auto_settle
+              - requires_investigation
+              - investigate_and_settle
+              - investigate_and_fail
+              - insufficient_funds
+              - creditor_account_type_not_supported
+              - creditor_account_closed
+              - debtor_account_closed
+              - financial_infrastructure_unavailable
+              - debtor_alias_not_found
+              - creditor_alias_not_found
+              - alias_resolution_service_unavailable
+            delay:
+              type: integer
+              description: An optional attribute that will delay the requested simulation by the given amount of seconds. If `delay` is not provided (default behaviour), the simulated action will happen instantly.
+    payto.webhook.payto_payment.settled:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.settled'
+      - type: object
+        example:
+          data:
+            type: payto_payment.settled
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.webhook.payto_payment.failed:
+      allOf:
+      - $ref: '#/components/schemas/payto.webhook.base'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/payto.event.payto_payment.failed'
+      - type: object
+        example:
+          data:
+            type: payto_payment.failed
+            resource_type: payto_payment
+          links:
+            resource: https://api.zeptopayments.com/payto/payments/biz_20221231_G7MQWwkQZIP8vbfH
+    payto.account_identifiers_bban:
+      type: string
+      title: BBAN
+      description: A branch code (BSB) and account number separated with a hyphen
+      example: 123456-98765432
+      pattern: ^\d{6}-[ -~]{1,28}$
+    payto.unprocessable_payment_retry_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_payment_retry_error'
+      required:
+      - errors
     payto.generic_errors:
       type: object
       properties:
@@ -1700,10 +1724,39 @@ components:
             $ref: '#/components/schemas/payto.generic_error'
       required:
       - errors
-    payto.event.payto_payment.under_investigation:
-      allOf:
-      - $ref: '#/components/schemas/payto.event.base'
-      - $ref: '#/components/schemas/payto.event.resource_metadata'
+    GetAPaymentResponse:
+      title: Get a Payment (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - direct_entry
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: The SuperPackage
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44'
+            status: maturing
+            amount: 30000
+            description: A tandem skydive jump SB23094
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
     Metadata:
       title: Metadata
       type: object
@@ -1712,6 +1765,128 @@ components:
       example:
         custom_key: Custom string
         another_custom_key: Maybe a URL
+    Payout:
+      title: Payout
+      required:
+      - amount
+      - description
+      - recipient_contact_id
+      description: The actual Payout
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: Amount in cents to pay the recipient
+          example: 30000
+        description:
+          type: string
+          description: Description that both the payer and recipient can see. For Direct Entry payments, the payout recipient will see the first 9 characters of this description. For NPP payments, the payout recipient will see the first 280 characters of this description. ASCII-printable characters and unicode emojis are accepted.
+          pattern: ^[ -~\p{Emoji}]+$
+          example: A tandem skydive jump SB23094
+        recipient_contact_id:
+          type: string
+          description: Contact to pay (`Contact.data.id`)
+          example: 48b89364-1577-4c81-ba02-96705895d457
+        category_purpose_code:
+          type: string
+          description: ISO 20022 code for payment category purpose (see supported values below).
+          enum:
+          - PENS
+          - SALA
+          - TAXS
+          example: PENS
+        end_to_end_id:
+          type: string
+          maxLength: 35
+          description: 'End-To-End ID (35 max. characters). Required when a category purpose code is present. For superannuation or tax payments, set this to the Payment Reference Number (PRN). For salary payments, set this to the Employee Reference.
+
+            '
+          example: FFC6D34847134E4D8BF4B9B41BDC94C8
+        metadata:
+          type: object
+          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
+    ListAllPaymentsResponse:
+      title: List all Payments (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - new_payments_platform
+          - direct_entry
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: This description is only available to the payer
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: The recipient will see this description
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          - ref: D.2
+            recipient_contact_id: dc6f1e60-3803-43ca-a200-7d641816f57f
+            batch_description: This description is only available to the payer
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: The recipient will see this description
+            from_id: 48b89364-1577-4c81-ba02-96705895d457
+            to_id: f989d9cd-87fc-4c73-b0a4-1eb0e8768d3b
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    MakeAPaymentResponse:
+      title: Make a Payment (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PB.1
+          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
+          channels:
+          - new_payments_platform
+          payouts:
+          - ref: D.1
+            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
+            batch_description: The SuperPackage
+            matures_at: '2016-09-13T23:50:44Z'
+            created_at: '2016-09-10T23:50:44Z'
+            status: maturing
+            amount: 30000
+            description: A tandem skydive jump SB23094
+            from_id: 83623359-e86e-440c-9780-432a3bc3626f
+            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
+            category_purpose_code: PENS
+            end_to_end_id: FFC6D34847134E4D8BF4B9B41BDC94C8
+            metadata:
+              invoice_ref: BILL-0001
+              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
+              custom_key: Custom string
+              another_custom_key: Maybe a URL
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
     MakeAPaymentRequest:
       title: Make a Payment (request)
       required:
@@ -1764,161 +1939,6 @@ components:
         metadata:
           custom_key: Custom string
           another_custom_key: Maybe a URL
-    GetAPaymentResponse:
-      title: Get a Payment (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-      example:
-        data:
-          ref: PB.1
-          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
-          channels:
-          - direct_entry
-          payouts:
-          - ref: D.1
-            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
-            batch_description: The SuperPackage
-            matures_at: '2016-09-13T23:50:44Z'
-            created_at: '2016-09-10T23:50:44'
-            status: maturing
-            amount: 30000
-            description: A tandem skydive jump SB23094
-            from_id: 83623359-e86e-440c-9780-432a3bc3626f
-            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
-            metadata:
-              invoice_ref: BILL-0001
-              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
-              custom_key: Custom string
-              another_custom_key: Maybe a URL
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-    MakeAPaymentResponse:
-      title: Make a Payment (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-      example:
-        data:
-          ref: PB.1
-          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
-          channels:
-          - new_payments_platform
-          payouts:
-          - ref: D.1
-            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
-            batch_description: The SuperPackage
-            matures_at: '2016-09-13T23:50:44Z'
-            created_at: '2016-09-10T23:50:44Z'
-            status: maturing
-            amount: 30000
-            description: A tandem skydive jump SB23094
-            from_id: 83623359-e86e-440c-9780-432a3bc3626f
-            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
-            category_purpose_code: PENS
-            end_to_end_id: FFC6D34847134E4D8BF4B9B41BDC94C8
-            metadata:
-              invoice_ref: BILL-0001
-              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
-              custom_key: Custom string
-              another_custom_key: Maybe a URL
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-    ListAllPaymentsResponse:
-      title: List all Payments (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-          description: ''
-      example:
-        data:
-        - ref: PB.1
-          your_bank_account_id: 83623359-e86e-440c-9780-432a3bc3626f
-          channels:
-          - new_payments_platform
-          - direct_entry
-          payouts:
-          - ref: D.1
-            recipient_contact_id: 48b89364-1577-4c81-ba02-96705895d457
-            batch_description: This description is only available to the payer
-            matures_at: '2016-09-13T23:50:44Z'
-            created_at: '2016-09-10T23:50:44Z'
-            status: maturing
-            amount: 30000
-            description: The recipient will see this description
-            from_id: 83623359-e86e-440c-9780-432a3bc3626f
-            to_id: 21066764-c103-4e7f-b436-4cee7db5f400
-            metadata:
-              invoice_ref: BILL-0001
-              invoice_id: c80a9958-e805-47c0-ac2a-c947d7fd778d
-              custom_key: Custom string
-              another_custom_key: Maybe a URL
-          - ref: D.2
-            recipient_contact_id: dc6f1e60-3803-43ca-a200-7d641816f57f
-            batch_description: This description is only available to the payer
-            matures_at: '2016-09-13T23:50:44Z'
-            created_at: '2016-09-10T23:50:44Z'
-            status: maturing
-            amount: 30000
-            description: The recipient will see this description
-            from_id: 48b89364-1577-4c81-ba02-96705895d457
-            to_id: f989d9cd-87fc-4c73-b0a4-1eb0e8768d3b
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-    Payout:
-      title: Payout
-      required:
-      - amount
-      - description
-      - recipient_contact_id
-      description: The actual Payout
-      type: object
-      properties:
-        amount:
-          type: integer
-          description: Amount in cents to pay the recipient
-          example: 30000
-        description:
-          type: string
-          description: Description that both the payer and recipient can see. For Direct Entry payments, the payout recipient will see the first 9 characters of this description. For NPP payments, the payout recipient will see the first 280 characters of this description. ASCII-printable characters and unicode emojis are accepted.
-          pattern: ^[ -~\p{Emoji}]+$
-          example: A tandem skydive jump SB23094
-        recipient_contact_id:
-          type: string
-          description: Contact to pay (`Contact.data.id`)
-          example: 48b89364-1577-4c81-ba02-96705895d457
-        category_purpose_code:
-          type: string
-          description: ISO 20022 code for payment category purpose (see supported values below).
-          enum:
-          - PENS
-          - SALA
-          - TAXS
-          example: PENS
-        end_to_end_id:
-          type: string
-          maxLength: 35
-          description: 'End-To-End ID (35 max. characters). Required when a category purpose code is present. For superannuation or tax payments, set this to the Payment Reference Number (PRN). For salary payments, set this to the Employee Reference.
-
-            '
-          example: FFC6D34847134E4D8BF4B9B41BDC94C8
-        metadata:
-          type: object
-          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version
@@ -1931,16 +1951,16 @@ components:
         example: '20260101'
       description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
     Link:
       schema:
         type: string
       description: Contains pagination link for next page of collection, if next page exists.
       example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   securitySchemes:
     bearerAuth:
       type: http

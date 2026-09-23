@@ -40,7 +40,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/merchant_reports.download'
+      operationId: postMerchantReportsPaytoSettlementByReportDateDownload
+      x-operation-id-source: derived
 components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
     merchant_reports.download:
       type: object
@@ -118,17 +131,6 @@ components:
                           type: string
                           description: The Zepto account ID associated with the report
                           example: 00000000-0000-0000-0000-000000000000
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   securitySchemes:
     bearerAuth:
       type: http

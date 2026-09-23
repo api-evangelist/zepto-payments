@@ -14,7 +14,7 @@ security:
 - bearerAuth: []
 tags:
 - name: Transactions
-  description: "By default, the transactions endpoint provides a detailed look at all past, current and future debits & credits related to your account.\n\n<aside class=\"notice\">Want to also know about the debits & credits applied to the other party? No problem! Use the <code>both_parties=true</code> query string.</aside>\n\n##Lifecycle\n\nA transaction (debit or credit) can have the following statuses:\n\n| Status | Description |\n|--------|-------------|\n| `maturing` | The maturation date has not yet been reached. |\n| `matured` | The maturation date has been reached and the transaction is eligible for processing. |\n| `preprocessing` | The transaction is undergoing pre-checks before being sent to the bank. |\n| `processing` | The transaction has been submitted to the bank. |\n| `clearing` | Waiting for confirmation from the bank that the transaction has succeeded. |\n| `cleared` | The transaction is complete. |\n| `rejected` | The bank has rejected the transaction due to incorrect bank account details. |\n| `returned` | The transaction did not successfully clear. |\n| `voided` | The transaction has been cancelled and is no longer eligible for processing. |\n| `pending_verification` | The bank account must be verified before the transaction can proceed. |\n| `paused` | The transaction has temporary been paused by Zepto pending internal review. |\n| `channel_switched` | The initial payment channel has failed and the credit has automatically switched to attempt the payment using the next available channel. |\n## Failure codes\n> Example response\n\n```json\n{\n  \"data\": [\n    {\n      \"ref\": \"D.3\",\n      \"parent_ref\": null,\n      \"type\": \"debit\",\n      \"category\": \"payout_refund\",\n      \"created_at\": \"2021-04-07T23:15:00Z\",\n      \"matures_at\": \"2021-04-10T23:15:00Z\",\n      \"cleared_at\": null,\n      \"bank_ref\": null,\n      \"status\": \"returned\",\n      \"status_changed_at\": \"2021-04-08T23:15:00Z\",\n      \"failure\" : {\n        \"code\": \"E251\",\n        \"title\": \"Voided By Initiator\",\n        \"detail\": \"The transaction was voided by its initiator.\",\n      },\n      \"failure_details\": \"Wrong amount - approved by Stacey\"\n      \"party_contact_id\": \"26297f44-c5e1-40a1-9864-3e0b0754c32a\",\n      \"party_name\": \"Sanford-Rees\",\n      \"party_nickname\": \"sanford-rees-8\",\n      \"description\": null,\n      \"amount\": 1,\n      \"bank_account_id\": \"56df206a-aaff-471a-b075-11882bc8906a\"\n      \"channels\": [\"float_account\"]\n      \"current_channel\": \"float_account\"\n    }\n  ]\n}\n```\nThe rejected, returned & voided statuses are always accompanied by a failure code, title and detail as listed below.\n### DE credit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E101 | Invalid BSB Number | The BSB is not valid or is no longer active. |\n| E102 | Payment Stopped | The target institution has blocked transactions to this account. Please refer to customer. |\n| E103 | Account Closed | The target account is closed. |\n| E104 | Customer Deceased | The target account's owner has been listed as deceased. |\n| E105 | Account Not Found | The target account number cannot be found by the financial institution. |\n| E106 | Refer to Customer | Usually means that there is an issue with the account receiving a credit that only the customer and their financial institution can resolve. Please refer to customer. |\n| E107 | Account Deleted | The target account is deleted. |\n| E108 | Invalid UserID | Please contact Zepto for further information. |\n| E109 | Technically Invalid | Usually means that the account is not creditable or that the reason for failure cannot be categorised within the standard BECS return codes. Please refer to customer. |\n| E150 | Voided By Admin | The transaction was voided by an administrator. |\n| E151 | Voided By Initiator | The transaction was voided by its initiator. |\n| E152 | Insufficient Funds | There were insufficient funds to complete the transaction. |\n| E153 | System Error | The transaction was unable to complete. Please contact Zepto for assistance. |\n| E154 | Account Blocked | The target account is blocked and cannot receive funds. |\n| E199 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |\n### DE debit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E201 | Invalid BSB Number | The BSB is not valid or is no longer active. |\n| E202 | Payment Stopped | The target institution has blocked transactions to this account. Please refer to customer. |\n| E203 | Account Closed | The target account is closed. |\n| E204 | Customer Deceased | The target account's owner has been listed as deceased. |\n| E205 | Account Not Found | The target account number cannot be found by the financial institution. |\n| E206 | Refer to Customer | Usually means insufficient funds or that the target account has breached their transaction limits. |\n| E207 | Account Deleted | The target account is deleted. |\n| E208 | Invalid UserID | Please contact Zepto for further information. |\n| E209 | Technically Invalid | Usually means that the account is not debitable or that the reason for failure can not be categorised within the standard BECS return codes. Please refer to customer. |\n| E250 | Voided By Admin | The transaction was voided by an administrator. |\n| E251 | Voided By Initiator | The transaction was voided by its initiator. |\n| E252 | Insufficient Funds | There were insufficient funds to complete the transaction. |\n| E253 | System Error | The transaction was unable to complete. Please contact Zepto for assistance. |\n| E299 | Unknown DE Error | An unknown DE error occurred. Please contact Zepto for assistance. |\n### NPP credit failures\n| Code | Title | Detail |\n| ------------ | ------------- | -------------- |\n| E301 | Upstream Network Outage | An upstream network issue occurred. Please try again later. |\n| E302 | BSB Not NPP Enabled | The target BSB is not NPP enabled. Please try another channel. |\n| E303 | Account Not NPP Enabled | The target account exists but cannot accept funds via the NPP. Please try another channel. |\n| E304 | Account Not Found | The target account number cannot be found. |\n| E305 | Intermittent Outage At Target Institution | The target financial institution is experiencing technical difficulties. Please try again later. |\n| E306 | Account Closed | The target account is closed. |\n| E307 | Target Institution Offline | The target financial institution is undergoing maintenance or experiencing an outage. Please try again later. |\n| E308 | Account Blocked | The target account is blocked and cannot receive funds. |\n| E399 | Unknown NPP Error | An unknown NPP error occurred. Please contact Zepto for assistance. |\n"
+  description: By default, the transactions endpoint provides a detailed look at all past, current and future debits & credits related to your account.
 paths:
   /transactions:
     parameters:
@@ -23,7 +23,7 @@ paths:
       tags:
       - Transactions
       summary: List all transactions
-      description: <aside class="notice">By default, Zepto will search and return all transactions created in the <strong>last 30 days</strong>. You can adjust this up to <strong>1 year</strong> by defining the <code>min_created_date</code> query string parameter defined below.</aside>
+      description: By default, Zepto will search and return all transactions created in the last 30 days. You can adjust this up to 1 year by defining the min_created_date query string parameter defined below.
       operationId: ListAllTransactions
       parameters:
       - name: page
@@ -239,26 +239,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListAllTransactionsResponse'
 components:
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
       schema:
         type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
     Failure:
       title: Failure object (see [Transaction/Failure codes](#failure-codes) for more info)
       required:
@@ -442,6 +434,14 @@ components:
         metadata:
           customer_id: xur4492
           product_ref: TSXL392110x
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
     ListAllTransactionsResponse:
       title: List all transactions (response)
       required:
@@ -518,17 +518,17 @@ components:
           metadata:
             customer_id: xur4492
             product_ref: TSXL392110x
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
+  headers:
+    Link:
       schema:
         type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   securitySchemes:
     bearerAuth:
       type: oauth2

@@ -17,9 +17,7 @@ tags:
 - name: Clients
   description: 'The Zepto Clients API allows registration of clients who indirectly use the Zepto platform
 
-    via your Zepto integration.
-
-    '
+    via your Zepto integration.'
 paths:
   /clients:
     parameters:
@@ -33,9 +31,7 @@ paths:
         via your Zepto integration.
 
 
-        Merchants are required to keep their sub-client details up to date with Zepto via the update client endpoint.
-
-        '
+        Merchants are required to keep their sub-client details up to date with Zepto via the update client endpoint.'
       parameters: []
       responses:
         '201':
@@ -86,6 +82,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/clients.client_request'
+      operationId: postClients
+      x-operation-id-source: derived
     get:
       summary: List Clients
       tags:
@@ -159,6 +157,8 @@ paths:
           description: forbidden
         '500':
           description: Internal Server Error
+      operationId: getClients
+      x-operation-id-source: derived
   /clients/{client_id}:
     parameters:
     - $ref: '#/components/parameters/ZeptoAPIVersion'
@@ -204,6 +204,8 @@ paths:
           description: forbidden
         '500':
           description: Internal Server Error
+      operationId: getClientsByClientId
+      x-operation-id-source: derived
     patch:
       summary: Update Client
       tags:
@@ -246,890 +248,21 @@ paths:
             schema:
               type: object
               $ref: '#/components/schemas/clients.client_update_request'
+      operationId: patchClientsByClientId
+      x-operation-id-source: derived
 components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    clients.client_individual_request:
-      type: object
-      required:
-      - business_names
-      - legal_name
-      - merchant_category_code
-      - registered_address
-      - risk_level
-      - services
-      - type
-      additionalProperties: false
-      properties:
-        business_names:
-          type: array
-          description: For `individual` clients, provide the client's legal name.
-          items:
-            type: string
-          example:
-          - Business Name 1
-          - Business Name 2
-        contact_information:
-          type: object
-          description: The contact information of the client. Required if RTP services requested.
-          properties:
-            contact_name:
-              type: string
-              description: 'The contact name for the client. Required if RTP services requested. '
-              example: Contact Name
-            email:
-              type: string
-              description: The contact email address for the client. Required if RTP services requested.
-              example: contact@example.com
-            phone:
-              type: string
-              description: The contact phone number for the client. Required if RTP services requested.
-              example: '+61400000000'
-              pattern: \A[\d\s\-\+\(\)]+\z
-        legal_name:
-          type: string
-          description: The legal name of the client.
-          example: Legal Name Pty Ltd
-        merchant_category_code:
-          type: string
-          description: The Merchant Category Code (MCC) of the client.
-          enum:
-          - '0742'
-          - '0763'
-          - 0780
-          - '1520'
-          - '1711'
-          - '1731'
-          - '1740'
-          - '1750'
-          - '1761'
-          - '1771'
-          - '1799'
-          - '2741'
-          - '2791'
-          - '2842'
-          - '4011'
-          - '4111'
-          - '4112'
-          - '4119'
-          - '4121'
-          - '4131'
-          - '4214'
-          - '4215'
-          - '4225'
-          - '4411'
-          - '4457'
-          - '4468'
-          - '4511'
-          - '4582'
-          - '4722'
-          - '4723'
-          - '4784'
-          - '4789'
-          - '4812'
-          - '4814'
-          - '4816'
-          - '4821'
-          - '4829'
-          - '4899'
-          - '4900'
-          - '5013'
-          - '5021'
-          - '5039'
-          - '5044'
-          - '5045'
-          - '5046'
-          - '5047'
-          - '5051'
-          - '5065'
-          - '5072'
-          - '5074'
-          - '5085'
-          - '5094'
-          - '5099'
-          - '5111'
-          - '5122'
-          - '5131'
-          - '5137'
-          - '5139'
-          - '5169'
-          - '5172'
-          - '5192'
-          - '5193'
-          - '5198'
-          - '5199'
-          - '5200'
-          - '5211'
-          - '5231'
-          - '5251'
-          - '5261'
-          - '5262'
-          - '5271'
-          - '5300'
-          - '5309'
-          - '5310'
-          - '5311'
-          - '5331'
-          - '5399'
-          - '5411'
-          - '5422'
-          - '5441'
-          - '5451'
-          - '5462'
-          - '5499'
-          - '5511'
-          - '5521'
-          - '5531'
-          - '5532'
-          - '5533'
-          - '5541'
-          - '5542'
-          - '5551'
-          - '5552'
-          - '5561'
-          - '5571'
-          - '5592'
-          - '5598'
-          - '5599'
-          - '5611'
-          - '5621'
-          - '5631'
-          - '5641'
-          - '5651'
-          - '5655'
-          - '5661'
-          - '5681'
-          - '5691'
-          - '5697'
-          - '5698'
-          - '5699'
-          - '5712'
-          - '5713'
-          - '5714'
-          - '5718'
-          - '5719'
-          - '5722'
-          - '5732'
-          - '5733'
-          - '5734'
-          - '5735'
-          - '5811'
-          - '5812'
-          - '5813'
-          - '5814'
-          - '5815'
-          - '5816'
-          - '5817'
-          - '5818'
-          - '5912'
-          - '5921'
-          - '5931'
-          - '5932'
-          - '5933'
-          - '5935'
-          - '5937'
-          - '5940'
-          - '5941'
-          - '5942'
-          - '5943'
-          - '5944'
-          - '5945'
-          - '5946'
-          - '5947'
-          - '5948'
-          - '5949'
-          - '5950'
-          - '5960'
-          - '5962'
-          - '5963'
-          - '5964'
-          - '5965'
-          - '5966'
-          - '5967'
-          - '5968'
-          - '5969'
-          - '5970'
-          - '5971'
-          - '5972'
-          - '5973'
-          - '5975'
-          - '5976'
-          - '5977'
-          - '5978'
-          - '5983'
-          - '5992'
-          - '5993'
-          - '5994'
-          - '5995'
-          - '5996'
-          - '5997'
-          - '5998'
-          - '5999'
-          - '6010'
-          - '6011'
-          - '6012'
-          - '6051'
-          - '6052'
-          - '6053'
-          - '6054'
-          - '6055'
-          - '6056'
-          - '6057'
-          - '6058'
-          - '6059'
-          - '6060'
-          - '6061'
-          - '6062'
-          - '6063'
-          - '6064'
-          - '6065'
-          - '6066'
-          - '6211'
-          - '6300'
-          - '6399'
-          - '6513'
-          - '6530'
-          - '6540'
-          - '7011'
-          - '7012'
-          - '7032'
-          - '7033'
-          - '7210'
-          - '7211'
-          - '7216'
-          - '7217'
-          - '7221'
-          - '7230'
-          - '7251'
-          - '7261'
-          - '7273'
-          - '7276'
-          - '7277'
-          - '7278'
-          - '7296'
-          - '7297'
-          - '7298'
-          - '7299'
-          - '7311'
-          - '7321'
-          - '7333'
-          - '7338'
-          - '7339'
-          - '7342'
-          - '7349'
-          - '7361'
-          - '7372'
-          - '7375'
-          - '7379'
-          - '7392'
-          - '7393'
-          - '7394'
-          - '7395'
-          - '7399'
-          - '7511'
-          - '7512'
-          - '7513'
-          - '7519'
-          - '7523'
-          - '7531'
-          - '7534'
-          - '7535'
-          - '7538'
-          - '7542'
-          - '7549'
-          - '7622'
-          - '7623'
-          - '7629'
-          - '7631'
-          - '7641'
-          - '7692'
-          - '7699'
-          - '7800'
-          - '7801'
-          - '7802'
-          - '7829'
-          - '7832'
-          - '7841'
-          - '7911'
-          - '7922'
-          - '7929'
-          - '7932'
-          - '7933'
-          - '7941'
-          - '7991'
-          - '7992'
-          - '7993'
-          - '7994'
-          - '7995'
-          - '7996'
-          - '7997'
-          - '7998'
-          - '7999'
-          - '8011'
-          - '8021'
-          - '8031'
-          - '8041'
-          - '8042'
-          - '8043'
-          - '8049'
-          - '8050'
-          - '8062'
-          - '8071'
-          - '8099'
-          - '8111'
-          - '8211'
-          - '8220'
-          - '8241'
-          - '8244'
-          - '8249'
-          - '8299'
-          - '8351'
-          - '8398'
-          - '8641'
-          - '8651'
-          - '8661'
-          - '8675'
-          - '8699'
-          - '8734'
-          - '8911'
-          - '8931'
-          - '8999'
-          - '9211'
-          - '9222'
-          - '9223'
-          - '9311'
-          - '9399'
-          - '9402'
-          - '9405'
-          - '9406'
-          - '9702'
-          - '9950'
-          example: '6060'
-        primary_bank_account_bban:
-          type: string
-          description: The primary bank account of the client.
-          example: 123456-123123123
-        registered_address:
-          type: string
-          description: The registered address of the client.
-          example: 123 Street, City, Country
-        risk_level:
-          type: string
-          description: The risk level of the client according to agreed KYC/AML policies with Zepto.
-          enum:
-          - low
-          - medium
-          - high
-          example: low
-        services:
-          type: array
-          description: Platform services provided by Zepto that the client requires access to. Sub-clients can only use services enabled on the parent account. <br /> `rtp` is not available for `individual` types.
-          properties:
-            de:
-              type:
-              - string
-              - 'null'
-              description: The DE service of the client.
-              enum:
-              - pending
-              - active
-              - suspended
-              - off_boarded
-              example: null
-            payto:
-              type:
-              - string
-              - 'null'
-              description: The PayTo service of the client.
-              enum:
-              - pending
-              - active
-              - suspended
-              - off_boarded
-              example: active
-            rtp:
-              type:
-              - string
-              - 'null'
-              description: The RTP service of the client.
-              enum:
-              - pending
-              - active
-              - suspended
-              - off_boarded
-              example: pending
-          items:
-            type: string
-            enum:
-            - payto
-            - rtp
-            - de
-        type:
-          type: string
-          description: The structure type of the client, either 'business' or 'individual'. This will alter which fields are required. Type `individual` is restricted by default, please contact Zepto for information on enabling.
-          enum:
-          - business
-          - individual
-          example: business
-    clients.errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            additionalProperties: false
-            properties:
-              title:
-                type: string
-                example: Title of error
-              detail:
-                type: string
-                description: A short description of the error
-                example: Description of error
-              links:
-                type:
-                - object
-                - 'null'
-                properties:
-                  about:
-                    type: string
-                    description: An optional link to more information on the error
-                    example: https://docs.zeptopayments.com/docs/zepto-environments
-                required:
-                - about
-            required:
-            - title
-            - detail
-      required:
-      - errors
-    clients.client_business_request:
-      type: object
-      required:
-      - australian_business_number
-      - business_names
-      - business_registration_date
-      - legal_name
-      - merchant_category_code
-      - registered_address
-      - risk_level
-      - services
-      - type
-      - website_url
-      additionalProperties: false
-      properties:
-        austrac_number:
-          type: string
-          description: The AUSTRAC number of the client (if applicable).
-          example: '1234567'
-        australian_business_number:
-          type: string
-          description: The Australian Business Number (ABN) of the client.
-          example: '12345678901'
-          pattern: \A\d{11}\z
-        australian_company_number:
-          type: string
-          description: The Australian Company Number(ACN) of the client. Corresponding `company_incorporation_date` is required when provided.
-          example: 045678901
-          pattern: \A\d{9}\z
-        australian_credit_licence:
-          type: string
-          description: The Australian Credit Licence of the client (if applicable).
-          example: '123456'
-        australian_financial_services_licence:
-          type: string
-          description: The Australian Financial Services Licence of the client (if applicable).
-          example: '777888999'
-        business_names:
-          type: array
-          description: The business/trading names registered to the client's legal entity.
-          items:
-            type: string
-          example:
-          - Business Name 1
-          - Business Name 2
-        business_registration_date:
-          type: string
-          description: The business registration date of the client.
-          format: date
-          example: '2025-02-01'
-        company_incorporation_date:
-          type: string
-          description: The company incorporation date of the client, must correspond to ACN registration.
-          format: date
-          example: '2025-02-01'
-        contact_information:
-          type: object
-          description: The contact information of the client. Required if RTP services requested.
-          properties:
-            contact_name:
-              type: string
-              description: 'The contact name for the client. Required if RTP services requested. '
-              example: Contact Name
-            email:
-              type: string
-              description: The contact email address for the client. Required if RTP services requested.
-              example: contact@example.com
-            phone:
-              type: string
-              description: The contact phone number for the client. Required if RTP services requested.
-              example: '+61400123456'
-              pattern: \A[\d\s\-\+\(\)]+\z
-        legal_name:
-          type: string
-          description: The legal name of the client.
-          example: Legal Name Pty Ltd
-        merchant_category_code:
-          type: string
-          description: The Merchant Category Code (MCC) of the client.
-          enum:
-          - '0742'
-          - '0763'
-          - 0780
-          - '1520'
-          - '1711'
-          - '1731'
-          - '1740'
-          - '1750'
-          - '1761'
-          - '1771'
-          - '1799'
-          - '2741'
-          - '2791'
-          - '2842'
-          - '4011'
-          - '4111'
-          - '4112'
-          - '4119'
-          - '4121'
-          - '4131'
-          - '4214'
-          - '4215'
-          - '4225'
-          - '4411'
-          - '4457'
-          - '4468'
-          - '4511'
-          - '4582'
-          - '4722'
-          - '4723'
-          - '4784'
-          - '4789'
-          - '4812'
-          - '4814'
-          - '4816'
-          - '4821'
-          - '4829'
-          - '4899'
-          - '4900'
-          - '5013'
-          - '5021'
-          - '5039'
-          - '5044'
-          - '5045'
-          - '5046'
-          - '5047'
-          - '5051'
-          - '5065'
-          - '5072'
-          - '5074'
-          - '5085'
-          - '5094'
-          - '5099'
-          - '5111'
-          - '5122'
-          - '5131'
-          - '5137'
-          - '5139'
-          - '5169'
-          - '5172'
-          - '5192'
-          - '5193'
-          - '5198'
-          - '5199'
-          - '5200'
-          - '5211'
-          - '5231'
-          - '5251'
-          - '5261'
-          - '5262'
-          - '5271'
-          - '5300'
-          - '5309'
-          - '5310'
-          - '5311'
-          - '5331'
-          - '5399'
-          - '5411'
-          - '5422'
-          - '5441'
-          - '5451'
-          - '5462'
-          - '5499'
-          - '5511'
-          - '5521'
-          - '5531'
-          - '5532'
-          - '5533'
-          - '5541'
-          - '5542'
-          - '5551'
-          - '5552'
-          - '5561'
-          - '5571'
-          - '5592'
-          - '5598'
-          - '5599'
-          - '5611'
-          - '5621'
-          - '5631'
-          - '5641'
-          - '5651'
-          - '5655'
-          - '5661'
-          - '5681'
-          - '5691'
-          - '5697'
-          - '5698'
-          - '5699'
-          - '5712'
-          - '5713'
-          - '5714'
-          - '5718'
-          - '5719'
-          - '5722'
-          - '5732'
-          - '5733'
-          - '5734'
-          - '5735'
-          - '5811'
-          - '5812'
-          - '5813'
-          - '5814'
-          - '5815'
-          - '5816'
-          - '5817'
-          - '5818'
-          - '5912'
-          - '5921'
-          - '5931'
-          - '5932'
-          - '5933'
-          - '5935'
-          - '5937'
-          - '5940'
-          - '5941'
-          - '5942'
-          - '5943'
-          - '5944'
-          - '5945'
-          - '5946'
-          - '5947'
-          - '5948'
-          - '5949'
-          - '5950'
-          - '5960'
-          - '5962'
-          - '5963'
-          - '5964'
-          - '5965'
-          - '5966'
-          - '5967'
-          - '5968'
-          - '5969'
-          - '5970'
-          - '5971'
-          - '5972'
-          - '5973'
-          - '5975'
-          - '5976'
-          - '5977'
-          - '5978'
-          - '5983'
-          - '5992'
-          - '5993'
-          - '5994'
-          - '5995'
-          - '5996'
-          - '5997'
-          - '5998'
-          - '5999'
-          - '6010'
-          - '6011'
-          - '6012'
-          - '6051'
-          - '6052'
-          - '6053'
-          - '6054'
-          - '6055'
-          - '6056'
-          - '6057'
-          - '6058'
-          - '6059'
-          - '6060'
-          - '6061'
-          - '6062'
-          - '6063'
-          - '6064'
-          - '6065'
-          - '6066'
-          - '6211'
-          - '6300'
-          - '6399'
-          - '6513'
-          - '6530'
-          - '6540'
-          - '7011'
-          - '7012'
-          - '7032'
-          - '7033'
-          - '7210'
-          - '7211'
-          - '7216'
-          - '7217'
-          - '7221'
-          - '7230'
-          - '7251'
-          - '7261'
-          - '7273'
-          - '7276'
-          - '7277'
-          - '7278'
-          - '7296'
-          - '7297'
-          - '7298'
-          - '7299'
-          - '7311'
-          - '7321'
-          - '7333'
-          - '7338'
-          - '7339'
-          - '7342'
-          - '7349'
-          - '7361'
-          - '7372'
-          - '7375'
-          - '7379'
-          - '7392'
-          - '7393'
-          - '7394'
-          - '7395'
-          - '7399'
-          - '7511'
-          - '7512'
-          - '7513'
-          - '7519'
-          - '7523'
-          - '7531'
-          - '7534'
-          - '7535'
-          - '7538'
-          - '7542'
-          - '7549'
-          - '7622'
-          - '7623'
-          - '7629'
-          - '7631'
-          - '7641'
-          - '7692'
-          - '7699'
-          - '7800'
-          - '7801'
-          - '7802'
-          - '7829'
-          - '7832'
-          - '7841'
-          - '7911'
-          - '7922'
-          - '7929'
-          - '7932'
-          - '7933'
-          - '7941'
-          - '7991'
-          - '7992'
-          - '7993'
-          - '7994'
-          - '7995'
-          - '7996'
-          - '7997'
-          - '7998'
-          - '7999'
-          - '8011'
-          - '8021'
-          - '8031'
-          - '8041'
-          - '8042'
-          - '8043'
-          - '8049'
-          - '8050'
-          - '8062'
-          - '8071'
-          - '8099'
-          - '8111'
-          - '8211'
-          - '8220'
-          - '8241'
-          - '8244'
-          - '8249'
-          - '8299'
-          - '8351'
-          - '8398'
-          - '8641'
-          - '8651'
-          - '8661'
-          - '8675'
-          - '8699'
-          - '8734'
-          - '8911'
-          - '8931'
-          - '8999'
-          - '9211'
-          - '9222'
-          - '9223'
-          - '9311'
-          - '9399'
-          - '9402'
-          - '9405'
-          - '9406'
-          - '9702'
-          - '9950'
-          example: '6060'
-        primary_bank_account_bban:
-          type: string
-          description: The primary bank account of the client.
-          example: 123456-123123123
-        registered_address:
-          type: string
-          description: The registered address of the client.
-          example: 123 Street, City, Country
-        risk_level:
-          type: string
-          description: The risk level of the client according to agreed KYC/AML policies with Zepto.
-          enum:
-          - low
-          - medium
-          - high
-          example: low
-        type:
-          type: string
-          description: The structure type of the client, either 'business' or 'individual'. This will alter which fields are required.
-          enum:
-          - business
-          - individual
-          example: business
-        website_url:
-          type: string
-          description: The website URL of the client.
-          example: https://example.com
-        services:
-          type: array
-          description: Platform services provided by Zepto that the client requires access to. Sub-clients can only use services enabled on the parent account.<br /> PayTo - Includes PayTo mandates and payments<br /> RTP - Includes PayID payments, payouts and refunds<br /> DE - Includes Direct Debit payment requests and Direct Credit payouts<br />
-          items:
-            type: string
-            enum:
-            - payto
-            - rtp
-            - de
     clients.client_update_request:
       type: object
       additionalProperties: false
@@ -1171,6 +304,39 @@ components:
           type: string
           description: The website URL of the client.
           example: https://example.com
+    clients.errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              title:
+                type: string
+                example: Title of error
+              detail:
+                type: string
+                description: A short description of the error
+                example: Description of error
+              links:
+                type:
+                - object
+                - 'null'
+                properties:
+                  about:
+                    type: string
+                    description: An optional link to more information on the error
+                    example: https://docs.zeptopayments.com/docs/zepto-environments
+                required:
+                - about
+            required:
+            - title
+            - detail
+      required:
+      - errors
     clients.client_request:
       type: object
       oneOf:
@@ -1181,6 +347,20 @@ components:
         mapping:
           business: '#/components/schemas/clients.client_business_request'
           individual: '#/components/schemas/clients.client_individual_request'
+    clients.list:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              description: URL for next page of results. Won't be present if there are no further pages.
+          example: {}
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/clients.client_response'
     clients.client_response:
       type: object
       additionalProperties: false
@@ -1653,31 +833,855 @@ components:
           - 'null'
           description: The website URL of the client.
           example: https://example.com
-    clients.list:
+    clients.client_individual_request:
       type: object
+      required:
+      - business_names
+      - legal_name
+      - merchant_category_code
+      - registered_address
+      - risk_level
+      - services
+      - type
+      additionalProperties: false
       properties:
-        links:
-          type: object
-          properties:
-            next:
-              type: string
-              description: URL for next page of results. Won't be present if there are no further pages.
-          example: {}
-        data:
+        business_names:
           type: array
+          description: For `individual` clients, provide the client's legal name.
           items:
-            $ref: '#/components/schemas/clients.client_response'
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+            type: string
+          example:
+          - Business Name 1
+          - Business Name 2
+        contact_information:
+          type: object
+          description: The contact information of the client. Required if RTP services requested.
+          properties:
+            contact_name:
+              type: string
+              description: 'The contact name for the client. Required if RTP services requested. '
+              example: Contact Name
+            email:
+              type: string
+              description: The contact email address for the client. Required if RTP services requested.
+              example: contact@example.com
+            phone:
+              type: string
+              description: The contact phone number for the client. Required if RTP services requested.
+              example: '+61400000000'
+              pattern: \A[\d\s\-\+\(\)]+\z
+        legal_name:
+          type: string
+          description: The legal name of the client.
+          example: Legal Name Pty Ltd
+        merchant_category_code:
+          type: string
+          description: The Merchant Category Code (MCC) of the client.
+          enum:
+          - '0742'
+          - '0763'
+          - 0780
+          - '1520'
+          - '1711'
+          - '1731'
+          - '1740'
+          - '1750'
+          - '1761'
+          - '1771'
+          - '1799'
+          - '2741'
+          - '2791'
+          - '2842'
+          - '4011'
+          - '4111'
+          - '4112'
+          - '4119'
+          - '4121'
+          - '4131'
+          - '4214'
+          - '4215'
+          - '4225'
+          - '4411'
+          - '4457'
+          - '4468'
+          - '4511'
+          - '4582'
+          - '4722'
+          - '4723'
+          - '4784'
+          - '4789'
+          - '4812'
+          - '4814'
+          - '4816'
+          - '4821'
+          - '4829'
+          - '4899'
+          - '4900'
+          - '5013'
+          - '5021'
+          - '5039'
+          - '5044'
+          - '5045'
+          - '5046'
+          - '5047'
+          - '5051'
+          - '5065'
+          - '5072'
+          - '5074'
+          - '5085'
+          - '5094'
+          - '5099'
+          - '5111'
+          - '5122'
+          - '5131'
+          - '5137'
+          - '5139'
+          - '5169'
+          - '5172'
+          - '5192'
+          - '5193'
+          - '5198'
+          - '5199'
+          - '5200'
+          - '5211'
+          - '5231'
+          - '5251'
+          - '5261'
+          - '5262'
+          - '5271'
+          - '5300'
+          - '5309'
+          - '5310'
+          - '5311'
+          - '5331'
+          - '5399'
+          - '5411'
+          - '5422'
+          - '5441'
+          - '5451'
+          - '5462'
+          - '5499'
+          - '5511'
+          - '5521'
+          - '5531'
+          - '5532'
+          - '5533'
+          - '5541'
+          - '5542'
+          - '5551'
+          - '5552'
+          - '5561'
+          - '5571'
+          - '5592'
+          - '5598'
+          - '5599'
+          - '5611'
+          - '5621'
+          - '5631'
+          - '5641'
+          - '5651'
+          - '5655'
+          - '5661'
+          - '5681'
+          - '5691'
+          - '5697'
+          - '5698'
+          - '5699'
+          - '5712'
+          - '5713'
+          - '5714'
+          - '5718'
+          - '5719'
+          - '5722'
+          - '5732'
+          - '5733'
+          - '5734'
+          - '5735'
+          - '5811'
+          - '5812'
+          - '5813'
+          - '5814'
+          - '5815'
+          - '5816'
+          - '5817'
+          - '5818'
+          - '5912'
+          - '5921'
+          - '5931'
+          - '5932'
+          - '5933'
+          - '5935'
+          - '5937'
+          - '5940'
+          - '5941'
+          - '5942'
+          - '5943'
+          - '5944'
+          - '5945'
+          - '5946'
+          - '5947'
+          - '5948'
+          - '5949'
+          - '5950'
+          - '5960'
+          - '5962'
+          - '5963'
+          - '5964'
+          - '5965'
+          - '5966'
+          - '5967'
+          - '5968'
+          - '5969'
+          - '5970'
+          - '5971'
+          - '5972'
+          - '5973'
+          - '5975'
+          - '5976'
+          - '5977'
+          - '5978'
+          - '5983'
+          - '5992'
+          - '5993'
+          - '5994'
+          - '5995'
+          - '5996'
+          - '5997'
+          - '5998'
+          - '5999'
+          - '6010'
+          - '6011'
+          - '6012'
+          - '6051'
+          - '6052'
+          - '6053'
+          - '6054'
+          - '6055'
+          - '6056'
+          - '6057'
+          - '6058'
+          - '6059'
+          - '6060'
+          - '6061'
+          - '6062'
+          - '6063'
+          - '6064'
+          - '6065'
+          - '6066'
+          - '6211'
+          - '6300'
+          - '6399'
+          - '6513'
+          - '6530'
+          - '6540'
+          - '7011'
+          - '7012'
+          - '7032'
+          - '7033'
+          - '7210'
+          - '7211'
+          - '7216'
+          - '7217'
+          - '7221'
+          - '7230'
+          - '7251'
+          - '7261'
+          - '7273'
+          - '7276'
+          - '7277'
+          - '7278'
+          - '7296'
+          - '7297'
+          - '7298'
+          - '7299'
+          - '7311'
+          - '7321'
+          - '7333'
+          - '7338'
+          - '7339'
+          - '7342'
+          - '7349'
+          - '7361'
+          - '7372'
+          - '7375'
+          - '7379'
+          - '7392'
+          - '7393'
+          - '7394'
+          - '7395'
+          - '7399'
+          - '7511'
+          - '7512'
+          - '7513'
+          - '7519'
+          - '7523'
+          - '7531'
+          - '7534'
+          - '7535'
+          - '7538'
+          - '7542'
+          - '7549'
+          - '7622'
+          - '7623'
+          - '7629'
+          - '7631'
+          - '7641'
+          - '7692'
+          - '7699'
+          - '7800'
+          - '7801'
+          - '7802'
+          - '7829'
+          - '7832'
+          - '7841'
+          - '7911'
+          - '7922'
+          - '7929'
+          - '7932'
+          - '7933'
+          - '7941'
+          - '7991'
+          - '7992'
+          - '7993'
+          - '7994'
+          - '7995'
+          - '7996'
+          - '7997'
+          - '7998'
+          - '7999'
+          - '8011'
+          - '8021'
+          - '8031'
+          - '8041'
+          - '8042'
+          - '8043'
+          - '8049'
+          - '8050'
+          - '8062'
+          - '8071'
+          - '8099'
+          - '8111'
+          - '8211'
+          - '8220'
+          - '8241'
+          - '8244'
+          - '8249'
+          - '8299'
+          - '8351'
+          - '8398'
+          - '8641'
+          - '8651'
+          - '8661'
+          - '8675'
+          - '8699'
+          - '8734'
+          - '8911'
+          - '8931'
+          - '8999'
+          - '9211'
+          - '9222'
+          - '9223'
+          - '9311'
+          - '9399'
+          - '9402'
+          - '9405'
+          - '9406'
+          - '9702'
+          - '9950'
+          example: '6060'
+        primary_bank_account_bban:
+          type: string
+          description: The primary bank account of the client.
+          example: 123456-123123123
+        registered_address:
+          type: string
+          description: The registered address of the client.
+          example: 123 Street, City, Country
+        risk_level:
+          type: string
+          description: The risk level of the client according to agreed KYC/AML policies with Zepto.
+          enum:
+          - low
+          - medium
+          - high
+          example: low
+        services:
+          type: array
+          description: Platform services provided by Zepto that the client requires access to. Sub-clients can only use services enabled on the parent account. <br /> `rtp` is not available for `individual` types.
+          properties:
+            de:
+              type:
+              - string
+              - 'null'
+              description: The DE service of the client.
+              enum:
+              - pending
+              - active
+              - suspended
+              - off_boarded
+              example: null
+            payto:
+              type:
+              - string
+              - 'null'
+              description: The PayTo service of the client.
+              enum:
+              - pending
+              - active
+              - suspended
+              - off_boarded
+              example: active
+            rtp:
+              type:
+              - string
+              - 'null'
+              description: The RTP service of the client.
+              enum:
+              - pending
+              - active
+              - suspended
+              - off_boarded
+              example: pending
+          items:
+            type: string
+            enum:
+            - payto
+            - rtp
+            - de
+        type:
+          type: string
+          description: The structure type of the client, either 'business' or 'individual'. This will alter which fields are required. Type `individual` is restricted by default, please contact Zepto for information on enabling.
+          enum:
+          - business
+          - individual
+          example: business
+    clients.client_business_request:
+      type: object
+      required:
+      - australian_business_number
+      - business_names
+      - business_registration_date
+      - legal_name
+      - merchant_category_code
+      - registered_address
+      - risk_level
+      - services
+      - type
+      - website_url
+      additionalProperties: false
+      properties:
+        austrac_number:
+          type: string
+          description: The AUSTRAC number of the client (if applicable).
+          example: '1234567'
+        australian_business_number:
+          type: string
+          description: The Australian Business Number (ABN) of the client.
+          example: '12345678901'
+          pattern: \A\d{11}\z
+        australian_company_number:
+          type: string
+          description: The Australian Company Number(ACN) of the client. Corresponding `company_incorporation_date` is required when provided.
+          example: 045678901
+          pattern: \A\d{9}\z
+        australian_credit_licence:
+          type: string
+          description: The Australian Credit Licence of the client (if applicable).
+          example: '123456'
+        australian_financial_services_licence:
+          type: string
+          description: The Australian Financial Services Licence of the client (if applicable).
+          example: '777888999'
+        business_names:
+          type: array
+          description: The business/trading names registered to the client's legal entity.
+          items:
+            type: string
+          example:
+          - Business Name 1
+          - Business Name 2
+        business_registration_date:
+          type: string
+          description: The business registration date of the client.
+          format: date
+          example: '2025-02-01'
+        company_incorporation_date:
+          type: string
+          description: The company incorporation date of the client, must correspond to ACN registration.
+          format: date
+          example: '2025-02-01'
+        contact_information:
+          type: object
+          description: The contact information of the client. Required if RTP services requested.
+          properties:
+            contact_name:
+              type: string
+              description: 'The contact name for the client. Required if RTP services requested. '
+              example: Contact Name
+            email:
+              type: string
+              description: The contact email address for the client. Required if RTP services requested.
+              example: contact@example.com
+            phone:
+              type: string
+              description: The contact phone number for the client. Required if RTP services requested.
+              example: '+61400123456'
+              pattern: \A[\d\s\-\+\(\)]+\z
+        legal_name:
+          type: string
+          description: The legal name of the client.
+          example: Legal Name Pty Ltd
+        merchant_category_code:
+          type: string
+          description: The Merchant Category Code (MCC) of the client.
+          enum:
+          - '0742'
+          - '0763'
+          - 0780
+          - '1520'
+          - '1711'
+          - '1731'
+          - '1740'
+          - '1750'
+          - '1761'
+          - '1771'
+          - '1799'
+          - '2741'
+          - '2791'
+          - '2842'
+          - '4011'
+          - '4111'
+          - '4112'
+          - '4119'
+          - '4121'
+          - '4131'
+          - '4214'
+          - '4215'
+          - '4225'
+          - '4411'
+          - '4457'
+          - '4468'
+          - '4511'
+          - '4582'
+          - '4722'
+          - '4723'
+          - '4784'
+          - '4789'
+          - '4812'
+          - '4814'
+          - '4816'
+          - '4821'
+          - '4829'
+          - '4899'
+          - '4900'
+          - '5013'
+          - '5021'
+          - '5039'
+          - '5044'
+          - '5045'
+          - '5046'
+          - '5047'
+          - '5051'
+          - '5065'
+          - '5072'
+          - '5074'
+          - '5085'
+          - '5094'
+          - '5099'
+          - '5111'
+          - '5122'
+          - '5131'
+          - '5137'
+          - '5139'
+          - '5169'
+          - '5172'
+          - '5192'
+          - '5193'
+          - '5198'
+          - '5199'
+          - '5200'
+          - '5211'
+          - '5231'
+          - '5251'
+          - '5261'
+          - '5262'
+          - '5271'
+          - '5300'
+          - '5309'
+          - '5310'
+          - '5311'
+          - '5331'
+          - '5399'
+          - '5411'
+          - '5422'
+          - '5441'
+          - '5451'
+          - '5462'
+          - '5499'
+          - '5511'
+          - '5521'
+          - '5531'
+          - '5532'
+          - '5533'
+          - '5541'
+          - '5542'
+          - '5551'
+          - '5552'
+          - '5561'
+          - '5571'
+          - '5592'
+          - '5598'
+          - '5599'
+          - '5611'
+          - '5621'
+          - '5631'
+          - '5641'
+          - '5651'
+          - '5655'
+          - '5661'
+          - '5681'
+          - '5691'
+          - '5697'
+          - '5698'
+          - '5699'
+          - '5712'
+          - '5713'
+          - '5714'
+          - '5718'
+          - '5719'
+          - '5722'
+          - '5732'
+          - '5733'
+          - '5734'
+          - '5735'
+          - '5811'
+          - '5812'
+          - '5813'
+          - '5814'
+          - '5815'
+          - '5816'
+          - '5817'
+          - '5818'
+          - '5912'
+          - '5921'
+          - '5931'
+          - '5932'
+          - '5933'
+          - '5935'
+          - '5937'
+          - '5940'
+          - '5941'
+          - '5942'
+          - '5943'
+          - '5944'
+          - '5945'
+          - '5946'
+          - '5947'
+          - '5948'
+          - '5949'
+          - '5950'
+          - '5960'
+          - '5962'
+          - '5963'
+          - '5964'
+          - '5965'
+          - '5966'
+          - '5967'
+          - '5968'
+          - '5969'
+          - '5970'
+          - '5971'
+          - '5972'
+          - '5973'
+          - '5975'
+          - '5976'
+          - '5977'
+          - '5978'
+          - '5983'
+          - '5992'
+          - '5993'
+          - '5994'
+          - '5995'
+          - '5996'
+          - '5997'
+          - '5998'
+          - '5999'
+          - '6010'
+          - '6011'
+          - '6012'
+          - '6051'
+          - '6052'
+          - '6053'
+          - '6054'
+          - '6055'
+          - '6056'
+          - '6057'
+          - '6058'
+          - '6059'
+          - '6060'
+          - '6061'
+          - '6062'
+          - '6063'
+          - '6064'
+          - '6065'
+          - '6066'
+          - '6211'
+          - '6300'
+          - '6399'
+          - '6513'
+          - '6530'
+          - '6540'
+          - '7011'
+          - '7012'
+          - '7032'
+          - '7033'
+          - '7210'
+          - '7211'
+          - '7216'
+          - '7217'
+          - '7221'
+          - '7230'
+          - '7251'
+          - '7261'
+          - '7273'
+          - '7276'
+          - '7277'
+          - '7278'
+          - '7296'
+          - '7297'
+          - '7298'
+          - '7299'
+          - '7311'
+          - '7321'
+          - '7333'
+          - '7338'
+          - '7339'
+          - '7342'
+          - '7349'
+          - '7361'
+          - '7372'
+          - '7375'
+          - '7379'
+          - '7392'
+          - '7393'
+          - '7394'
+          - '7395'
+          - '7399'
+          - '7511'
+          - '7512'
+          - '7513'
+          - '7519'
+          - '7523'
+          - '7531'
+          - '7534'
+          - '7535'
+          - '7538'
+          - '7542'
+          - '7549'
+          - '7622'
+          - '7623'
+          - '7629'
+          - '7631'
+          - '7641'
+          - '7692'
+          - '7699'
+          - '7800'
+          - '7801'
+          - '7802'
+          - '7829'
+          - '7832'
+          - '7841'
+          - '7911'
+          - '7922'
+          - '7929'
+          - '7932'
+          - '7933'
+          - '7941'
+          - '7991'
+          - '7992'
+          - '7993'
+          - '7994'
+          - '7995'
+          - '7996'
+          - '7997'
+          - '7998'
+          - '7999'
+          - '8011'
+          - '8021'
+          - '8031'
+          - '8041'
+          - '8042'
+          - '8043'
+          - '8049'
+          - '8050'
+          - '8062'
+          - '8071'
+          - '8099'
+          - '8111'
+          - '8211'
+          - '8220'
+          - '8241'
+          - '8244'
+          - '8249'
+          - '8299'
+          - '8351'
+          - '8398'
+          - '8641'
+          - '8651'
+          - '8661'
+          - '8675'
+          - '8699'
+          - '8734'
+          - '8911'
+          - '8931'
+          - '8999'
+          - '9211'
+          - '9222'
+          - '9223'
+          - '9311'
+          - '9399'
+          - '9402'
+          - '9405'
+          - '9406'
+          - '9702'
+          - '9950'
+          example: '6060'
+        primary_bank_account_bban:
+          type: string
+          description: The primary bank account of the client.
+          example: 123456-123123123
+        registered_address:
+          type: string
+          description: The registered address of the client.
+          example: 123 Street, City, Country
+        risk_level:
+          type: string
+          description: The risk level of the client according to agreed KYC/AML policies with Zepto.
+          enum:
+          - low
+          - medium
+          - high
+          example: low
+        type:
+          type: string
+          description: The structure type of the client, either 'business' or 'individual'. This will alter which fields are required.
+          enum:
+          - business
+          - individual
+          example: business
+        website_url:
+          type: string
+          description: The website URL of the client.
+          example: https://example.com
+        services:
+          type: array
+          description: Platform services provided by Zepto that the client requires access to. Sub-clients can only use services enabled on the parent account.<br /> PayTo - Includes PayTo mandates and payments<br /> RTP - Includes PayID payments, payouts and refunds<br /> DE - Includes Direct Debit payment requests and Direct Credit payouts<br />
+          items:
+            type: string
+            enum:
+            - payto
+            - rtp
+            - de
   securitySchemes:
     bearerAuth:
       type: http

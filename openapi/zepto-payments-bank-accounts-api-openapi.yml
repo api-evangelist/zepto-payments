@@ -14,9 +14,7 @@ security:
 - bearerAuth: []
 tags:
 - name: Bank Accounts
-  description: 'Your currently linked up bank accounts.
-
-    '
+  description: Your currently linked up bank accounts.
 paths:
   /bank_accounts:
     parameters:
@@ -25,9 +23,7 @@ paths:
       tags:
       - Bank Accounts
       summary: List all Bank Accounts
-      description: 'By default, all Bank Accounts will be returned.
-
-        '
+      description: By default, all Bank Accounts will be returned.
       operationId: ListAllBankAccounts
       responses:
         '200':
@@ -232,18 +228,76 @@ paths:
         '404':
           description: Not Found - the Bank Account or entry is unavailable, the entry is outside the rolling 24-month availability window, or the Bank Account is not a Float Account
 components:
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
       schema:
         type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
+    BankAccount:
+      title: Bank Account
+      type: object
+      required:
+      - account_type
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique Bank Account ID
+        account_type:
+          type: string
+          description: Distinguishes Float Accounts from other Bank Accounts
+          enum:
+          - bank_account
+          - float_account
+        branch_code:
+          type: string
+          description: Bank State Branch code
+        bank_name:
+          type: string
+          description: Name of the financial institution
+        account_number:
+          type: string
+          description: Bank account number
+        status:
+          type: string
+          description: Current Bank Account status
+          enum:
+          - active
+          - removed
+        title:
+          type: string
+          description: Display title for the Bank Account
+        available_balance:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: Current available balance in cents for a Float Account; null for other Bank Accounts
+        payid_configs:
+          type: array
+          description: PayID pooling configurations associated with the Float Account
+          items:
+            type: object
+            properties:
+              email_domain:
+                type: string
+              pooling_state:
+                type: string
+                enum:
+                - disabled
+                - enabled
+                - paused
+              max_pool_size:
+                type: integer
+              current_pool_size:
+                type: integer
     GetABankAccountResponse:
       title: Get a Bank Account (response)
       required:
@@ -275,6 +329,16 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/FloatAccountEntry'
+    ListFloatAccountEntriesResponse:
+      title: List Float Account entries (response)
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FloatAccountEntry'
     FloatAccountEntry:
       title: Float Account entry
       type: object
@@ -364,85 +428,17 @@ components:
             pooling_state: disabled
             max_pool_size: 10
             current_pool_size: 1
-    ListFloatAccountEntriesResponse:
-      title: List Float Account entries (response)
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FloatAccountEntry'
-    BankAccount:
-      title: Bank Account
-      type: object
-      required:
-      - account_type
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique Bank Account ID
-        account_type:
-          type: string
-          description: Distinguishes Float Accounts from other Bank Accounts
-          enum:
-          - bank_account
-          - float_account
-        branch_code:
-          type: string
-          description: Bank State Branch code
-        bank_name:
-          type: string
-          description: Name of the financial institution
-        account_number:
-          type: string
-          description: Bank account number
-        status:
-          type: string
-          description: Current Bank Account status
-          enum:
-          - active
-          - removed
-        title:
-          type: string
-          description: Display title for the Bank Account
-        available_balance:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: Current available balance in cents for a Float Account; null for other Bank Accounts
-        payid_configs:
-          type: array
-          description: PayID pooling configurations associated with the Float Account
-          items:
-            type: object
-            properties:
-              email_domain:
-                type: string
-              pooling_state:
-                type: string
-                enum:
-                - disabled
-                - enabled
-                - paused
-              max_pool_size:
-                type: integer
-              current_pool_size:
-                type: integer
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
+  headers:
+    Link:
       schema:
         type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   securitySchemes:
     bearerAuth:
       type: oauth2

@@ -14,9 +14,7 @@ security:
 - bearerAuth: []
 tags:
 - name: Refunds
-  description: '
-
-    Refunds can be issued for any successfully completed Payment Request transaction. This includes:
+  description: 'Refunds can be issued for any successfully completed Payment Request transaction. This includes:
 
 
     1. Payment Requests for direct debit payments **(Collections)**:
@@ -24,9 +22,7 @@ tags:
     2. Payment Requests for funds received via DE/NPP **(Receivables)**:
 
 
-    This allows you to return any funds that were previously collected or received into one of your bank/float accounts.
-
-    '
+    This allows you to return any funds that were previously collected or received into one of your bank/float accounts.'
 paths:
   /credits/{credit_ref}/refunds:
     parameters:
@@ -35,7 +31,19 @@ paths:
       tags:
       - Refunds
       summary: Issue a Refund
-      description: "Certain rules apply to the issuance of a refund:\n<ul>\n  <li>Must be applied against a successfully cleared Payment Request (Collections or Receivables)</li>\n  <li>Many refunds may be created against the original Payment Request</li>\n  <li>The total refunded amount must not exceed the original value</li>\n</ul>\n<aside class=\"notice\">We now require supplying an <code>Idempotency-Key</code> header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate refunds. To understand more on how to make idempotent requests, please refer to our <a href=\"https://docs.zeptopayments.com/v20260101/reference/idempotent-requests\">Idempotent requests guide</a>.</aside>\n"
+      description: 'Certain rules apply to the issuance of a refund:
+
+
+        Must be applied against a successfully cleared Payment Request (Collections or Receivables)
+
+
+        Many refunds may be created against the original Payment Request
+
+
+        The total refunded amount must not exceed the original value
+
+
+        We now require supplying an Idempotency-Key header when performing this request to ensure you can safely retry the action in case of an issue. If the header value is different to one provided previously, we will be treating a request as a new operation which may lead to duplicate refunds. To understand more on how to make idempotent requests, please refer to our Idempotent requests guide.'
       operationId: IssueARefund
       parameters:
       - name: Idempotency-Key
@@ -129,26 +137,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/RetrieveARefundResponse'
 components:
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
       schema:
         type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
     IssueARefundResponse:
       title: Issue a Refund (response)
       type: object
@@ -219,6 +219,49 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
+    IssueARefundRequest:
+      title: Issue a Refund (request)
+      required:
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
+          example: 500
+        channels:
+          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
+          type: array
+        reason:
+          type: string
+          pattern: ^[ -~]+$
+          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
+          example: Because reason
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        amount: 500
+        channels:
+        - direct_entry
+        reason: Because reason
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
     RetrieveARefundResponse:
       title: Retrieve a Refund (response)
       required:
@@ -262,52 +305,17 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
-    IssueARefundRequest:
-      title: Issue a Refund (request)
-      required:
-      - amount
-      type: object
-      properties:
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
-          example: 500
-        channels:
-          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
-          type: array
-        reason:
-          type: string
-          pattern: ^[ -~]+$
-          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
-          example: Because reason
-        your_bank_account_id:
-          type: string
-          format: uuid
-          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-      example:
-        amount: 500
-        channels:
-        - direct_entry
-        reason: Because reason
-        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
+  headers:
+    Link:
       schema:
         type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   securitySchemes:
     bearerAuth:
       type: oauth2

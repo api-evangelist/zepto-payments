@@ -44,9 +44,7 @@ paths:
       tags:
       - Sandbox Only
       summary: Simulate an incoming real-time payment
-      description: 'Simulate receiving a real-time payment to either a Receivable Contact or one of your float accounts, made using a BSB and account number (i.e. not via PayID).
-
-        '
+      description: Simulate receiving a real-time payment to either a Receivable Contact or one of your float accounts, made using a BSB and account number (i.e. not via PayID).
       operationId: SimulateIncomingNPPBBANPayment
       requestBody:
         description: ''
@@ -67,9 +65,7 @@ paths:
       tags:
       - Sandbox Only
       summary: Simulate an incoming DE payment
-      description: 'Simulate receiving a Direct Entry payment (i.e. not a real-time payment) to either a Receivable Contact or one of your float accounts.
-
-        '
+      description: Simulate receiving a Direct Entry payment (i.e. not a real-time payment) to either a Receivable Contact or one of your float accounts.
       operationId: SimulateIncomingDEPayment
       requestBody:
         description: ''
@@ -84,7 +80,63 @@ paths:
         '400':
           description: Invalid parameters
 components:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
+    SimulateIncomingPayIDPaymentRequest:
+      required:
+      - payid_email
+      - amount
+      type: object
+      properties:
+        payid_email:
+          type: string
+          minLength: 6
+          maxLength: 256
+          description: 'Receivable Contact PayID email (Min: 6 - Max: 256)'
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+        payment_description:
+          type: string
+          description: 'Default:  "Simulated PayID payment"'
+        payment_reference:
+          type: string
+          description: 'Default:  "simulated-payid-payment"'
+        from_bsb:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: 'Default: "014209"'
+        from_account_number:
+          type: string
+          minLength: 1
+          maxLength: 9
+          description: 'Default: "12345678"'
+        debtor_name:
+          type: string
+          pattern: ^[ -~]+$
+          minLength: 1
+          description: 'Default:  "Simulated Debtor"'
+        debtor_legal_name:
+          type: string
+          minLength: 1
+          pattern: ^[ -~]+$
+          description: 'Default:  "Simulated Debtor Pty Ltd"'
+      example:
+        payid_email: incoming@zeptopayments.com
+        amount: 10000
     SimulateIncomingNPPBBANPaymentRequest:
       required:
       - to_bsb
@@ -137,51 +189,6 @@ components:
         to_bsb: '802919'
         to_account_number: '88888888'
         amount: 10000
-    SimulateIncomingPayIDPaymentRequest:
-      required:
-      - payid_email
-      - amount
-      type: object
-      properties:
-        payid_email:
-          type: string
-          minLength: 6
-          maxLength: 256
-          description: 'Receivable Contact PayID email (Min: 6 - Max: 256)'
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
-        payment_description:
-          type: string
-          description: 'Default:  "Simulated PayID payment"'
-        payment_reference:
-          type: string
-          description: 'Default:  "simulated-payid-payment"'
-        from_bsb:
-          type: string
-          minLength: 6
-          maxLength: 6
-          description: 'Default: "014209"'
-        from_account_number:
-          type: string
-          minLength: 1
-          maxLength: 9
-          description: 'Default: "12345678"'
-        debtor_name:
-          type: string
-          pattern: ^[ -~]+$
-          minLength: 1
-          description: 'Default:  "Simulated Debtor"'
-        debtor_legal_name:
-          type: string
-          minLength: 1
-          pattern: ^[ -~]+$
-          description: 'Default:  "Simulated Debtor Pty Ltd"'
-      example:
-        payid_email: incoming@zeptopayments.com
-        amount: 10000
     SimulateIncomingDEPaymentRequest:
       required:
       - to_bsb
@@ -228,17 +235,6 @@ components:
         to_bsb: '802919'
         to_account_number: '88888888'
         amount: 10000
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   securitySchemes:
     bearerAuth:
       type: oauth2
