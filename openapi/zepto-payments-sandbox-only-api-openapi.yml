@@ -80,17 +80,6 @@ paths:
         '400':
           description: Invalid parameters
 components:
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
     SimulateIncomingPayIDPaymentRequest:
       required:
@@ -235,6 +224,17 @@ components:
         to_bsb: '802919'
         to_account_number: '88888888'
         amount: 10000
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   securitySchemes:
     bearerAuth:
       type: oauth2

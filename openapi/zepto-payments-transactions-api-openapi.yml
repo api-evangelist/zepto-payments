@@ -239,18 +239,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListAllTransactionsResponse'
 components:
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
     Failure:
       title: Failure object (see [Transaction/Failure codes](#failure-codes) for more info)
       required:
@@ -434,14 +431,6 @@ components:
         metadata:
           customer_id: xur4492
           product_ref: TSXL392110x
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
     ListAllTransactionsResponse:
       title: List all transactions (response)
       required:
@@ -518,17 +507,28 @@ components:
           metadata:
             customer_id: xur4492
             product_ref: TSXL392110x
-  headers:
-    Link:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
       schema:
         type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  headers:
     Per-Page:
       schema:
         type: integer
       description: Contains the current maximum items in collection. Defaults to 25
       example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
   securitySchemes:
     bearerAuth:
       type: oauth2

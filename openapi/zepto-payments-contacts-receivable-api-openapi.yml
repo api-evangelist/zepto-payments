@@ -204,18 +204,27 @@ paths:
         '404':
           description: Not Found
 components:
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    UpdateAReceivableContactRequest:
+      title: Update a Receivable Contact (request)
+      type: object
+      required:
+      - payid_name
+      properties:
+        payid_name:
+          type: string
+          pattern: ^[ -~]+$
+          description: The PayID name of the Receivable Contact
+      example:
+        payid_name: Bob Smith
     AddAReceivableContactResponse:
       title: Add a Receivable Contact (response)
       type: object
@@ -343,26 +352,6 @@ components:
             alias_type: email
             alias_name: your merchant's alias_name
             state: pending
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
-    UpdateAReceivableContactRequest:
-      title: Update a Receivable Contact (request)
-      type: object
-      required:
-      - payid_name
-      properties:
-        payid_name:
-          type: string
-          pattern: ^[ -~]+$
-          description: The PayID name of the Receivable Contact
-      example:
-        payid_name: Bob Smith
     AddAReceivableContactRequest:
       title: Add a Receivable Contact (request)
       required:
@@ -400,6 +389,17 @@ components:
         metadata:
           custom_key: Custom string
           another_custom_key: Maybe a URL
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   securitySchemes:
     bearerAuth:
       type: oauth2

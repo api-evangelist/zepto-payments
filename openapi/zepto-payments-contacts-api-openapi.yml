@@ -219,60 +219,7 @@ paths:
         '404':
           description: Not Found
 components:
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
-    AddAnAnyoneContactRequest:
-      title: Add a Contact (request)
-      required:
-      - name
-      - email
-      - branch_code
-      - account_number
-      type: object
-      properties:
-        name:
-          type: string
-          pattern: ^[ -~]+$
-          maxLength: 140
-          description: The name of the Contact (140 max. characters, ASCII characters only)
-        email:
-          type: string
-          maxLength: 256
-          description: The email of the Contact (256 max. characters)
-        branch_code:
-          type: string
-          description: The bank account BSB of the Contact
-        account_number:
-          type: string
-          description: The bank account number of the Contact
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-      example:
-        name: Hunter Thompson
-        email: hunter@batcountry.com
-        branch_code: '123456'
-        account_number: '13048322'
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
     ListAllContactsResponse:
       title: List all Contacts (response)
       required:
@@ -354,6 +301,48 @@ components:
               credits_blocked: false
           links:
             add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    AddAnAnyoneContactRequest:
+      title: Add a Contact (request)
+      required:
+      - name
+      - email
+      - branch_code
+      - account_number
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^[ -~]+$
+          maxLength: 140
+          description: The name of the Contact (140 max. characters, ASCII characters only)
+        email:
+          type: string
+          maxLength: 256
+          description: The email of the Contact (256 max. characters)
+        branch_code:
+          type: string
+          description: The bank account BSB of the Contact
+        account_number:
+          type: string
+          description: The bank account number of the Contact
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        name: Hunter Thompson
+        email: hunter@batcountry.com
+        branch_code: '123456'
+        account_number: '13048322'
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
     UpdateAContactRequest:
       title: Update a Contact (request)
       type: object
@@ -382,6 +371,36 @@ components:
         metadata:
           custom_key: Custom string
           another_custom_key: Maybe a URL
+    AddAnAnyoneContactResponse:
+      title: Add a Contact (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
+          name: Hunter Thompson
+          email: hunter@batcountry.com
+          type: anyone
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+          bank_account:
+            id: 55afddde-4296-4daf-8e49-7ba481ef9608
+            account_number: '13048322'
+            branch_code: '123456'
+            bank_name: National Australia Bank
+            state: active
+            iav_provider: null
+            iav_status: null
+            blocks:
+              debits_blocked: false
+              credits_blocked: false
+          links:
+            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
     UpdateAContactResponse:
       title: Update a Contact (response)
       required:
@@ -592,47 +611,28 @@ components:
             alias_type: email
             alias_name: your merchant's alias_name
             state: active
-    AddAnAnyoneContactResponse:
-      title: Add a Contact (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-      example:
-        data:
-          id: 6a7ed958-f1e8-42dc-8c02-3901d7057357
-          name: Hunter Thompson
-          email: hunter@batcountry.com
-          type: anyone
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-          bank_account:
-            id: 55afddde-4296-4daf-8e49-7ba481ef9608
-            account_number: '13048322'
-            branch_code: '123456'
-            bank_name: National Australia Bank
-            state: active
-            iav_provider: null
-            iav_status: null
-            blocks:
-              debits_blocked: false
-              credits_blocked: false
-          links:
-            add_bank_connection: https://go.sandbox.zeptopayments.com/invite_contact/thomas-morgan-1/1030bfef-cef5-4938-b10b-5841cafafc80
-  headers:
-    Link:
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
       schema:
         type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
+  headers:
     Per-Page:
       schema:
         type: integer
       description: Contains the current maximum items in collection. Defaults to 25
       example: 25
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
   securitySchemes:
     bearerAuth:
       type: oauth2
