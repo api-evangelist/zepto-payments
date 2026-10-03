@@ -229,61 +229,6 @@ paths:
           description: Not Found - the Bank Account or entry is unavailable, the entry is outside the rolling 24-month availability window, or the Bank Account is not a Float Account
 components:
   schemas:
-    FloatAccountEntry:
-      title: Float Account entry
-      type: object
-      required:
-      - id
-      - created_at
-      - description
-      - amount
-      - available_balance_after
-      - links
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique ID of the entry
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time in UTC when the entry was applied to the Float Account
-        description:
-          type: string
-          description: Description recorded for the entry
-        amount:
-          type: integer
-          format: int64
-          description: Signed amount in cents. Positive values are credits and negative values are debits.
-        available_balance_after:
-          type: integer
-          format: int64
-          description: Available balance in cents immediately after this entry was applied
-        links:
-          type: object
-          required:
-          - self
-          properties:
-            self:
-              type: string
-              format: uri
-              description: Canonical URL for this entry
-      example:
-        id: 019c8814-c767-753c-82f7-3daac44d8662
-        created_at: '2026-07-21T01:27:50Z'
-        description: CT.1uou2c
-        amount: -1250
-        available_balance_after: 84750
-        links:
-          self: https://api.sandbox.zeptopayments.com/bank_accounts/ab3de19b-709b-4a41-82a5-3b43b3dc58c9/entries/019c8814-c767-753c-82f7-3daac44d8662
-    GetFloatAccountEntryResponse:
-      title: Get a Float Account entry (response)
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/FloatAccountEntry'
     ListFloatAccountEntriesResponse:
       title: List Float Account entries (response)
       type: object
@@ -294,6 +239,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FloatAccountEntry'
+    GetABankAccountResponse:
+      title: Get a Bank Account (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BankAccount'
+      example:
+        data:
+          id: ab3de19b-709b-4a41-82a5-3b43b3dc58c9
+          account_type: float_account
+          branch_code: '802919'
+          bank_name: Zepto Float Account
+          account_number: '1748212'
+          status: active
+          title: Float Account
+          available_balance: 10000
+          payid_configs:
+          - email_domain: pay.zepto.com.au
+            pooling_state: disabled
+            max_pool_size: 10
+            current_pool_size: 1
     ListAllBankAccountsResponse:
       title: List all Bank Accounts (response)
       required:
@@ -394,29 +362,61 @@ components:
                 type: integer
               current_pool_size:
                 type: integer
-    GetABankAccountResponse:
-      title: Get a Bank Account (response)
+    FloatAccountEntry:
+      title: Float Account entry
+      type: object
+      required:
+      - id
+      - created_at
+      - description
+      - amount
+      - available_balance_after
+      - links
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the entry
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time in UTC when the entry was applied to the Float Account
+        description:
+          type: string
+          description: Description recorded for the entry
+        amount:
+          type: integer
+          format: int64
+          description: Signed amount in cents. Positive values are credits and negative values are debits.
+        available_balance_after:
+          type: integer
+          format: int64
+          description: Available balance in cents immediately after this entry was applied
+        links:
+          type: object
+          required:
+          - self
+          properties:
+            self:
+              type: string
+              format: uri
+              description: Canonical URL for this entry
+      example:
+        id: 019c8814-c767-753c-82f7-3daac44d8662
+        created_at: '2026-07-21T01:27:50Z'
+        description: CT.1uou2c
+        amount: -1250
+        available_balance_after: 84750
+        links:
+          self: https://api.sandbox.zeptopayments.com/bank_accounts/ab3de19b-709b-4a41-82a5-3b43b3dc58c9/entries/019c8814-c767-753c-82f7-3daac44d8662
+    GetFloatAccountEntryResponse:
+      title: Get a Float Account entry (response)
+      type: object
       required:
       - data
-      type: object
       properties:
         data:
-          $ref: '#/components/schemas/BankAccount'
-      example:
-        data:
-          id: ab3de19b-709b-4a41-82a5-3b43b3dc58c9
-          account_type: float_account
-          branch_code: '802919'
-          bank_name: Zepto Float Account
-          account_number: '1748212'
-          status: active
-          title: Float Account
-          available_balance: 10000
-          payid_configs:
-          - email_domain: pay.zepto.com.au
-            pooling_state: disabled
-            max_pool_size: 10
-            current_pool_size: 1
+          $ref: '#/components/schemas/FloatAccountEntry'
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version

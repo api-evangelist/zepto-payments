@@ -34,17 +34,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PingResponse'
 components:
-  parameters:
-    ZeptoAPIVersion:
-      name: Zepto-API-Version
-      in: header
-      required: false
-      schema:
-        type: string
-        pattern: ^\d{8}$
-        default: '20250101'
-        example: '20260101'
-      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   schemas:
     PingResponse:
       title: Ping (response)
@@ -56,6 +45,17 @@ components:
           type: string
       example:
         ping: pong
+  parameters:
+    ZeptoAPIVersion:
+      name: Zepto-API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: ^\d{8}$
+        default: '20250101'
+        example: '20260101'
+      description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
   securitySchemes:
     bearerAuth:
       type: oauth2

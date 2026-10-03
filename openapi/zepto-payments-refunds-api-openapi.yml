@@ -189,6 +189,41 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
+    IssueARefundRequest:
+      title: Issue a Refund (request)
+      required:
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
+          example: 500
+        channels:
+          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
+          type: array
+        reason:
+          type: string
+          pattern: ^[ -~]+$
+          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
+          example: Because reason
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        amount: 500
+        channels:
+        - direct_entry
+        reason: Because reason
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
     IssueARefundResponse:
       title: Issue a Refund (response)
       type: object
@@ -259,41 +294,6 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
-    IssueARefundRequest:
-      title: Issue a Refund (request)
-      required:
-      - amount
-      type: object
-      properties:
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
-          example: 500
-        channels:
-          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
-          type: array
-        reason:
-          type: string
-          pattern: ^[ -~]+$
-          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
-          example: Because reason
-        your_bank_account_id:
-          type: string
-          format: uuid
-          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-      example:
-        amount: 500
-        channels:
-        - direct_entry
-        reason: Because reason
-        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version

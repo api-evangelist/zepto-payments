@@ -444,6 +444,162 @@ webhooks:
           description: Successfully received webhook.
 components:
   schemas:
+    investigations.action_request.reject_request:
+      type: object
+      required:
+      - reason
+      additionalProperties: false
+      properties:
+        reason:
+          type: object
+          required:
+          - code
+          - description
+          additionalProperties: false
+          properties:
+            code:
+              type: string
+              description: The reason code for rejecting the request. It should be a valid value from the [ISO20022 ExternalRejectedReason1Code set](https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets).
+              enum:
+              - ADEA
+              - BDAY
+              - CTRC
+              - DPRG
+              - INDT
+              - MISM
+              - NAUT
+              - NINS
+              - NOAC
+              - TERM
+              - ASBR
+              - AB15
+              - AB26
+              - AB12
+              - DT07
+              - AB13
+              - AB21
+              - ISWS
+              - MISN
+              - NOFR
+              - RC14
+              - RC16
+              - RC15
+              - RC13
+              - SBRN
+              example: NAUT
+            description:
+              type: string
+              description: A description of the reason for rejection.
+              example: Item was delivered (see uploaded evidence)
+    investigations.event:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - type
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the event
+          format: uuid
+          example: 0196f9a7-1aca-54a5-ba76-722e8e70deda
+        type:
+          type: string
+          enum:
+          - events
+          description: The type of the resource
+        attributes:
+          type: object
+          required:
+          - at
+          - title
+          - detail
+          properties:
+            at:
+              type: string
+              format: date-time
+              description: The date and time when the event occurred
+              example: '2025-05-23T14:30:00Z'
+            title:
+              type: string
+              description: The title of the event
+              enum:
+              - OFI raised dispute
+              - Merchant accepted dispute
+              - Merchant action requested
+              - Merchant rejected dispute
+            detail:
+              type: string
+              description: The detailed description of the event
+              enum:
+              - Payer's bank raised a dispute
+              - Merchant acknowledged dispute was founded and has returned funds
+              - Zepto requested merchant to take action
+              - Merchant rejected dispute with evidence
+    investigations.upload:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - type
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the upload
+          format: uuid
+          example: 0196f9a7-3465-ae88-7cc8-6fabacb573bc
+        type:
+          type: string
+          enum:
+          - uploads
+          description: The type of the resource
+        attributes:
+          type: object
+          required:
+          - urn
+          properties:
+            urn:
+              type: string
+              description: The URN of the upload
+              example: urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc
+        relationships:
+          type: object
+          required:
+          - dispute
+          properties:
+            dispute:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/investigations.dispute'
+    investigations.action_request.accept_request:
+      type: object
+      required:
+      - amount_returned
+      - return_transaction_identification
+      additionalProperties: false
+      properties:
+        amount_returned:
+          type: object
+          required:
+          - currency
+          - value
+          additionalProperties: false
+          properties:
+            currency:
+              type: string
+              description: The currency of the amount returned.
+              enum:
+              - AUD
+              example: AUD
+            value:
+              type: integer
+              description: The value of the amount returned in cents.
+              example: 100
+        return_transaction_identification:
+          type: string
+          description: The unique identifier for the return transaction.
+          example: lbkmya1jg83uqr9d1ytogr6wpwdzz9bjwgs
     investigations.simulate_incoming_message_request_without_action_request:
       type: object
       required:
@@ -493,103 +649,48 @@ components:
           type: string
           description: The narrative for the investigation (freeform text, slash-delimited). It is omitted from the `message_received` webhook but is included in `action_requested` webhook.
           example: /SomeKey1/SomeValue1//SomeKey2/SomeValue2/
-    investigations.action_request.reject_request:
+    investigations.simulate_incoming_message_request_with_action_request:
       type: object
       required:
-      - reason
+      - simulate_action_request
+      - investigation_type_code
+      - investigation_reason_code
+      - original_transaction_identification
+      - narrative
       additionalProperties: false
       properties:
-        reason:
-          type: object
-          required:
-          - code
-          - description
-          additionalProperties: false
-          properties:
-            code:
-              type: string
-              description: The reason code for rejecting the request. It should be a valid value from the [ISO20022 ExternalRejectedReason1Code set](https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets).
-              enum:
-              - ADEA
-              - BDAY
-              - CTRC
-              - DPRG
-              - INDT
-              - MISM
-              - NAUT
-              - NINS
-              - NOAC
-              - TERM
-              - ASBR
-              - AB15
-              - AB26
-              - AB12
-              - DT07
-              - AB13
-              - AB21
-              - ISWS
-              - MISN
-              - NOFR
-              - RC14
-              - RC16
-              - RC15
-              - RC13
-              - SBRN
-              example: NAUT
-            description:
-              type: string
-              description: A description of the reason for rejection.
-              example: Item was delivered (see uploaded evidence)
-    investigations.upload:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - type
-      properties:
-        id:
+        simulate_action_request:
+          type: boolean
+          description: Flag to trigger the `action_requested` webhook. When enabled, `investigation_type_code` must be `INV13` or `INV14`.
+          example: true
+        investigation_type_code:
           type: string
-          description: The unique identifier for the upload
-          format: uuid
-          example: 0196f9a7-3465-ae88-7cc8-6fabacb573bc
-        type:
-          type: string
+          description: The type of investigation to be simulated.
           enum:
-          - uploads
-          description: The type of the resource
-        attributes:
-          type: object
-          required:
-          - urn
-          properties:
-            urn:
-              type: string
-              description: The URN of the upload
-              example: urn:example:0196f9a7-3465-ae88-7cc8-6fabacb573bc
-        relationships:
-          type: object
-          required:
-          - dispute
-          properties:
-            dispute:
-              type: object
-              properties:
-                data:
-                  $ref: '#/components/schemas/investigations.dispute'
-    investigations.incoming_message_simulation:
-      type: object
-      properties:
-        id:
+          - INV13
+          - INV14
+          example: INV13
+        investigation_reason_code:
           type: string
-          format: uuid
-          enum:
-          - 00000000-0000-0000-0000-000000000000
-          example: 00000000-0000-0000-0000-000000000000
-        type:
+          description: The reason code for the investigation (eg from the [ISO20022 ExternalReturnReason1Code set](https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets)).
+          example: CUST
+        original_transaction_identification:
           type: string
-          enum:
-          - incoming_message_simulations
-          example: incoming_message_simulations
+          description: The original transaction identification related to the investigation. It must relate to a PayTo payment submission for a mandate owned by the merchant.
+          example: 0196fb4e-3611-8c42-fffc-7f6852dddbc4
+        narrative:
+          type: string
+          description: The narrative for the investigation (freeform text, slash-delimited). It is omitted from the `message_received` webhook but is included in `action_requested` webhook.
+          example: /SomeKey1/SomeValue1//SomeKey2/SomeValue2/
+    investigations.simulate_incoming_message_request:
+      discriminator:
+        propertyName: simulate_action_request
+        mapping:
+          'true': '#/components/schemas/investigations.simulate_incoming_message_request_with_action_request'
+          'false': '#/components/schemas/investigations.simulate_incoming_message_request_without_action_request'
+      oneOf:
+      - $ref: '#/components/schemas/investigations.simulate_incoming_message_request_with_action_request'
+      - $ref: '#/components/schemas/investigations.simulate_incoming_message_request_without_action_request'
     investigations.message:
       type: object
       additionalProperties: false
@@ -629,76 +730,6 @@ components:
               type: object
               summary: A map of relevant codes to their meanings.
               description: The keys of this object are the codes themselves and the values are strings representing their meanings.
-    investigations.simulate_incoming_message_request:
-      discriminator:
-        propertyName: simulate_action_request
-        mapping:
-          'true': '#/components/schemas/investigations.simulate_incoming_message_request_with_action_request'
-          'false': '#/components/schemas/investigations.simulate_incoming_message_request_without_action_request'
-      oneOf:
-      - $ref: '#/components/schemas/investigations.simulate_incoming_message_request_with_action_request'
-      - $ref: '#/components/schemas/investigations.simulate_incoming_message_request_without_action_request'
-    investigations.simulate_incoming_message_request_with_action_request:
-      type: object
-      required:
-      - simulate_action_request
-      - investigation_type_code
-      - investigation_reason_code
-      - original_transaction_identification
-      - narrative
-      additionalProperties: false
-      properties:
-        simulate_action_request:
-          type: boolean
-          description: Flag to trigger the `action_requested` webhook. When enabled, `investigation_type_code` must be `INV13` or `INV14`.
-          example: true
-        investigation_type_code:
-          type: string
-          description: The type of investigation to be simulated.
-          enum:
-          - INV13
-          - INV14
-          example: INV13
-        investigation_reason_code:
-          type: string
-          description: The reason code for the investigation (eg from the [ISO20022 ExternalReturnReason1Code set](https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets)).
-          example: CUST
-        original_transaction_identification:
-          type: string
-          description: The original transaction identification related to the investigation. It must relate to a PayTo payment submission for a mandate owned by the merchant.
-          example: 0196fb4e-3611-8c42-fffc-7f6852dddbc4
-        narrative:
-          type: string
-          description: The narrative for the investigation (freeform text, slash-delimited). It is omitted from the `message_received` webhook but is included in `action_requested` webhook.
-          example: /SomeKey1/SomeValue1//SomeKey2/SomeValue2/
-    investigations.action_request.accept_request:
-      type: object
-      required:
-      - amount_returned
-      - return_transaction_identification
-      additionalProperties: false
-      properties:
-        amount_returned:
-          type: object
-          required:
-          - currency
-          - value
-          additionalProperties: false
-          properties:
-            currency:
-              type: string
-              description: The currency of the amount returned.
-              enum:
-              - AUD
-              example: AUD
-            value:
-              type: integer
-              description: The value of the amount returned in cents.
-              example: 100
-        return_transaction_identification:
-          type: string
-          description: The unique identifier for the return transaction.
-          example: lbkmya1jg83uqr9d1ytogr6wpwdzz9bjwgs
     investigations.dispute:
       type: object
       additionalProperties: false
@@ -778,51 +809,20 @@ components:
                       type: boolean
                       description: Indicates if the uploads are included in the response
                       example: false
-    investigations.event:
+    investigations.incoming_message_simulation:
       type: object
-      additionalProperties: false
-      required:
-      - id
-      - type
       properties:
         id:
           type: string
-          description: The unique identifier for the event
           format: uuid
-          example: 0196f9a7-1aca-54a5-ba76-722e8e70deda
+          enum:
+          - 00000000-0000-0000-0000-000000000000
+          example: 00000000-0000-0000-0000-000000000000
         type:
           type: string
           enum:
-          - events
-          description: The type of the resource
-        attributes:
-          type: object
-          required:
-          - at
-          - title
-          - detail
-          properties:
-            at:
-              type: string
-              format: date-time
-              description: The date and time when the event occurred
-              example: '2025-05-23T14:30:00Z'
-            title:
-              type: string
-              description: The title of the event
-              enum:
-              - OFI raised dispute
-              - Merchant accepted dispute
-              - Merchant action requested
-              - Merchant rejected dispute
-            detail:
-              type: string
-              description: The detailed description of the event
-              enum:
-              - Payer's bank raised a dispute
-              - Merchant acknowledged dispute was founded and has returned funds
-              - Zepto requested merchant to take action
-              - Merchant rejected dispute with evidence
+          - incoming_message_simulations
+          example: incoming_message_simulations
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version

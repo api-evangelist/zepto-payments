@@ -214,6 +214,125 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    payto.alias_resolution_service_unavailable_error:
+      type: object
+      additionalProperties: false
+      required:
+      - title
+      - detail
+      - code
+      properties:
+        title:
+          type: string
+          example: Title of error
+        code:
+          type: string
+          description: A code assigned to the type of error received
+          example: E100
+          enum:
+          - ZPADD98
+        detail:
+          type: string
+          description: A short description of the error
+          example: Description of error
+        links:
+          type: object
+          properties:
+            about:
+              type: string
+              description: An optional link to more information on the error
+              example: https://docs.zeptopayments.com/docs/zepto-environments
+          required:
+          - about
+        meta:
+          type: object
+          description: Optional meta information about the error
+          properties:
+            resource_ref:
+              type: string
+              description: Resource reference of the resource impacted by the error
+              example: P2PAY.1000
+            resource_uid:
+              type: string
+              description: Supplied ID of the resource impacted by the error
+              example: payment_34fj8djh2
+    payto.alias_resolution_email_request:
+      allOf:
+      - type: object
+        required:
+        - type
+        - value
+        properties:
+          type:
+            type: string
+            enum:
+            - alias_phone
+            - alias_email
+            - alias_abn
+            - alias_organisation_identifier
+            example: alias_email
+          value:
+            allOf:
+            - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
+      - $ref: '#/components/schemas/payto.alias_resolution_base_request'
+    payto.alias_resolution_base_request:
+      type: object
+      required:
+      - requester
+      properties:
+        requester:
+          type: object
+          description: Details of the end-user requesting this resolution.
+          required:
+          - id
+          - remote_ip
+          properties:
+            id:
+              type: string
+              pattern: ^[A-Za-z0-9_~.-]{1,64}$
+              description: Integrator's unique identifier for the end-user requesting this resolution. Maximum 64 characters containing only unreserved characters as defined in RFC3986.
+              example: user_G7MQWwkQZIP8vbfH
+              minLength: 1
+              maxLength: 64
+            remote_ip:
+              type: string
+              description: IP address of the end-user requesting this resolution. (IPv4 or IPv6)
+              anyOf:
+              - format: ipv4
+              - format: ipv6
+              example: 192.0.2.146
+        sandbox:
+          type: object
+          required:
+          - simulate
+          description: 'SANDBOX ONLY: Parameter that allows you to simulate certain alias lookup scenarios to aid integrators while testing their control flows.'
+          properties:
+            simulate:
+              type: string
+              enum:
+              - alias_found
+              - alias_not_found
+              - service_unavailable
+            display_name:
+              type: string
+              description: Display name to be returned when simulating an `alias_found` response. Will be ignored for other simulations. Defaults to `Sandbox User`.
+              example: Jane Smith
+    payto.account_identifiers_alias_phone:
+      type: string
+      title: Phone alias
+      description: A PayID phone alias. e.g. +61-411222333
+      example: +61-411222333
+      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
+    payto.unprocessable_alias_resolution_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.unprocessable_alias_resolution_error'
+      required:
+      - errors
     payto.alias_resolution_organisation_request:
       allOf:
       - type: object
@@ -233,12 +352,31 @@ components:
             allOf:
             - $ref: '#/components/schemas/payto.account_identifiers_alias_organisation_identifier'
       - $ref: '#/components/schemas/payto.alias_resolution_base_request'
-    payto.account_identifiers_alias_organisation_identifier:
+    payto.alias_resolution_service_unavailable_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.alias_resolution_service_unavailable_error'
+      required:
+      - errors
+    payto.alias_resolution:
+      type: object
+      required:
+      - display_name
+      properties:
+        display_name:
+          type: string
+          example: Jane Smith
+          description: The display name associated with the alias.
+    payto.account_identifiers_alias_abn:
       type: string
-      title: Organisation alias
-      description: A PayID organisation identifier alias
-      example: Zepto Pty Ltd, Byron Bay NSW
-      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
+      title: ABN alias
+      description: A PayID ABN alias
+      example: '123456789'
+      pattern: ^((\d{9})|(\d{11}))$
     payto.unprocessable_alias_resolution_error:
       type: object
       additionalProperties: false
@@ -286,149 +424,12 @@ components:
               type: string
               description: Supplied ID of the resource impacted by the error
               example: payment_34fj8djh2
-    payto.alias_resolution_request:
-      type: object
-      anyOf:
-      - $ref: '#/components/schemas/payto.alias_resolution_phone_request'
-      - $ref: '#/components/schemas/payto.alias_resolution_email_request'
-      - $ref: '#/components/schemas/payto.alias_resolution_abn_request'
-      - $ref: '#/components/schemas/payto.alias_resolution_organisation_request'
-      discriminator:
-        propertyName: type
-        mapping:
-          alias_phone: '#/components/schemas/payto.alias_resolution_phone_request'
-          alias_email: '#/components/schemas/payto.alias_resolution_email_request'
-          alias_abn: '#/components/schemas/payto.alias_resolution_abn_request'
-          alias_organisation_identifier: '#/components/schemas/payto.alias_resolution_organisation_request'
-    payto.alias_resolution_base_request:
-      type: object
-      required:
-      - requester
-      properties:
-        requester:
-          type: object
-          description: Details of the end-user requesting this resolution.
-          required:
-          - id
-          - remote_ip
-          properties:
-            id:
-              type: string
-              pattern: ^[A-Za-z0-9_~.-]{1,64}$
-              description: Integrator's unique identifier for the end-user requesting this resolution. Maximum 64 characters containing only unreserved characters as defined in RFC3986.
-              example: user_G7MQWwkQZIP8vbfH
-              minLength: 1
-              maxLength: 64
-            remote_ip:
-              type: string
-              description: IP address of the end-user requesting this resolution. (IPv4 or IPv6)
-              anyOf:
-              - format: ipv4
-              - format: ipv6
-              example: 192.0.2.146
-        sandbox:
-          type: object
-          required:
-          - simulate
-          description: 'SANDBOX ONLY: Parameter that allows you to simulate certain alias lookup scenarios to aid integrators while testing their control flows.'
-          properties:
-            simulate:
-              type: string
-              enum:
-              - alias_found
-              - alias_not_found
-              - service_unavailable
-            display_name:
-              type: string
-              description: Display name to be returned when simulating an `alias_found` response. Will be ignored for other simulations. Defaults to `Sandbox User`.
-              example: Jane Smith
-    payto.alias_resolution_service_unavailable_errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.alias_resolution_service_unavailable_error'
-      required:
-      - errors
-    payto.alias_resolution_service_unavailable_error:
-      type: object
-      additionalProperties: false
-      required:
-      - title
-      - detail
-      - code
-      properties:
-        title:
-          type: string
-          example: Title of error
-        code:
-          type: string
-          description: A code assigned to the type of error received
-          example: E100
-          enum:
-          - ZPADD98
-        detail:
-          type: string
-          description: A short description of the error
-          example: Description of error
-        links:
-          type: object
-          properties:
-            about:
-              type: string
-              description: An optional link to more information on the error
-              example: https://docs.zeptopayments.com/docs/zepto-environments
-          required:
-          - about
-        meta:
-          type: object
-          description: Optional meta information about the error
-          properties:
-            resource_ref:
-              type: string
-              description: Resource reference of the resource impacted by the error
-              example: P2PAY.1000
-            resource_uid:
-              type: string
-              description: Supplied ID of the resource impacted by the error
-              example: payment_34fj8djh2
-    payto.generic_errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.generic_error'
-      required:
-      - errors
-    payto.account_identifiers_alias_phone:
+    payto.account_identifiers_alias_organisation_identifier:
       type: string
-      title: Phone alias
-      description: A PayID phone alias. e.g. +61-411222333
-      example: +61-411222333
-      pattern: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
-    payto.alias_resolution_abn_request:
-      allOf:
-      - type: object
-        required:
-        - type
-        - value
-        properties:
-          type:
-            type: string
-            enum:
-            - alias_phone
-            - alias_email
-            - alias_abn
-            - alias_organisation_identifier
-            example: alias_abn
-          value:
-            allOf:
-            - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
-      - $ref: '#/components/schemas/payto.alias_resolution_base_request'
+      title: Organisation alias
+      description: A PayID organisation identifier alias
+      example: Zepto Pty Ltd, Byron Bay NSW
+      pattern: ^[!-@\[-~][ -@\[-~]{0,254}[!-@\[-~]$
     payto.alias_resolution_phone_request:
       allOf:
       - type: object
@@ -448,28 +449,13 @@ components:
             allOf:
             - $ref: '#/components/schemas/payto.account_identifiers_alias_phone'
       - $ref: '#/components/schemas/payto.alias_resolution_base_request'
-    payto.account_identifiers_alias_abn:
-      type: string
-      title: ABN alias
-      description: A PayID ABN alias
-      example: '123456789'
-      pattern: ^((\d{9})|(\d{11}))$
     payto.account_identifiers_alias_email:
       type: string
       title: Email alias
       description: A PayID email alias
       example: default@example.com
       pattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$
-    payto.alias_resolution:
-      type: object
-      required:
-      - display_name
-      properties:
-        display_name:
-          type: string
-          example: Jane Smith
-          description: The display name associated with the alias.
-    payto.alias_resolution_email_request:
+    payto.alias_resolution_abn_request:
       allOf:
       - type: object
         required:
@@ -483,21 +469,11 @@ components:
             - alias_email
             - alias_abn
             - alias_organisation_identifier
-            example: alias_email
+            example: alias_abn
           value:
             allOf:
-            - $ref: '#/components/schemas/payto.account_identifiers_alias_email'
+            - $ref: '#/components/schemas/payto.account_identifiers_alias_abn'
       - $ref: '#/components/schemas/payto.alias_resolution_base_request'
-    payto.unprocessable_alias_resolution_errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/payto.unprocessable_alias_resolution_error'
-      required:
-      - errors
     payto.generic_error:
       type: object
       additionalProperties: false
@@ -533,6 +509,30 @@ components:
       required:
       - title
       - detail
+    payto.generic_errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/payto.generic_error'
+      required:
+      - errors
+    payto.alias_resolution_request:
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/payto.alias_resolution_phone_request'
+      - $ref: '#/components/schemas/payto.alias_resolution_email_request'
+      - $ref: '#/components/schemas/payto.alias_resolution_abn_request'
+      - $ref: '#/components/schemas/payto.alias_resolution_organisation_request'
+      discriminator:
+        propertyName: type
+        mapping:
+          alias_phone: '#/components/schemas/payto.alias_resolution_phone_request'
+          alias_email: '#/components/schemas/payto.alias_resolution_email_request'
+          alias_abn: '#/components/schemas/payto.alias_resolution_abn_request'
+          alias_organisation_identifier: '#/components/schemas/payto.alias_resolution_organisation_request'
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version

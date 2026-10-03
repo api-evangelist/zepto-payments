@@ -142,81 +142,6 @@ paths:
                 $ref: '#/components/schemas/GetATransferResponse'
 components:
   schemas:
-    ListAllTransfersResponse:
-      title: List all Transfers (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-      example:
-        data:
-        - ref: T.62xl
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 47000
-          description: Deposit from my bank account
-          matures_at: '2021-06-03T00:00:00Z'
-        - ref: T.87xp
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 9700
-          description: Withdrawal June 2021
-          matures_at: '2021-05-28T00:00:00Z'
-        - ref: T.87s4
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 230
-          description: Transfer to my other Float account
-          matures_at: '2021-05-03T00:00:00Z'
-    AddATransferResponse:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-          required:
-          - ref
-          - from_bank_account_id
-          - to_bank_account_id
-          - amount
-          - description
-          - matures_at
-          properties:
-            ref:
-              type: string
-              description: 'The Transfer request reference (T.*) (Min: 4 - Max: 8)'
-            from_bank_account_id:
-              type: string
-              description: The source bank/float account (UUID)
-            to_bank_account_id:
-              type: string
-              description: The destination bank/float account (UUID
-            amount:
-              type: integer
-              minimum: 1
-              maximum: 99999999999
-              description: 'The amount value provided (Min: 1 - Max: 99999999999)'
-            description:
-              type: string
-              description: Description for the Transfer
-            matures_at:
-              type: string
-              format: date-time
-              description: Date & time in UTC ISO8601 the Transfer should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
-              example: '2021-06-01T02:10:56Z'
-      example:
-        data:
-          ref: T.11ub
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 100000
-          description: Float account balance adjustment
-          matures_at: '2021-06-06T00:00:00Z'
     GetATransferResponse:
       required:
       - data
@@ -265,6 +190,51 @@ components:
           amount: 47000
           description: Deposit from my bank account
           matures_at: '2021-06-03T00:00:00Z'
+    AddATransferResponse:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+          - ref
+          - from_bank_account_id
+          - to_bank_account_id
+          - amount
+          - description
+          - matures_at
+          properties:
+            ref:
+              type: string
+              description: 'The Transfer request reference (T.*) (Min: 4 - Max: 8)'
+            from_bank_account_id:
+              type: string
+              description: The source bank/float account (UUID)
+            to_bank_account_id:
+              type: string
+              description: The destination bank/float account (UUID
+            amount:
+              type: integer
+              minimum: 1
+              maximum: 99999999999
+              description: 'The amount value provided (Min: 1 - Max: 99999999999)'
+            description:
+              type: string
+              description: Description for the Transfer
+            matures_at:
+              type: string
+              format: date-time
+              description: Date & time in UTC ISO8601 the Transfer should be processed. (Can not be earlier than the start of current day in Sydney AEST/AEDT)
+              example: '2021-06-01T02:10:56Z'
+      example:
+        data:
+          ref: T.11ub
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 100000
+          description: Float account balance adjustment
+          matures_at: '2021-06-06T00:00:00Z'
     AddATransferRequest:
       required:
       - from_bank_account_id
@@ -300,6 +270,36 @@ components:
         amount: 100000
         description: Float account balance adjustment
         matures_at: '2021-06-06T00:00:00Z'
+    ListAllTransfersResponse:
+      title: List all Transfers (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+      example:
+        data:
+        - ref: T.62xl
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 47000
+          description: Deposit from my bank account
+          matures_at: '2021-06-03T00:00:00Z'
+        - ref: T.87xp
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 9700
+          description: Withdrawal June 2021
+          matures_at: '2021-05-28T00:00:00Z'
+        - ref: T.87s4
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 230
+          description: Transfer to my other Float account
+          matures_at: '2021-05-03T00:00:00Z'
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version
