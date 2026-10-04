@@ -137,30 +137,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/RetrieveARefundResponse'
 components:
+  headers:
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   schemas:
-    ListOutgoingRefundsResponse:
-      title: List outgoing Refunds (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-          description: ''
-      example:
-        data:
-        - ref: PRF.2
-          for_ref: C.5
-          debit_ref: D.5a
-          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-          created_at: '2017-05-09T04:45:26Z'
-          amount: 5
-          reason: Because reason
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
     Metadata:
       title: Metadata
       type: object
@@ -169,61 +157,6 @@ components:
       example:
         custom_key: Custom string
         another_custom_key: Maybe a URL
-    RetrieveARefundResponse:
-      title: Retrieve a Refund (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: object
-      example:
-        data:
-          ref: PRF.1
-          for_ref: C.59
-          debit_ref: D.hi
-          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-          created_at: '2017-05-08T07:20:24Z'
-          amount: 500
-          reason: Because reason
-          metadata:
-            custom_key: Custom string
-            another_custom_key: Maybe a URL
-    IssueARefundRequest:
-      title: Issue a Refund (request)
-      required:
-      - amount
-      type: object
-      properties:
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
-          example: 500
-        channels:
-          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
-          type: array
-        reason:
-          type: string
-          pattern: ^[ -~]+$
-          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
-          example: Because reason
-        your_bank_account_id:
-          type: string
-          format: uuid
-          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-      example:
-        amount: 500
-        channels:
-        - direct_entry
-        reason: Because reason
-        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
     IssueARefundResponse:
       title: Issue a Refund (response)
       type: object
@@ -294,6 +227,84 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
+    RetrieveARefundResponse:
+      title: Retrieve a Refund (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: object
+      example:
+        data:
+          ref: PRF.1
+          for_ref: C.59
+          debit_ref: D.hi
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          created_at: '2017-05-08T07:20:24Z'
+          amount: 500
+          reason: Because reason
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
+    IssueARefundRequest:
+      title: Issue a Refund (request)
+      required:
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents refund (Min: 1 - Max: 99999999999)'
+          example: 500
+        channels:
+          description: Specify the payment channel to be used, in order. (new_payments_platform, direct_entry, or both)
+          type: array
+        reason:
+          type: string
+          pattern: ^[ -~]+$
+          description: The first 8 characters are visible if funds are sent via direct credit / BECS, and up to 270 characters if sent via NPP
+          example: Because reason
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should take the funds for this transaction. If omitted, your primary bank account will be used.
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      example:
+        amount: 500
+        channels:
+        - direct_entry
+        reason: Because reason
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
+    ListOutgoingRefundsResponse:
+      title: List outgoing Refunds (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: ''
+      example:
+        data:
+        - ref: PRF.2
+          for_ref: C.5
+          debit_ref: D.5a
+          your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+          created_at: '2017-05-09T04:45:26Z'
+          amount: 5
+          reason: Because reason
+          metadata:
+            custom_key: Custom string
+            another_custom_key: Maybe a URL
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version
@@ -305,17 +316,6 @@ components:
         default: '20250101'
         example: '20260101'
       description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
-      schema:
-        type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
   securitySchemes:
     bearerAuth:
       type: oauth2

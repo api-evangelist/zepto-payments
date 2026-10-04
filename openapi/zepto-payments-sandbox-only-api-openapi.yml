@@ -81,97 +81,6 @@ paths:
           description: Invalid parameters
 components:
   schemas:
-    SimulateIncomingPayIDPaymentRequest:
-      required:
-      - payid_email
-      - amount
-      type: object
-      properties:
-        payid_email:
-          type: string
-          minLength: 6
-          maxLength: 256
-          description: 'Receivable Contact PayID email (Min: 6 - Max: 256)'
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
-        payment_description:
-          type: string
-          description: 'Default:  "Simulated PayID payment"'
-        payment_reference:
-          type: string
-          description: 'Default:  "simulated-payid-payment"'
-        from_bsb:
-          type: string
-          minLength: 6
-          maxLength: 6
-          description: 'Default: "014209"'
-        from_account_number:
-          type: string
-          minLength: 1
-          maxLength: 9
-          description: 'Default: "12345678"'
-        debtor_name:
-          type: string
-          pattern: ^[ -~]+$
-          minLength: 1
-          description: 'Default:  "Simulated Debtor"'
-        debtor_legal_name:
-          type: string
-          minLength: 1
-          pattern: ^[ -~]+$
-          description: 'Default:  "Simulated Debtor Pty Ltd"'
-      example:
-        payid_email: incoming@zeptopayments.com
-        amount: 10000
-    SimulateIncomingDEPaymentRequest:
-      required:
-      - to_bsb
-      - to_account_number
-      - amount
-      type: object
-      properties:
-        to_bsb:
-          type: string
-          minLength: 6
-          maxLength: 6
-          description: Zepto float account BSB (usually 802919)
-        to_account_number:
-          type: string
-          minLength: 1
-          maxLength: 9
-          description: Zepto float account number
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
-        payment_reference:
-          type: string
-          maxLength: 18
-          description: 'Max 18 characters. Default: "simulated-de-pymt"'
-        from_bsb:
-          type: string
-          minLength: 6
-          maxLength: 6
-          description: 'Default: "014209"'
-        from_account_number:
-          type: string
-          minLength: 1
-          maxLength: 9
-          description: 'Default: "12345678"'
-        debtor_name:
-          type: string
-          minLength: 1
-          maxLength: 16
-          pattern: ^[ -~]+$
-          description: 'Max 16 characters. Default: "Simulated Debtor"'
-      example:
-        to_bsb: '802919'
-        to_account_number: '88888888'
-        amount: 10000
     SimulateIncomingNPPBBANPaymentRequest:
       required:
       - to_bsb
@@ -223,6 +132,97 @@ components:
       example:
         to_bsb: '802919'
         to_account_number: '88888888'
+        amount: 10000
+    SimulateIncomingDEPaymentRequest:
+      required:
+      - to_bsb
+      - to_account_number
+      - amount
+      type: object
+      properties:
+        to_bsb:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: Zepto float account BSB (usually 802919)
+        to_account_number:
+          type: string
+          minLength: 1
+          maxLength: 9
+          description: Zepto float account number
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+        payment_reference:
+          type: string
+          maxLength: 18
+          description: 'Max 18 characters. Default: "simulated-de-pymt"'
+        from_bsb:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: 'Default: "014209"'
+        from_account_number:
+          type: string
+          minLength: 1
+          maxLength: 9
+          description: 'Default: "12345678"'
+        debtor_name:
+          type: string
+          minLength: 1
+          maxLength: 16
+          pattern: ^[ -~]+$
+          description: 'Max 16 characters. Default: "Simulated Debtor"'
+      example:
+        to_bsb: '802919'
+        to_account_number: '88888888'
+        amount: 10000
+    SimulateIncomingPayIDPaymentRequest:
+      required:
+      - payid_email
+      - amount
+      type: object
+      properties:
+        payid_email:
+          type: string
+          minLength: 6
+          maxLength: 256
+          description: 'Receivable Contact PayID email (Min: 6 - Max: 256)'
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents (Min: 1 - Max: 99999999999)'
+        payment_description:
+          type: string
+          description: 'Default:  "Simulated PayID payment"'
+        payment_reference:
+          type: string
+          description: 'Default:  "simulated-payid-payment"'
+        from_bsb:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: 'Default: "014209"'
+        from_account_number:
+          type: string
+          minLength: 1
+          maxLength: 9
+          description: 'Default: "12345678"'
+        debtor_name:
+          type: string
+          pattern: ^[ -~]+$
+          minLength: 1
+          description: 'Default:  "Simulated Debtor"'
+        debtor_legal_name:
+          type: string
+          minLength: 1
+          pattern: ^[ -~]+$
+          description: 'Default:  "Simulated Debtor Pty Ltd"'
+      example:
+        payid_email: incoming@zeptopayments.com
         amount: 10000
   parameters:
     ZeptoAPIVersion:

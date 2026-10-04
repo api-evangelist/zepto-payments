@@ -240,6 +240,82 @@ paths:
                 $ref: '#/components/schemas/ListAllTransactionsResponse'
 components:
   schemas:
+    ListAllTransactionsResponse:
+      title: List all transactions (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+      example:
+        data:
+        - ref: D.3
+          parent_ref: null
+          type: debit
+          category: payout_refund
+          created_at: '2021-04-07T23:15:00Z'
+          matured_at: '2021-04-07T23:15:00Z'
+          cleared_at: '2021-04-10T23:15:00Z'
+          bank_ref: DT.9a
+          status: cleared
+          status_changed_at: '2021-04-10T23:15:00Z'
+          party_contact_id: 31354923-b1e9-4d65-b03c-415ead89cbf3
+          party_name: Sanford-Rees
+          party_nickname: null
+          party_bank_ref: CT.11
+          description: null
+          amount: 20000
+          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
+          channels:
+          - float account
+          current_channel: float_account
+        - ref: D.2
+          parent_ref: PB.2
+          type: debit
+          category: payout
+          created_at: '2016-12-06T23:15:00Z'
+          matured_at: '2016-12-09T23:15:00Z'
+          cleared_at: null
+          bank_ref: null
+          status: maturing
+          status_changed_at: '2016-12-06T23:15:00Z'
+          party_contact_id: 3c6e31d3-1dc1-448b-9512-0320bc44fdcf
+          party_name: Gutmann-Schmidt
+          party_nickname: null
+          party_bank_ref: null
+          description: Batteries for hire
+          amount: 2949299
+          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
+          channels:
+          - float_account
+          current_channel: float_account
+        - ref: C.2
+          parent_ref: PB.s0z
+          type: credit
+          category: payout
+          created_at: '2016-12-05T23:15:00Z'
+          matured_at: '2016-12-06T23:15:00Z'
+          cleared_at: '2016-12-09T23:15:00Z'
+          bank_ref: CT.1
+          status: cleared
+          status_changed_at: '2016-12-09T23:15:00Z'
+          party_contact_id: 33c6e31d-1dc1-448b-9512-0320bc44fdcf
+          party_name: Price and Sons
+          party_nickname: price-and-sons-2
+          party_bank_ref: null
+          description: Online purchase
+          amount: 19999
+          bank_account_id: c2e329ae-606f-4311-a9ab-a751baa1915c
+          channels:
+          - new_payments_platform
+          - direct_entry
+          current_channel: direct_entry
+          metadata:
+            customer_id: xur4492
+            product_ref: TSXL392110x
     Metadata:
       title: Metadata
       type: object
@@ -431,82 +507,17 @@ components:
         metadata:
           customer_id: xur4492
           product_ref: TSXL392110x
-    ListAllTransactionsResponse:
-      title: List all transactions (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionResponse'
-      example:
-        data:
-        - ref: D.3
-          parent_ref: null
-          type: debit
-          category: payout_refund
-          created_at: '2021-04-07T23:15:00Z'
-          matured_at: '2021-04-07T23:15:00Z'
-          cleared_at: '2021-04-10T23:15:00Z'
-          bank_ref: DT.9a
-          status: cleared
-          status_changed_at: '2021-04-10T23:15:00Z'
-          party_contact_id: 31354923-b1e9-4d65-b03c-415ead89cbf3
-          party_name: Sanford-Rees
-          party_nickname: null
-          party_bank_ref: CT.11
-          description: null
-          amount: 20000
-          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
-          channels:
-          - float account
-          current_channel: float_account
-        - ref: D.2
-          parent_ref: PB.2
-          type: debit
-          category: payout
-          created_at: '2016-12-06T23:15:00Z'
-          matured_at: '2016-12-09T23:15:00Z'
-          cleared_at: null
-          bank_ref: null
-          status: maturing
-          status_changed_at: '2016-12-06T23:15:00Z'
-          party_contact_id: 3c6e31d3-1dc1-448b-9512-0320bc44fdcf
-          party_name: Gutmann-Schmidt
-          party_nickname: null
-          party_bank_ref: null
-          description: Batteries for hire
-          amount: 2949299
-          bank_account_id: 56df206a-aaff-471a-b075-11882bc8906a
-          channels:
-          - float_account
-          current_channel: float_account
-        - ref: C.2
-          parent_ref: PB.s0z
-          type: credit
-          category: payout
-          created_at: '2016-12-05T23:15:00Z'
-          matured_at: '2016-12-06T23:15:00Z'
-          cleared_at: '2016-12-09T23:15:00Z'
-          bank_ref: CT.1
-          status: cleared
-          status_changed_at: '2016-12-09T23:15:00Z'
-          party_contact_id: 33c6e31d-1dc1-448b-9512-0320bc44fdcf
-          party_name: Price and Sons
-          party_nickname: price-and-sons-2
-          party_bank_ref: null
-          description: Online purchase
-          amount: 19999
-          bank_account_id: c2e329ae-606f-4311-a9ab-a751baa1915c
-          channels:
-          - new_payments_platform
-          - direct_entry
-          current_channel: direct_entry
-          metadata:
-            customer_id: xur4492
-            product_ref: TSXL392110x
+  headers:
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version
@@ -518,17 +529,6 @@ components:
         default: '20250101'
         example: '20260101'
       description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
-      schema:
-        type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
   securitySchemes:
     bearerAuth:
       type: oauth2

@@ -229,16 +229,72 @@ paths:
           description: Not Found - the Bank Account or entry is unavailable, the entry is outside the rolling 24-month availability window, or the Bank Account is not a Float Account
 components:
   schemas:
-    ListFloatAccountEntriesResponse:
-      title: List Float Account entries (response)
+    BankAccount:
+      title: Bank Account
+      type: object
+      required:
+      - account_type
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique Bank Account ID
+        account_type:
+          type: string
+          description: Distinguishes Float Accounts from other Bank Accounts
+          enum:
+          - bank_account
+          - float_account
+        branch_code:
+          type: string
+          description: Bank State Branch code
+        bank_name:
+          type: string
+          description: Name of the financial institution
+        account_number:
+          type: string
+          description: Bank account number
+        status:
+          type: string
+          description: Current Bank Account status
+          enum:
+          - active
+          - removed
+        title:
+          type: string
+          description: Display title for the Bank Account
+        available_balance:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: Current available balance in cents for a Float Account; null for other Bank Accounts
+        payid_configs:
+          type: array
+          description: PayID pooling configurations associated with the Float Account
+          items:
+            type: object
+            properties:
+              email_domain:
+                type: string
+              pooling_state:
+                type: string
+                enum:
+                - disabled
+                - enabled
+                - paused
+              max_pool_size:
+                type: integer
+              current_pool_size:
+                type: integer
+    GetFloatAccountEntryResponse:
+      title: Get a Float Account entry (response)
       type: object
       required:
       - data
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FloatAccountEntry'
+          $ref: '#/components/schemas/FloatAccountEntry'
     GetABankAccountResponse:
       title: Get a Bank Account (response)
       required:
@@ -304,64 +360,16 @@ components:
             pooling_state: disabled
             max_pool_size: 10
             current_pool_size: 1
-    BankAccount:
-      title: Bank Account
+    ListFloatAccountEntriesResponse:
+      title: List Float Account entries (response)
       type: object
       required:
-      - account_type
+      - data
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique Bank Account ID
-        account_type:
-          type: string
-          description: Distinguishes Float Accounts from other Bank Accounts
-          enum:
-          - bank_account
-          - float_account
-        branch_code:
-          type: string
-          description: Bank State Branch code
-        bank_name:
-          type: string
-          description: Name of the financial institution
-        account_number:
-          type: string
-          description: Bank account number
-        status:
-          type: string
-          description: Current Bank Account status
-          enum:
-          - active
-          - removed
-        title:
-          type: string
-          description: Display title for the Bank Account
-        available_balance:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: Current available balance in cents for a Float Account; null for other Bank Accounts
-        payid_configs:
+        data:
           type: array
-          description: PayID pooling configurations associated with the Float Account
           items:
-            type: object
-            properties:
-              email_domain:
-                type: string
-              pooling_state:
-                type: string
-                enum:
-                - disabled
-                - enabled
-                - paused
-              max_pool_size:
-                type: integer
-              current_pool_size:
-                type: integer
+            $ref: '#/components/schemas/FloatAccountEntry'
     FloatAccountEntry:
       title: Float Account entry
       type: object
@@ -409,14 +417,17 @@ components:
         available_balance_after: 84750
         links:
           self: https://api.sandbox.zeptopayments.com/bank_accounts/ab3de19b-709b-4a41-82a5-3b43b3dc58c9/entries/019c8814-c767-753c-82f7-3daac44d8662
-    GetFloatAccountEntryResponse:
-      title: Get a Float Account entry (response)
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/FloatAccountEntry'
+  headers:
+    Link:
+      schema:
+        type: string
+      description: Contains pagination link for next page of collection, if next page exists.
+      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
+    Per-Page:
+      schema:
+        type: integer
+      description: Contains the current maximum items in collection. Defaults to 25
+      example: 25
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version
@@ -428,17 +439,6 @@ components:
         default: '20250101'
         example: '20260101'
       description: API version in YYYYMMDD format. Defaults to 20250101 (legacy) when omitted.
-  headers:
-    Per-Page:
-      schema:
-        type: integer
-      description: Contains the current maximum items in collection. Defaults to 25
-      example: 25
-    Link:
-      schema:
-        type: string
-      description: Contains pagination link for next page of collection, if next page exists.
-      example: <https://api.sandbox.zeptopayments.com/contacts?page=2>; rel="next"
   securitySchemes:
     bearerAuth:
       type: oauth2

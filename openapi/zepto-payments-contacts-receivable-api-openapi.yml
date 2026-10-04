@@ -205,26 +205,6 @@ paths:
           description: Not Found
 components:
   schemas:
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
-    UpdateAReceivableContactRequest:
-      title: Update a Receivable Contact (request)
-      type: object
-      required:
-      - payid_name
-      properties:
-        payid_name:
-          type: string
-          pattern: ^[ -~]+$
-          description: The PayID name of the Receivable Contact
-      example:
-        payid_name: Bob Smith
     AddAReceivableContactResponse:
       title: Add a Receivable Contact (response)
       type: object
@@ -352,6 +332,26 @@ components:
             alias_type: email
             alias_name: your merchant's alias_name
             state: pending
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    UpdateAReceivableContactRequest:
+      title: Update a Receivable Contact (request)
+      type: object
+      required:
+      - payid_name
+      properties:
+        payid_name:
+          type: string
+          pattern: ^[ -~]+$
+          description: The PayID name of the Receivable Contact
+      example:
+        payid_name: Bob Smith
     AddAReceivableContactRequest:
       title: Add a Receivable Contact (request)
       required:
