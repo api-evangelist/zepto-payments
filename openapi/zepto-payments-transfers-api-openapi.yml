@@ -190,6 +190,36 @@ components:
           amount: 47000
           description: Deposit from my bank account
           matures_at: '2021-06-03T00:00:00Z'
+    ListAllTransfersResponse:
+      title: List all Transfers (response)
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+      example:
+        data:
+        - ref: T.62xl
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 47000
+          description: Deposit from my bank account
+          matures_at: '2021-06-03T00:00:00Z'
+        - ref: T.87xp
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 9700
+          description: Withdrawal June 2021
+          matures_at: '2021-05-28T00:00:00Z'
+        - ref: T.87s4
+          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
+          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
+          amount: 230
+          description: Transfer to my other Float account
+          matures_at: '2021-05-03T00:00:00Z'
     AddATransferRequest:
       required:
       - from_bank_account_id
@@ -225,36 +255,6 @@ components:
         amount: 100000
         description: Float account balance adjustment
         matures_at: '2021-06-06T00:00:00Z'
-    ListAllTransfersResponse:
-      title: List all Transfers (response)
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-      example:
-        data:
-        - ref: T.62xl
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 47000
-          description: Deposit from my bank account
-          matures_at: '2021-06-03T00:00:00Z'
-        - ref: T.87xp
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 9700
-          description: Withdrawal June 2021
-          matures_at: '2021-05-28T00:00:00Z'
-        - ref: T.87s4
-          from_bank_account_id: a79423b2-3827-4cf5-9eda-dc02a298d005
-          to_bank_account_id: 0921a719-c79d-4ffb-91b6-1b30ab77d14d
-          amount: 230
-          description: Transfer to my other Float account
-          matures_at: '2021-05-03T00:00:00Z'
     AddATransferResponse:
       required:
       - data

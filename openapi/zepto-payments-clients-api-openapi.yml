@@ -252,61 +252,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    clients.list:
-      type: object
-      properties:
-        links:
-          type: object
-          properties:
-            next:
-              type: string
-              description: URL for next page of results. Won't be present if there are no further pages.
-          example: {}
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/clients.client_response'
-    clients.client_update_request:
-      type: object
-      additionalProperties: false
-      properties:
-        business_names:
-          type: array
-          description: The business/trading names registered to the client's legal entity. For `individual` clients, this should be the client's legal name.
-          items:
-            type: string
-          example:
-          - Business Name 1
-          - Business Name 2
-        contact_information:
-          type: object
-          description: The contact information of the client. Required if RTP services requested.
-          properties:
-            contact_name:
-              type: string
-              description: 'The contact name for the client. Required if RTP services requested. '
-              example: Contact Name
-            email:
-              type: string
-              description: The contact email address for the client. Required if RTP services requested.
-              example: contact@example.com
-            phone:
-              type: string
-              description: The contact phone number for the client. Required if RTP services requested.
-              example: '+61400123456'
-              pattern: \A[\d\s\-\+\(\)]+\z
-        legal_name:
-          type: string
-          description: The legal name of the client.
-          example: Legal Name Pty Ltd
-        registered_address:
-          type: string
-          description: The registered address of the client.
-          example: 123 Street, City, Country
-        website_url:
-          type: string
-          description: The website URL of the client.
-          example: https://example.com
     clients.client_business_request:
       type: object
       required:
@@ -1189,16 +1134,6 @@ components:
           - business
           - individual
           example: business
-    clients.client_request:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/clients.client_business_request'
-      - $ref: '#/components/schemas/clients.client_individual_request'
-      discriminator:
-        propertyName: type
-        mapping:
-          business: '#/components/schemas/clients.client_business_request'
-          individual: '#/components/schemas/clients.client_individual_request'
     clients.client_response:
       type: object
       additionalProperties: false
@@ -1671,6 +1606,71 @@ components:
           - 'null'
           description: The website URL of the client.
           example: https://example.com
+    clients.client_update_request:
+      type: object
+      additionalProperties: false
+      properties:
+        business_names:
+          type: array
+          description: The business/trading names registered to the client's legal entity. For `individual` clients, this should be the client's legal name.
+          items:
+            type: string
+          example:
+          - Business Name 1
+          - Business Name 2
+        contact_information:
+          type: object
+          description: The contact information of the client. Required if RTP services requested.
+          properties:
+            contact_name:
+              type: string
+              description: 'The contact name for the client. Required if RTP services requested. '
+              example: Contact Name
+            email:
+              type: string
+              description: The contact email address for the client. Required if RTP services requested.
+              example: contact@example.com
+            phone:
+              type: string
+              description: The contact phone number for the client. Required if RTP services requested.
+              example: '+61400123456'
+              pattern: \A[\d\s\-\+\(\)]+\z
+        legal_name:
+          type: string
+          description: The legal name of the client.
+          example: Legal Name Pty Ltd
+        registered_address:
+          type: string
+          description: The registered address of the client.
+          example: 123 Street, City, Country
+        website_url:
+          type: string
+          description: The website URL of the client.
+          example: https://example.com
+    clients.client_request:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/clients.client_business_request'
+      - $ref: '#/components/schemas/clients.client_individual_request'
+      discriminator:
+        propertyName: type
+        mapping:
+          business: '#/components/schemas/clients.client_business_request'
+          individual: '#/components/schemas/clients.client_individual_request'
+    clients.list:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              description: URL for next page of results. Won't be present if there are no further pages.
+          example: {}
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/clients.client_response'
   parameters:
     ZeptoAPIVersion:
       name: Zepto-API-Version

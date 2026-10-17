@@ -316,32 +316,6 @@ components:
           metadata:
             customer_id: xur4492
             product_ref: TSXL392110x
-    Metadata:
-      title: Metadata
-      type: object
-      description: Use for your custom data and certain Zepto customisations.
-      properties: {}
-      example:
-        custom_key: Custom string
-        another_custom_key: Maybe a URL
-    Failure:
-      title: Failure object (see [Transaction/Failure codes](#failure-codes) for more info)
-      required:
-      - code
-      - title
-      - detail
-      type: object
-      properties:
-        code:
-          type: string
-        title:
-          type: string
-        detail:
-          type: string
-      example:
-        code: E205
-        title: Account Not Found
-        detail: The target account number cannot be found by the financial institution.
     TransactionResponse:
       title: A transaction (response)
       required:
@@ -507,6 +481,32 @@ components:
         metadata:
           customer_id: xur4492
           product_ref: TSXL392110x
+    Metadata:
+      title: Metadata
+      type: object
+      description: Use for your custom data and certain Zepto customisations.
+      properties: {}
+      example:
+        custom_key: Custom string
+        another_custom_key: Maybe a URL
+    Failure:
+      title: Failure object (see [Transaction/Failure codes](#failure-codes) for more info)
+      required:
+      - code
+      - title
+      - detail
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+      example:
+        code: E205
+        title: Account Not Found
+        detail: The target account number cannot be found by the financial institution.
   headers:
     Link:
       schema:

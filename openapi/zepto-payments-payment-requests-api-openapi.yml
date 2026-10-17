@@ -579,6 +579,51 @@ components:
             amount: 3000
             description: Membership fees
             matures_at: '2021-03-09T16:58:00Z'
+    MakeAPaymentRequestRequest:
+      title: Make a Payment Request (request)
+      required:
+      - authoriser_contact_id
+      - description
+      - matures_at
+      - amount
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description visible to the initiator (payee). The first 9 characters supplied will be visible to the authoriser (payer)
+          example: Visible to both initiator and authoriser
+        matures_at:
+          type: string
+          format: date-time
+          description: Date & time in UTC ISO8601 that the Payment will be processed if the request is approved. (If the request is approved after this point in time, it will be processed straight away)
+          example: '2016-12-19T02:10:56Z'
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 99999999999
+          description: 'Amount in cents to pay the initiator (Min: 1 - Max: 99999999999)'
+          example: 99000
+        authoriser_contact_id:
+          type: string
+          description: The Contact the payment will be requested from (`Contact.data.id`)
+          example: de86472c-c027-4735-a6a7-234366a27fc7
+        your_bank_account_id:
+          type: string
+          format: uuid
+          description: Specify where we should settle the funds for this transaction. If omitted, your primary bank account will be used.
+          example: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          type: object
+          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
+      example:
+        description: Visible to both initiator and authoriser
+        matures_at: 2016-12-19 02:10:56 UTC
+        amount: 99000
+        authoriser_contact_id: de86472c-c027-4735-a6a7-234366a27fc7
+        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
+        metadata:
+          custom_key: Custom string
+          another_custom_key: Maybe a URL
     MakeAPaymentRequestResponse:
       title: Make a Payment Request (response)
       required:
@@ -705,51 +750,6 @@ components:
           metadata:
             custom_key: Custom string
             another_custom_key: Maybe a URL
-    MakeAPaymentRequestRequest:
-      title: Make a Payment Request (request)
-      required:
-      - authoriser_contact_id
-      - description
-      - matures_at
-      - amount
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description visible to the initiator (payee). The first 9 characters supplied will be visible to the authoriser (payer)
-          example: Visible to both initiator and authoriser
-        matures_at:
-          type: string
-          format: date-time
-          description: Date & time in UTC ISO8601 that the Payment will be processed if the request is approved. (If the request is approved after this point in time, it will be processed straight away)
-          example: '2016-12-19T02:10:56Z'
-        amount:
-          type: integer
-          minimum: 1
-          maximum: 99999999999
-          description: 'Amount in cents to pay the initiator (Min: 1 - Max: 99999999999)'
-          example: 99000
-        authoriser_contact_id:
-          type: string
-          description: The Contact the payment will be requested from (`Contact.data.id`)
-          example: de86472c-c027-4735-a6a7-234366a27fc7
-        your_bank_account_id:
-          type: string
-          format: uuid
-          description: Specify where we should settle the funds for this transaction. If omitted, your primary bank account will be used.
-          example: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-        metadata:
-          type: object
-          description: Use for your custom data and certain Zepto customisations. Stored against generated transactions and included in associated webhook payloads.
-      example:
-        description: Visible to both initiator and authoriser
-        matures_at: 2016-12-19 02:10:56 UTC
-        amount: 99000
-        authoriser_contact_id: de86472c-c027-4735-a6a7-234366a27fc7
-        your_bank_account_id: 9c70871d-8e36-4c3e-8a9c-c0ee20e7c679
-        metadata:
-          custom_key: Custom string
-          another_custom_key: Maybe a URL
   headers:
     Link:
       schema:
